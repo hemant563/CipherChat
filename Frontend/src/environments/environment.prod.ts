@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://api.yourdomain.com/api/v1',
-  socketUrl: 'https://api.yourdomain.com',
+  apiUrl: 'https://cipherchat-7oni.onrender.com/api/v1',
+  socketUrl: 'https://cipherchat-7oni.onrender.com',
 };
