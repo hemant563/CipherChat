@@ -31,9 +31,12 @@ const env = {
   OTP_EXPIRY_MINUTES: parseInt(process.env.OTP_EXPIRY_MINUTES, 10) || 5,
   OTP_LENGTH: parseInt(process.env.OTP_LENGTH, 10) || 6,
 
-  // Email (Nodemailer)
+  // Email (Nodemailer / Gmail API)
   SMTP_USER: process.env.SMTP_USER || null,
   SMTP_PASS: process.env.SMTP_PASS || null,
+  GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID || null,
+  GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET || null,
+  GOOGLE_REFRESH_TOKEN: process.env.GOOGLE_REFRESH_TOKEN || null,
 
   // CORS
   CORS_ORIGIN: process.env.CORS_ORIGIN || 'http://localhost:4200',
