@@ -29,6 +29,11 @@ app.use(globalLimiter);
 // Serve uploaded files statically (ensure /uploads exists)
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
+// ── 2.5 Health Check ───────────────────────────────────────────
+app.get('/', (req, res) => {
+  res.status(200).json({ status: 'success', message: 'CipherChat API is running!' });
+});
+
 // ── 3. API Routes ──────────────────────────────────────────────
 app.use('/api/v1', routes);
 
