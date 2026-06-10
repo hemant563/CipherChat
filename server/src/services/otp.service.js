@@ -32,8 +32,13 @@ class OtpService {
     }
 
     try {
+      // Print the OTP in logs as a fallback just in case email fails!
+      logger.info(`[IMPORTANT] OTP for ${email} is: ${otp}`);
+
       const transporter = nodemailer.createTransport({
-        service: 'gmail',
+        host: 'smtp.gmail.com',
+        port: 465,
+        secure: true,
         auth: {
           user: env.SMTP_USER,
           pass: env.SMTP_PASS,
