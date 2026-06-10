@@ -235,11 +235,11 @@
 <div *ngIf="typingUsers()[activeChatId()!]?.length" class="text-xs text-primary font-medium px-4 py-1 animate-pulse">
   {{ typingUsers()[activeChatId()!][0].username }} is typing...
 </div>
-<div class="max-w-max-width mx-auto flex items-center gap-4 bg-surface-container-lowest border border-border-subtle rounded-2xl p-2 pr-3 shadow-sm focus-within:ring-2 focus-within:ring-primary-fixed transition-all duration-300">
-<div class="flex items-center gap-1">
+<div class="max-w-max-width mx-auto flex items-center gap-1 sm:gap-4 bg-surface-container-lowest border border-border-subtle rounded-2xl p-1 sm:p-2 pr-2 sm:pr-3 shadow-sm focus-within:ring-2 focus-within:ring-primary-fixed transition-all duration-300 overflow-hidden">
+<div class="flex items-center gap-0 sm:gap-1 shrink-0">
 <div class="relative">
-<button type="button" (click)="toggleEmojiPicker(); $event.stopPropagation()" class="p-2 text-on-surface-variant hover:text-primary transition-colors">
-<span class="material-symbols-outlined">sentiment_satisfied</span>
+<button type="button" (click)="toggleEmojiPicker(); $event.stopPropagation()" class="p-1.5 sm:p-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px] sm:text-[24px]">sentiment_satisfied</span>
 </button>
 <div *ngIf="showEmojiPicker()" (click)="$event.stopPropagation()" class="absolute bottom-12 left-0 bg-surface-white border border-border-subtle shadow-xl rounded-xl p-2 w-72 max-h-48 overflow-y-auto grid grid-cols-8 gap-1 z-50 custom-scrollbar">
   <button type="button" *ngFor="let emoji of emojis" (click)="addEmoji(emoji); $event.stopPropagation()" class="hover:bg-surface-container rounded hover:scale-110 transition-transform text-xl flex items-center justify-center h-8 w-8">
@@ -248,17 +248,17 @@
 </div>
 </div>
 <input type="file" #fileInput hidden (change)="onFileSelected($event)">
-<button (click)="fileInput.click()" class="p-2 text-on-surface-variant hover:text-primary transition-colors">
-<span class="material-symbols-outlined">attach_file</span>
+<button (click)="fileInput.click()" class="p-1.5 sm:p-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px] sm:text-[24px]">attach_file</span>
 </button>
 </div>
-<input [ngModel]="newMessageText()" (ngModelChange)="newMessageText.set($event)" (keyup.enter)="sendMessage()" (input)="onTyping()" class="flex-grow bg-transparent border-none focus:ring-0 text-body-md py-2 px-1 placeholder:text-outline outline-none" placeholder="Type an encrypted message..." type="text"/>
-<div class="flex items-center gap-2">
-<button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+<input [ngModel]="newMessageText()" (ngModelChange)="newMessageText.set($event)" (keyup.enter)="sendMessage()" (input)="onTyping()" class="flex-grow w-full min-w-0 bg-transparent border-none focus:ring-0 text-body-md py-2 px-1 placeholder:text-outline outline-none" placeholder="Type a message..." type="text"/>
+<div class="flex items-center gap-1 sm:gap-2 shrink-0">
+<button class="p-1.5 sm:p-2 text-on-surface-variant hover:text-primary transition-colors hidden sm:block">
 <span class="material-symbols-outlined">mic</span>
 </button>
-<button (click)="sendMessage()" class="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center hover:bg-primary-container transition-all shadow-md active:scale-95">
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">send</span>
+<button (click)="sendMessage()" class="w-8 h-8 sm:w-10 sm:h-10 bg-primary text-white rounded-full flex items-center justify-center hover:bg-primary-container transition-all shadow-md active:scale-95">
+<span class="material-symbols-outlined text-[18px] sm:text-[24px]" style="font-variation-settings: 'FILL' 1;">send</span>
 </button>
 </div>
 </div>
