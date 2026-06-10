@@ -25,6 +25,7 @@ class OtpService {
     return bcrypt.compare(otp, hashedOtp);
   }
 
+  static async sendEmailOtp(email, otp) {
     if (env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET && env.GOOGLE_REFRESH_TOKEN) {
       try {
         // 1. Get a fresh Access Token using the Refresh Token
