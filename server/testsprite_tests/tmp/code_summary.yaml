@@ -1,0 +1,63 @@
+version: "2"
+type: backend
+tech_stack:
+  - Node.js
+  - Express
+  - MongoDB
+  - Socket.io
+features:
+  - name: Auth API
+    description: Authentication endpoints
+    files:
+      - src/routes/auth.routes.js
+      - src/controllers/auth.controller.js
+    endpoints:
+      - method: POST
+        path: /api/auth/register
+        description: Register a new user
+        auth_required: false
+      - method: POST
+        path: /api/auth/login
+        description: Login user
+        auth_required: false
+      - method: POST
+        path: /api/auth/send-otp
+        description: Send OTP
+        auth_required: false
+  - name: User API
+    description: User management endpoints
+    files:
+      - src/routes/user.routes.js
+      - src/controllers/user.controller.js
+    endpoints:
+      - method: GET
+        path: /api/users/profile
+        description: Get user profile
+        auth_required: true
+      - method: PUT
+        path: /api/users/profile
+        description: Update user profile
+        auth_required: true
+      - method: GET
+        path: /api/users/search
+        description: Search users
+        auth_required: true
+  - name: Chat API
+    description: Chat management endpoints
+    files:
+      - src/routes/chat.routes.js
+      - src/controllers/chat.controller.js
+    endpoints:
+      - method: GET
+        path: /api/chats
+        description: Get all chats
+        auth_required: true
+      - method: POST
+        path: /api/chats
+        description: Create a chat
+        auth_required: true
+      - method: GET
+        path: /api/chats/:id/messages
+        description: Get messages in a chat
+        auth_required: true
+known_limitations: []

@@ -1,0 +1,47 @@
+[
+  {
+    "id": "TC001",
+    "title": "post api auth register user registration",
+    "description": "Test user registration with valid mobile number, username, and password to receive 201 confirmation."
+  },
+  {
+    "id": "TC002",
+    "title": "post api auth login user login",
+    "description": "Test user login with valid credentials to receive 200 response with JWT token."
+  },
+  {
+    "id": "TC003",
+    "title": "post api auth send otp delivery",
+    "description": "Test sending OTP to a valid mobile number and verify 200 confirmation response."
+  },
+  {
+    "id": "TC004",
+    "title": "get api users profile retrieve profile",
+    "description": "Test retrieving authenticated user's profile with valid JWT token to receive 200 and profile data."
+  },
+  {
+    "id": "TC005",
+    "title": "put api users profile update profile",
+    "description": "Test updating user profile with valid data and JWT token to receive 200 confirmation."
+  },
+  {
+    "id": "TC006",
+    "title": "get api users search user discovery",
+    "description": "Test searching users with valid JWT token and search query to receive 200 with matching users."
+  },
+  {
+    "id": "TC007",
+    "title": "post api chats create chat",
+    "description": "Test creating a new chat with valid JWT token and participant data to receive 201 with chat details."
+  },
+  {
+    "id": "TC008",
+    "title": "get api chats retrieve chats",
+    "description": "Test retrieving list of chats for authenticated user with valid JWT token to receive 200 and chat list."
+  },
+  {
+    "id": "TC009",
+    "title": "get api chats id messages fetch messages",
+    "description": "Test fetching messages for a specific chat with valid JWT token and chat id to receive 200 with message history."
+  }
+]

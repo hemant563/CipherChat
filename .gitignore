@@ -1,0 +1,5 @@
+node_modules/
+.env
+.testsprite/
+.vscode/
+.DS_Store

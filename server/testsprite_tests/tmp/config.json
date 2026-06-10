@@ -1,0 +1,18 @@
+{
+  "status": "commited",
+  "type": "backend",
+  "scope": "codebase",
+  "localEndpoint": "http://localhost:5001",
+  "backendAuthType": "public",
+  "executionArgs": {
+    "projectName": "Chatsphere-Backend",
+    "projectPath": "e:\\\\project fsd\\\\ChatSphere\\\\server",
+    "testIds": [],
+    "additionalInstruction": "Test all endpoints and verify recent Cloudinary upload migration works correctly.",
+    "serverMode": "development",
+    "envs": {
+      "API_KEY": "sk-user-QpwBgRhmrYkrAlH3p_acOHx6dKz4NtVFtaSFSWfjjtLhKqyaD4uYMip31kXmQ82z35pENdKLQROTxJzakcRnaQQiUNU5sGzVmGLMaE-Uo_NBqTmaRHa_KEeq8hsC-q_wkbI"
+    }
+  },
+  "serverPort": 63525
+}
