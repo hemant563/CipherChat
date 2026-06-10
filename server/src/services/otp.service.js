@@ -26,83 +26,56 @@ class OtpService {
   }
 
   static async sendEmailOtp(email, otp) {
-    if (env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET && env.GOOGLE_REFRESH_TOKEN) {
+    if (env.BREVO_API_KEY) {
       try {
-        // 1. Get a fresh Access Token using the Refresh Token
-        const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: new URLSearchParams({
-            client_id: env.GOOGLE_CLIENT_ID,
-            client_secret: env.GOOGLE_CLIENT_SECRET,
-            refresh_token: env.GOOGLE_REFRESH_TOKEN,
-            grant_type: 'refresh_token',
-          }),
-        });
-
-        if (!tokenResponse.ok) {
-          const errData = await tokenResponse.json();
-          logger.error(`Google Token Error: ${JSON.stringify(errData)}`);
-          throw new Error('Failed to refresh Google Access Token');
-        }
-
-        const tokenData = await tokenResponse.json();
-        const accessToken = tokenData.access_token;
-
-        // 2. Construct the raw email MIME string
-        const emailContent = [
-          'Content-Type: text/html; charset="UTF-8"',
-          'MIME-Version: 1.0',
-          `To: ${email}`,
-          'From: "CipherChat Security" <cipherchat09@gmail.com>',
-          'Subject: Your CipherChat Verification Code',
-          '',
-          `
-            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; text-align: center; border: 1px solid #e2e8f0; border-radius: 12px;">
-              <h2 style="color: #4f46e5;">CipherChat</h2>
-              <p style="font-size: 16px; color: #475569;">Hello,</p>
-              <p style="font-size: 16px; color: #475569;">Your verification code is:</p>
-              <div style="font-size: 32px; font-weight: bold; letter-spacing: 4px; color: #1e293b; padding: 20px; background-color: #f1f5f9; border-radius: 8px; margin: 20px 0;">
-                ${otp}
-              </div>
-              <p style="font-size: 14px; color: #64748b;">This code will expire in ${env.OTP_EXPIRY_MINUTES} minutes.</p>
-              <p style="font-size: 12px; color: #94a3b8; margin-top: 40px;">If you didn't request this code, please ignore this email.</p>
-            </div>
-          `
-        ].join('\\r\\n');
-
-        // 3. Base64url encode the string
-        const encodedEmail = Buffer.from(emailContent)
-          .toString('base64')
-          .replace(/\\+/g, '-')
-          .replace(/\\//g, '_')
-          .replace(/=+$/, '');
-
-        // 4. Send the email via Gmail API
-        const sendResponse = await fetch('https://gmail.googleapis.com/upload/gmail/v1/users/me/messages/send', {
+        const response = await fetch('https://api.brevo.com/v3/smtp/email', {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${accessToken}`,
-            'Content-Type': 'application/json',
+            'accept': 'application/json',
+            'api-key': env.BREVO_API_KEY,
+            'content-type': 'application/json'
           },
-          body: JSON.stringify({ raw: encodedEmail }),
+          body: JSON.stringify({
+            sender: {
+              name: 'CipherChat Security',
+              email: env.SMTP_USER || 'noreply@cipherchat.com'
+            },
+            to: [
+              {
+                email: email
+              }
+            ],
+            subject: 'Your CipherChat Verification Code',
+            htmlContent: `
+              <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; text-align: center; border: 1px solid #e2e8f0; border-radius: 12px;">
+                <h2 style="color: #4f46e5;">CipherChat</h2>
+                <p style="font-size: 16px; color: #475569;">Hello,</p>
+                <p style="font-size: 16px; color: #475569;">Your verification code is:</p>
+                <div style="font-size: 32px; font-weight: bold; letter-spacing: 4px; color: #1e293b; padding: 20px; background-color: #f1f5f9; border-radius: 8px; margin: 20px 0;">
+                  ${otp}
+                </div>
+                <p style="font-size: 14px; color: #64748b;">This code will expire in ${env.OTP_EXPIRY_MINUTES} minutes.</p>
+                <p style="font-size: 12px; color: #94a3b8; margin-top: 40px;">If you didn't request this code, please ignore this email.</p>
+              </div>
+            `
+          })
         });
 
-        if (!sendResponse.ok) {
-          const errData = await sendResponse.json();
-          logger.error(`Gmail API Send Error: ${JSON.stringify(errData)}`);
-          throw new Error('Gmail API request failed');
+        if (!response.ok) {
+          const errData = await response.json();
+          logger.error(`Brevo API Error: ${JSON.stringify(errData)}`);
+          throw new Error('Brevo API request failed');
         }
 
-        logger.info(`OTP email sent successfully to ${email} via Gmail API`);
+        logger.info(`OTP email sent successfully to ${email} via Brevo HTTP API`);
         return true;
       } catch (error) {
-        logger.error(`Failed to send OTP email via Gmail API to ${email}: ${error.message}`);
+        logger.error(`Failed to send OTP email via Brevo to ${email}: ${error.message}`);
         throw new Error('Failed to send verification email. Please try again.');
       }
     }
 
-    // Fallback to Nodemailer if Google Credentials are not provided (works locally but not on Render Free Tier)
+    // Fallback to Nodemailer if Brevo API Key is not provided (works locally but not on Render Free Tier)
     if (!env.SMTP_USER || !env.SMTP_PASS) {
       logger.warn(`[MOCK EMAIL] SMTP credentials missing. OTP ${otp} for ${email}`);
       return true;
