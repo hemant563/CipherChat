@@ -1,0 +1,9 @@
+{
+  "outputDirectory": "dist/Chatsphere/browser",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
