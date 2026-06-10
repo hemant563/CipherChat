@@ -104,7 +104,7 @@
   <span *ngIf="activeChat()!.isPremium || activeChat()!.isAdmin" class="material-symbols-outlined text-[18px] ml-1" [ngClass]="(activeChat()!.isAdmin || activeChat()!.premiumPlan === 'yearly') ? 'text-amber-500' : 'text-blue-500'" title="Verified Account">verified</span>
 </h2>
 </div>
-<div class="flex items-center gap-1 text-[11px] text-success-green font-medium">
+<div class="flex items-center gap-1 text-[11px] text-success-green font-medium whitespace-nowrap">
 <span class="material-symbols-outlined text-[12px]">lock</span>
                                 End-to-End Encrypted
                             </div>
@@ -219,7 +219,7 @@
 
 </div>
 <!-- CHAT INPUT AREA -->
-<div class="p-6 bg-surface-white border-t border-border-subtle shrink-0">
+<div class="p-4 md:p-6 pb-[88px] md:pb-6 bg-surface-white border-t border-border-subtle shrink-0">
   <ng-container *ngIf="canSendMessage(); else readonlyMode">
     <!-- Smart Replies -->
     <div *ngIf="smartReplies().length > 0 || aiLoading()" class="max-w-max-width mx-auto flex gap-2 overflow-x-auto custom-scrollbar animate-fadeIn mb-3">
