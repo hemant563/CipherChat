@@ -71,13 +71,6 @@ export class ChatDashboard implements OnInit, OnDestroy {
   smartReplies = signal<string[]>([]);
   aiLoading = signal(false);
 
-  // --- Voice Note State ---
-  isRecording = signal(false);
-  recordingDuration = signal(0);
-  private mediaRecorder: MediaRecorder | null = null;
-  private audioChunks: Blob[] = [];
-  private recordingInterval: any = null;
-
   typingUsers = signal<{ [chatId: string]: { userId: string, username: string }[] }>({});
   private typingTimeouts: { [chatId: string]: any } = {};
   private emitTypingTimeout: any = null;
@@ -408,13 +401,6 @@ export class ChatDashboard implements OnInit, OnDestroy {
 
   sendMessage() {
     this.showEmojiPicker.set(false);
-    
-    // Check if sending a voice note
-    if (this.isRecording()) {
-      this.sendVoiceNote();
-      return;
-    }
-
     const text = this.newMessageText().trim();
     const chatId = this.activeChatId();
     if (!text || !chatId) return;
@@ -543,7 +529,7 @@ export class ChatDashboard implements OnInit, OnDestroy {
     }
   }
 
-  // --- Rendering Markdown Media ---
+  // --- Rendering Markdown Image Hack ---
 
   isImageMessage(content: string): boolean {
     return content.startsWith('![Image](') && content.endsWith(')');
@@ -554,113 +540,17 @@ export class ChatDashboard implements OnInit, OnDestroy {
     return match ? match[1] : '';
   }
 
-  isAudioMessage(content: string): boolean {
-    return content.startsWith('![Audio](') && content.endsWith(')');
-  }
-
-  extractAudioUrl(content: string): string {
-    const match = content.match(/!\[Audio\]\((.*?)\)/);
-    return match ? match[1] : '';
-  }
-
   getMessagePreview(content: string): string {
     if (!content) return 'No messages yet';
     if (content.startsWith('![Image](')) return '📷 Photo';
     if (content.startsWith('![Video](')) return '🎥 Video';
-    if (content.startsWith('![Audio](')) return '🎵 Voice Note';
+    if (content.startsWith('![Audio](')) return '🎵 Audio';
     if (content.startsWith('![File](')) return '📄 File';
     return content;
   }
 
-  // --- Voice Recording ---
-
-  async startRecording() {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      this.mediaRecorder = new MediaRecorder(stream);
-      this.audioChunks = [];
-
-      this.mediaRecorder.ondataavailable = (event) => {
-        if (event.data.size > 0) {
-          this.audioChunks.push(event.data);
-        }
-      };
-
-      this.mediaRecorder.onstop = () => {
-        stream.getTracks().forEach(track => track.stop());
-      };
-
-      this.mediaRecorder.start();
-      this.isRecording.set(true);
-      this.recordingDuration.set(0);
-      
-      this.recordingInterval = setInterval(() => {
-        this.recordingDuration.update(d => d + 1);
-      }, 1000);
-
-    } catch (err) {
-      console.error('Error accessing microphone', err);
-      this.toastService.error('Microphone permission denied or not available.');
-    }
-  }
-
-  cancelRecording() {
-    if (this.mediaRecorder && this.isRecording()) {
-      this.mediaRecorder.stop();
-      this.isRecording.set(false);
-      clearInterval(this.recordingInterval);
-      this.recordingDuration.set(0);
-      this.audioChunks = [];
-    }
-  }
-
-  sendVoiceNote() {
-    if (!this.mediaRecorder || !this.isRecording() || !this.activeChatId()) return;
-
-    this.mediaRecorder.onstop = () => {
-      // Stop tracks
-      this.mediaRecorder!.stream.getTracks().forEach(track => track.stop());
-      
-      const audioBlob = new Blob(this.audioChunks, { type: 'audio/webm' });
-      const audioFile = new File([audioBlob], `voice-note-${Date.now()}.webm`, { type: 'audio/webm' });
-
-      // Show uploading state by not resetting UI instantly if desired, but we will for snappiness
-      this.isRecording.set(false);
-      clearInterval(this.recordingInterval);
-      this.recordingDuration.set(0);
-
-      this.mediaService.uploadMedia(audioFile).subscribe({
-        next: (res) => {
-          const url = res.data.media.url;
-          this.socketService.sendMessage({
-            type: 'text',
-            content: `![Audio](${url})`,
-            conversationId: this.activeChatId()!,
-            groupId: this.activeChat()?.isGroupChat ? this.activeChatId()! : null,
-            recipientId: this.activeChat()?.isGroupChat ? null : this.activeChat()?.participants.find((p: any) => p && p._id !== this.myUser()?._id)?._id,
-            iv: 'dummy_iv_for_now',
-            encryptedKeys: []
-          }, (resMsg) => {
-            if (resMsg && resMsg.success && resMsg.message) {
-              this.handleIncomingMessage(resMsg.message);
-              this.scrollToBottom();
-            }
-          });
-        },
-        error: (err) => {
-          console.error('Failed to upload voice note', err);
-          this.toastService.error('Failed to send voice note.');
-        }
-      });
-    };
-
-    this.mediaRecorder.stop();
-  }
-
-  formatDuration(seconds: number): string {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  voiceNoteComingSoon() {
+    this.toastService.info('Voice notes are coming in a future update! 🚀');
   }
 
   handleIncomingMessage(msg: any) {

@@ -71,7 +71,6 @@ export const ALLOWED_MIME_TYPES = Object.freeze([
   'audio/mpeg',
   'audio/wav',
   'audio/ogg',
-  'audio/webm',
   'application/pdf',
   'application/msword',
   'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
