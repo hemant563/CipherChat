@@ -36,7 +36,7 @@
 </div>
 <div class="space-y-2 overflow-y-auto custom-scrollbar flex-grow">
 <!-- Chat Item Dynamic -->
-<div *ngFor="let chat of filteredChats()" 
+<div *ngFor="let chat of filteredChats(); trackBy: trackByChat" 
      (click)="selectChat(chat._id || chat.id)"
      [ngClass]="[
        (chat._id || chat.id) === activeChatId() ? 'bg-white border-primary-fixed shadow-md shadow-primary/5' : 'hover:bg-white/60 border-transparent hover:shadow-sm',
@@ -180,7 +180,7 @@
 </div>
 </div>
 
-<ng-container *ngFor="let msg of activeChat()?.messages">
+<ng-container *ngFor="let msg of activeChat()?.messages; trackBy: trackByMsg">
 <!-- Outgoing Message -->
 <div *ngIf="msg.sender?._id === myUser()?._id" class="flex flex-col items-end gap-1 ml-auto max-w-[80%] group">
 <div class="bg-primary text-white p-4 rounded-t-2xl rounded-bl-2xl text-body-md message-shadow">
