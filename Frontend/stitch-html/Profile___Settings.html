@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ChatSphere | Profile &amp; Settings</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Geist:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+                  "primary-fixed": "#dce1ff",
+                  "on-surface-variant": "#444651",
+                  "secondary-fixed": "#e1e0ff",
+                  "surface-container-low": "#f2f4f6",
+                  "tertiary": "#4b1c00",
+                  "surface-container-lowest": "#ffffff",
+                  "on-tertiary-fixed": "#341100",
+                  "surface-container-high": "#e6e8ea",
+                  "inverse-on-surface": "#eff1f3",
+                  "on-secondary-fixed-variant": "#2f2ebe",
+                  "on-error": "#ffffff",
+                  "surface-dim": "#d8dadc",
+                  "primary": "#00236f",
+                  "outline-variant": "#c5c5d3",
+                  "tertiary-container": "#6e2c00",
+                  "inverse-surface": "#2d3133",
+                  "success-green": "#10B981",
+                  "on-secondary-fixed": "#07006c",
+                  "on-surface": "#191c1e",
+                  "on-primary-container": "#90a8ff",
+                  "primary-fixed-dim": "#b6c4ff",
+                  "on-secondary": "#ffffff",
+                  "text-primary": "#0F172A",
+                  "surface-white": "#FFFFFF",
+                  "primary-container": "#1e3a8a",
+                  "inverse-primary": "#b6c4ff",
+                  "surface-container": "#eceef0",
+                  "on-primary-fixed": "#00164e",
+                  "on-error-container": "#93000a",
+                  "tertiary-fixed-dim": "#ffb691",
+                  "surface-tint": "#4059aa",
+                  "outline": "#757682",
+                  "background": "#f7f9fb",
+                  "on-primary-fixed-variant": "#264191",
+                  "text-secondary": "#64748B",
+                  "error-container": "#ffdad6",
+                  "on-tertiary": "#ffffff",
+                  "error": "#ba1a1a",
+                  "on-secondary-container": "#fffbff",
+                  "surface": "#f7f9fb",
+                  "surface-variant": "#e0e3e5",
+                  "security-blue": "#1E293B",
+                  "secondary-fixed-dim": "#c0c1ff",
+                  "on-background": "#191c1e",
+                  "on-primary": "#ffffff",
+                  "surface-container-highest": "#e0e3e5",
+                  "surface-bright": "#f7f9fb",
+                  "tertiary-fixed": "#ffdbcb",
+                  "on-tertiary-container": "#f39461",
+                  "on-tertiary-fixed-variant": "#773205",
+                  "secondary-container": "#6063ee",
+                  "border-subtle": "#E2E8F0",
+                  "secondary": "#4648d4"
+          },
+          "borderRadius": {
+                  "DEFAULT": "0.25rem",
+                  "lg": "0.5rem",
+                  "xl": "0.75rem",
+                  "full": "9999px"
+          },
+          "spacing": {
+                  "max-width": "1280px",
+                  "gutter": "16px",
+                  "margin-mobile": "16px",
+                  "unit": "4px",
+                  "margin-desktop": "32px"
+          },
+          "fontFamily": {
+                  "body-md": ["Inter"],
+                  "label-md": ["Geist"],
+                  "label-sm": ["Geist"],
+                  "body-lg": ["Inter"],
+                  "headline-lg-mobile": ["Geist"],
+                  "display-lg": ["Geist"],
+                  "headline-lg": ["Geist"],
+                  "title-md": ["Geist"]
+          },
+          "fontSize": {
+                  "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                  "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                  "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.03em", "fontWeight": "500"}],
+                  "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                  "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                  "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                  "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                  "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #e2e8f0;
+      border-radius: 10px;
+    }
+    .toggle-checkbox:checked {
+      right: 0;
+      border-color: #4648d4;
+    }
+    .toggle-checkbox:checked + .toggle-label {
+      background-color: #4648d4;
+    }
+  </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md selection:bg-primary-fixed selection:text-on-primary-fixed">
+<div class="flex h-screen overflow-hidden">
+<!-- SideNavBar (Authority: JSON) -->
+<aside class="hidden md:flex flex-col h-full py-6 bg-surface-white dark:bg-inverse-surface w-[320px] left-0 top-0 border-r border-border-subtle dark:border-outline-variant">
+<div class="px-6 mb-8">
+<h1 class="font-headline-lg text-headline-lg font-bold text-primary dark:text-primary-fixed-dim">ChatSphere</h1>
+<p class="font-label-md text-label-md text-on-surface-variant">Encrypted</p>
+</div>
+<nav class="flex-1 flex flex-col">
+<a class="flex items-center gap-4 text-on-surface-variant dark:text-outline-variant px-6 py-4 hover:bg-surface-container dark:hover:bg-on-surface-variant transition-colors group" href="#">
+<span class="material-symbols-outlined">chat</span>
+<span class="font-label-md text-label-md">Chats</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant dark:text-outline-variant px-6 py-4 hover:bg-surface-container dark:hover:bg-on-surface-variant transition-colors group" href="#">
+<span class="material-symbols-outlined">groups</span>
+<span class="font-label-md text-label-md">Communities</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant dark:text-outline-variant px-6 py-4 hover:bg-surface-container dark:hover:bg-on-surface-variant transition-colors group" href="#">
+<span class="material-symbols-outlined">call</span>
+<span class="font-label-md text-label-md">Calls</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant dark:text-outline-variant px-6 py-4 hover:bg-surface-container dark:hover:bg-on-surface-variant transition-colors group" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</nav>
+<div class="mt-auto pt-6 border-t border-border-subtle dark:border-outline-variant">
+<a class="flex items-center gap-4 text-primary dark:text-inverse-primary font-bold border-l-4 border-primary dark:border-inverse-primary bg-primary-fixed dark:bg-primary-container px-6 py-4 transition-colors" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">account_circle</span>
+<span class="font-label-md text-label-md">Profile</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 flex flex-col h-full bg-background overflow-y-auto custom-scrollbar">
+<!-- TopAppBar (Authority: JSON) -->
+<header class="flex justify-between items-center w-full px-6 md:px-margin-desktop h-16 bg-surface-white dark:bg-inverse-surface border-b border-border-subtle dark:border-outline-variant sticky top-0 z-10">
+<div class="flex items-center gap-3">
+<span class="md:hidden material-symbols-outlined text-primary">menu</span>
+<h2 class="font-title-md text-title-md font-semibold text-text-primary dark:text-inverse-on-surface">Active Conversation</h2>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary cursor-pointer transition-all duration-200">lock</span>
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary cursor-pointer transition-all duration-200">videocam</span>
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary cursor-pointer transition-all duration-200">call</span>
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary cursor-pointer transition-all duration-200">more_vert</span>
+</div>
+</header>
+<!-- Dashboard Content -->
+<div class="max-w-4xl mx-auto w-full px-6 py-10 space-y-10">
+<!-- Profile Header Section -->
+<section class="bg-surface-white rounded-xl border border-border-subtle p-8 flex flex-col md:flex-row items-center gap-8 shadow-[0_4px_12px_rgba(30,41,59,0.04)] relative overflow-hidden">
+<div class="absolute top-0 right-0 p-4">
+<div class="flex items-center gap-2 px-3 py-1 bg-green-50 rounded-full border border-success-green/20">
+<span class="material-symbols-outlined text-[16px] text-success-green" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+<span class="text-success-green font-label-sm text-label-sm">Security Status: High</span>
+</div>
+</div>
+<div class="relative group">
+<div class="w-32 h-32 rounded-full overflow-hidden border-4 border-primary-fixed shadow-lg">
+<img alt="User Profile Avatar" class="w-full h-full object-cover" data-alt="A high-quality professional portrait of a young man with a confident and friendly expression, set against a softly blurred minimalist architectural background. The lighting is bright and clean, reflecting a modern light-mode aesthetic. The composition is focused and clear, emphasizing trust and security in a high-tech personal profile context, with subtle deep indigo accents in the surroundings." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCojT_ulJzDq9qcrPYnOHcPFN5NjOAcB91KMCwh4OUn3Qt-KZbyNt6pjiUQAbaUcAGYV_hSOHzS6XpQJqU4ADaalGoZ2lduxfnYhMHLYqI22jfNQ-YKYrdRZXvZjYpnGzxKcm1fvqWQO4gQZkYtC-yzvfoLe7gn_uvj09Yu1eKDzWxqXD9VK-ey9H0cSJH7OQaOFk5c23jgbKxKY-WJOVxhi0gVgzDyHwMrptZVOKoUL7UKbDV1QV1QdxHMkeHk9whNUVH1Gj_euSbD"/>
+</div>
+<button class="absolute bottom-1 right-1 bg-primary text-white p-2 rounded-full shadow-md hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+</div>
+<div class="text-center md:text-left">
+<h3 class="font-headline-lg text-headline-lg text-text-primary">Alex Sterling</h3>
+<p class="font-body-md text-text-secondary">@user123</p>
+<div class="mt-4 flex flex-wrap justify-center md:justify-start gap-2">
+<span class="bg-primary-fixed text-on-primary-fixed px-3 py-1 rounded-lg font-label-sm text-label-sm">Premium Member</span>
+<span class="bg-secondary-fixed text-on-secondary-fixed-variant px-3 py-1 rounded-lg font-label-sm text-label-sm">Beta Tester</span>
+</div>
+</div>
+</section>
+<!-- Settings Grid (Asymmetric/Bento-ish) -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Privacy Section -->
+<div class="bg-surface-white rounded-xl border border-border-subtle p-6 flex flex-col gap-6 shadow-[0_4px_12px_rgba(30,41,59,0.04)]">
+<div class="flex items-center gap-3 border-b border-border-subtle pb-4">
+<span class="material-symbols-outlined text-primary">visibility_off</span>
+<h4 class="font-title-md text-title-md">Privacy</h4>
+</div>
+<div class="space-y-4">
+<div class="flex items-center justify-between p-3 rounded-lg hover:bg-surface-container-low transition-colors group cursor-pointer">
+<div>
+<p class="font-label-md text-label-md text-text-primary">Hide Phone Number</p>
+<p class="text-label-sm font-label-sm text-text-secondary">Only contacts can see your number</p>
+</div>
+<div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+<input checked="" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer outline-none" id="toggle_phone" name="toggle" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-outline-variant cursor-pointer" for="toggle_phone"></label>
+</div>
+</div>
+<div class="flex items-center justify-between p-3 rounded-lg hover:bg-surface-container-low transition-colors group cursor-pointer">
+<p class="font-label-md text-label-md text-text-primary">Read Receipts</p>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</div>
+<div class="flex items-center justify-between p-3 rounded-lg hover:bg-surface-container-low transition-colors group cursor-pointer">
+<p class="font-label-md text-label-md text-text-primary">Who can add me</p>
+<span class="text-label-sm font-label-sm text-primary font-bold">Everyone</span>
+</div>
+</div>
+</div>
+<!-- Security Section -->
+<div class="bg-surface-white rounded-xl border border-border-subtle p-6 flex flex-col gap-6 shadow-[0_4px_12px_rgba(30,41,59,0.04)]">
+<div class="flex items-center gap-3 border-b border-border-subtle pb-4">
+<span class="material-symbols-outlined text-primary">security</span>
+<h4 class="font-title-md text-title-md">Security</h4>
+</div>
+<div class="space-y-4">
+<div class="flex items-center justify-between p-3 bg-primary-fixed/30 rounded-xl border border-primary-fixed">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">key</span>
+<div>
+<p class="font-label-md text-label-md text-text-primary">Two-Step Verification</p>
+<p class="text-label-sm font-label-sm text-on-primary-fixed-variant">Enabled via OTP</p>
+</div>
+</div>
+<button class="bg-primary text-white px-3 py-1 rounded-lg text-label-sm font-label-sm hover:opacity-90 transition-opacity">Manage</button>
+</div>
+<div class="flex items-center justify-between p-3 rounded-lg hover:bg-surface-container-low transition-colors cursor-pointer">
+<p class="font-label-md text-label-md text-text-primary">Active Sessions</p>
+<span class="text-label-sm font-label-sm text-text-secondary">3 devices</span>
+</div>
+<div class="flex items-center justify-between p-3 rounded-lg hover:bg-surface-container-low transition-colors cursor-pointer">
+<p class="font-label-md text-label-md text-text-primary">End-to-end Keys</p>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</div>
+</div>
+</div>
+<!-- AI Assistant Section -->
+<div class="bg-surface-white rounded-xl border border-border-subtle p-6 flex flex-col gap-6 shadow-[0_4px_12px_rgba(30,41,59,0.04)]">
+<div class="flex items-center gap-3 border-b border-border-subtle pb-4">
+<span class="material-symbols-outlined text-primary">psychology</span>
+<h4 class="font-title-md text-title-md">AI Assistant</h4>
+</div>
+<div class="flex items-center gap-4 p-4 bg-surface-container rounded-xl">
+<div class="w-12 h-12 rounded-full bg-gradient-to-tr from-primary to-secondary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-white">auto_awesome</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-text-primary">Smart Replies</p>
+<p class="text-label-sm font-label-sm text-text-secondary">Generative responses for quick chats</p>
+</div>
+<div class="ml-auto">
+<div class="relative inline-block w-10 align-middle select-none transition duration-200 ease-in">
+<input checked="" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer outline-none" id="toggle_ai" name="toggle" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-outline-variant cursor-pointer" for="toggle_ai"></label>
+</div>
+</div>
+</div>
+<button class="w-full py-3 rounded-xl border border-primary text-primary font-label-md text-label-md hover:bg-primary-fixed transition-colors">Configure AI Training Data</button>
+</div>
+<!-- Notifications Section -->
+<div class="bg-surface-white rounded-xl border border-border-subtle p-6 flex flex-col gap-6 shadow-[0_4px_12px_rgba(30,41,59,0.04)]">
+<div class="flex items-center gap-3 border-b border-border-subtle pb-4">
+<span class="material-symbols-outlined text-primary">notifications</span>
+<h4 class="font-title-md text-title-md">Notifications</h4>
+</div>
+<div class="space-y-4">
+<div class="flex items-center justify-between p-3 rounded-lg hover:bg-surface-container-low transition-colors cursor-pointer">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant">chat_bubble</span>
+<p class="font-label-md text-label-md text-text-primary">Message Tones</p>
+</div>
+<span class="text-label-sm font-label-sm text-text-secondary">Default (Pop)</span>
+</div>
+<div class="flex items-center justify-between p-3 rounded-lg hover:bg-surface-container-low transition-colors cursor-pointer">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant">vibration</span>
+<p class="font-label-md text-label-md text-text-primary">Haptic Feedback</p>
+</div>
+<div class="relative inline-block w-10 align-middle select-none">
+<input checked="" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer outline-none" id="toggle_vibrate" name="toggle" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-outline-variant cursor-pointer" for="toggle_vibrate"></label>
+</div>
+</div>
+<div class="flex items-center justify-between p-3 rounded-lg hover:bg-surface-container-low transition-colors cursor-pointer">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant">desktop_windows</span>
+<p class="font-label-md text-label-md text-text-primary">Desktop Alerts</p>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Danger Zone -->
+<div class="mt-12 pt-8 border-t border-border-subtle flex justify-center">
+<button class="flex items-center gap-2 text-error px-6 py-3 rounded-xl hover:bg-error-container/20 transition-colors">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-label-md text-label-md">Logout from ChatSphere</span>
+</button>
+</div>
+</div>
+</main>
+</div>
+<script>
+    // Simple micro-interaction for toggle states
+    document.querySelectorAll('.toggle-checkbox').forEach(toggle => {
+      toggle.addEventListener('change', (e) => {
+        const parent = e.target.closest('div');
+        if(e.target.checked) {
+          console.log(`${e.target.id} enabled`);
+        } else {
+          console.log(`${e.target.id} disabled`);
+        }
+      });
+    });
+
+    // Dark mode toggle simulation (for testing purposes)
+    const toggleDarkMode = () => {
+      document.documentElement.classList.toggle('dark');
+    };
+  </script>
+</body></html>

@@ -1,0 +1,143 @@
+<!-- SideNavBar Anchor Component -->
+
+<!-- Main Content Area -->
+<main class="w-full h-full overflow-y-auto custom-scrollbar">
+<!-- TopAppBar Anchor Component -->
+<header class="sticky top-0 w-full px-margin-desktop py-4 bg-surface-white/80 backdrop-blur-md border-b border-subtle flex justify-between items-center z-40">
+<div class="flex items-center gap-4">
+<span class="font-title-md text-title-md text-primary font-bold">Calls</span>
+<div class="flex items-center gap-2 bg-success-green/10 text-success-green px-3 py-1 rounded-full border border-success-green/20">
+<span class="material-symbols-outlined text-[16px]" data-icon="lock" style="font-variation-settings: 'FILL' 1;">lock</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider font-bold">End-to-End Encrypted</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="h-8 w-[1px] bg-subtle mx-2"></div>
+<div class="flex items-center gap-1">
+<button (click)="toggleRingtone()" class="p-2 text-text-secondary hover:text-primary transition-colors focus:ring-2 ring-primary ring-offset-2 rounded-lg" [title]="isRingtoneMuted() ? 'Unmute Ringtone' : 'Mute Ringtone'">
+<span class="material-symbols-outlined" data-icon="notifications">{{ isRingtoneMuted() ? 'notifications_off' : 'notifications_active' }}</span>
+</button>
+<button (click)="goToSettings()" class="p-2 text-on-surface-variant hover:text-primary transition-colors focus:ring-2 ring-primary ring-offset-2 rounded-lg">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Content Canvas -->
+<section class="p-margin-desktop max-w-5xl mx-auto pb-20">
+<div class="mb-8">
+<h2 class="font-headline-lg text-headline-lg font-bold text-text-primary mb-2">Recent Activity</h2>
+<p class="font-body-md text-body-md text-text-secondary">Track your secure voice and video communication history.</p>
+</div>
+
+<!-- Active Call Simulation Banner -->
+<!-- Removed dummy banner -->
+<!-- Bento Layout for Analytics/Status (Contextual Element) -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-6 mb-8">
+<div class="col-span-1 md:col-span-12 lg:col-span-8 bg-surface-white border border-subtle rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-6">
+<div class="text-center md:text-left">
+<p class="font-label-md text-label-md text-text-secondary mb-1">Total Call Duration (This Week)</p>
+<h3 class="font-display-lg text-display-lg text-primary">{{ totalDuration() }}</h3>
+</div>
+<div class="flex gap-4">
+<div class="text-center">
+<p class="text-primary font-bold text-headline-lg">{{ outgoingCallsCount() }}</p>
+<p class="font-label-sm text-label-sm text-text-secondary">Made</p>
+</div>
+<div class="text-center">
+<p class="text-success-green font-bold text-headline-lg">{{ answeredCallsCount() }}</p>
+<p class="font-label-sm text-label-sm text-text-secondary">Answered</p>
+</div>
+<div class="text-center">
+<p class="text-error font-bold text-headline-lg">{{ missedCallsCount() }}</p>
+<p class="font-label-sm text-label-sm text-text-secondary">Missed</p>
+</div>
+</div>
+</div>
+<div class="col-span-1 md:col-span-12 lg:col-span-4 bg-security-blue text-white rounded-2xl p-6 relative overflow-hidden">
+<div class="relative z-10">
+<p class="font-label-md text-label-md text-primary-fixed-dim mb-4">Security Level</p>
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-success-green" data-icon="verified_user">verified_user</span>
+<p class="font-title-md text-title-md font-bold">Maximum</p>
+</div>
+<p class="font-label-sm text-label-sm opacity-80">Quantum-resistant encryption active for all calls.</p>
+</div>
+<!-- Abstract Background Graphic -->
+<div class="absolute right-[-20px] bottom-[-20px] opacity-10">
+<span class="material-symbols-outlined text-[120px]" data-icon="security">security</span>
+</div>
+</div>
+</div>
+<!-- Call Logs List -->
+<div class="bg-surface-white border border-subtle rounded-2xl overflow-hidden shadow-sm">
+<div class="px-6 py-4 border-b border-subtle bg-surface-container-lowest flex justify-between items-center">
+<span class="font-label-md text-label-md font-bold text-text-primary">Call Log</span>
+<div class="flex gap-4">
+<button (click)="setFilter('All')" class="font-label-sm text-label-sm font-bold" [ngClass]="callFilter() === 'All' ? 'text-primary' : 'text-text-secondary hover:text-primary'">All</button>
+<button (click)="setFilter('Missed')" class="font-label-sm text-label-sm font-bold" [ngClass]="callFilter() === 'Missed' ? 'text-primary' : 'text-text-secondary hover:text-primary'">Missed</button>
+</div>
+</div>
+<div class="divide-y divide-subtle">
+<!-- Call Item Dynamic -->
+<ng-container *ngFor="let call of callHistory()">
+  <div *ngIf="callFilter() === 'All' || (callFilter() === 'Missed' && call.status === 'missed')" class="p-6 flex items-center justify-between hover:bg-surface-container-low transition-colors group">
+    <div class="flex items-center gap-4">
+      <div class="relative">
+        <ng-container *ngIf="call.caller._id === myUserId()">
+          <img *ngIf="call.recipient?.avatar?.includes('http')" [alt]="call.recipient?.displayName" class="w-12 h-12 rounded-full object-cover" [src]="call.recipient?.avatar"/>
+          <div *ngIf="!call.recipient?.avatar?.includes('http')" class="w-12 h-12 rounded-full bg-primary-fixed text-on-primary-fixed flex items-center justify-center font-bold text-lg">
+            {{ call.recipient?.displayName ? call.recipient!.displayName.charAt(0).toUpperCase() : (call.recipient?.username ? call.recipient!.username.charAt(0).toUpperCase() : 'U') }}
+          </div>
+        </ng-container>
+        <ng-container *ngIf="call.caller._id !== myUserId()">
+          <img *ngIf="call.caller?.avatar?.includes('http')" [alt]="call.caller?.displayName" class="w-12 h-12 rounded-full object-cover" [src]="call.caller?.avatar"/>
+          <div *ngIf="!call.caller?.avatar?.includes('http')" class="w-12 h-12 rounded-full bg-primary-fixed text-on-primary-fixed flex items-center justify-center font-bold text-lg">
+            {{ call.caller?.displayName ? call.caller!.displayName.charAt(0).toUpperCase() : (call.caller?.username ? call.caller!.username.charAt(0).toUpperCase() : 'U') }}
+          </div>
+        </ng-container>
+      </div>
+      <div>
+        <h4 class="font-label-md text-label-md font-bold" [ngClass]="{'text-error': call.status === 'missed', 'text-text-primary': call.status !== 'missed'}">
+          {{ call.caller._id === myUserId() ? (call.recipient?.displayName || call.recipient?.username) : (call.caller?.displayName || call.caller?.username) }}
+        </h4>
+        <div class="flex items-center gap-2 text-text-secondary">
+          <span class="material-symbols-outlined text-[16px]">
+            {{ call.caller._id === myUserId() ? 'call_made' : (call.status === 'missed' ? 'call_missed' : 'call_received') }}
+          </span>
+          <p class="font-label-sm text-label-sm">{{ call.status | titlecase }} • {{ call.createdAt | date:'medium' }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="flex items-center gap-6">
+      <div class="text-right">
+        <p class="font-label-sm text-label-sm text-text-secondary">{{ call.type | titlecase }} Call</p>
+        <p *ngIf="call.duration" class="font-label-md text-label-md font-bold text-text-primary">{{ call.duration }}s</p>
+        <p *ngIf="!call.duration" class="font-label-md text-label-md font-bold" [ngClass]="{'text-error': call.status === 'missed', 'text-text-primary': call.status !== 'missed'}">--:--</p>
+      </div>
+      <button (click)="callBack(call, call.type === 'video' ? 'video' : 'audio')" class="p-3 rounded-full text-primary hover:bg-primary/10 transition-all opacity-0 group-hover:opacity-100">
+        <span class="material-symbols-outlined">{{ call.type === 'video' ? 'videocam' : 'call' }}</span>
+      </button>
+    </div>
+  </div>
+</ng-container>
+<div *ngIf="callHistory().length === 0" class="p-8 text-center text-on-surface-variant">
+  <p>No call history available.</p>
+</div>
+</div>
+<div class="p-6 bg-surface-container-low/30 text-center">
+<button (click)="toggleOlderHistory()" class="text-primary font-bold font-label-md text-label-md hover:underline">{{ showOlderHistory() ? 'Hide Older History' : 'View Older History' }}</button>
+</div>
+<!-- Older History Placeholder -->
+<div *ngIf="showOlderHistory()" class="p-6 text-center text-text-secondary font-body-md bg-surface-container-lowest border-t border-subtle">
+<span class="material-symbols-outlined text-[48px] text-outline mb-2 block">history</span>
+No older call history available. Your encrypted call records are stored for 30 days.
+</div>
+</div>
+</section>
+</main>
+<!-- Global Privacy Badge (Fixed Bottom Right) -->
+<div class="fixed bottom-6 right-6 flex items-center gap-2 bg-surface-white border border-subtle shadow-xl px-4 py-2 rounded-full z-50">
+<span class="material-symbols-outlined text-success-green" data-icon="encrypted" style="font-variation-settings: 'FILL' 1;">encrypted</span>
+<span class="font-label-sm text-label-sm text-text-secondary">Connection Secure</span>
+</div>

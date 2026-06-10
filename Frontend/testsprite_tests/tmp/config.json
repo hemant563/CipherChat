@@ -1,0 +1,17 @@
+{
+  "status": "commited",
+  "type": "frontend",
+  "scope": "codebase",
+  "localEndpoint": "http://localhost:4200",
+  "executionArgs": {
+    "projectName": "Chatsphere",
+    "projectPath": "e:/project fsd/ChatSphere/Chatsphere",
+    "testIds": [],
+    "additionalInstruction": "",
+    "serverMode": "development",
+    "envs": {
+      "API_KEY": "sk-user-QpwBgRhmrYkrAlH3p_acOHx6dKz4NtVFtaSFSWfjjtLhKqyaD4uYMip31kXmQ82z35pENdKLQROTxJzakcRnaQQiUNU5sGzVmGLMaE-Uo_NBqTmaRHa_KEeq8hsC-q_wkbI"
+    }
+  },
+  "serverPort": 60560
+}

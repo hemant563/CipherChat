@@ -1,0 +1,963 @@
+[
+  {
+    "id": "TC001",
+    "title": "Sign up and enter the app as a new user",
+    "description": "This verifies that a visitor can register with phone OTP and reach the authenticated app with the chosen role.",
+    "category": "Authentication and onboarding",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /landing"
+      },
+      {
+        "type": "action",
+        "description": "Enter a phone number"
+      },
+      {
+        "type": "action",
+        "description": "Request an OTP"
+      },
+      {
+        "type": "action",
+        "description": "Enter the OTP code"
+      },
+      {
+        "type": "action",
+        "description": "Provide a username"
+      },
+      {
+        "type": "action",
+        "description": "Provide a password"
+      },
+      {
+        "type": "action",
+        "description": "Complete registration"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user reaches the authenticated app"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user is signed in with the selected role"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC002",
+    "title": "Sign in and reach the app from the landing page",
+    "description": "This verifies that an existing user can sign in with phone OTP and access the authenticated app.",
+    "category": "Authentication and onboarding",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /landing"
+      },
+      {
+        "type": "action",
+        "description": "Enter a phone number"
+      },
+      {
+        "type": "action",
+        "description": "Request an OTP"
+      },
+      {
+        "type": "action",
+        "description": "Enter the OTP code"
+      },
+      {
+        "type": "action",
+        "description": "Sign in"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user reaches the authenticated app"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user is signed in"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC003",
+    "title": "Review platform metrics in the admin dashboard",
+    "description": "This test verifies that an admin can open the dashboard and review the core platform metrics for users, listings, bookings, and revenue.",
+    "category": "Admin dashboard",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_USER}} into the phone number field"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_PASSWORD}} into the verification field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Open the admin dashboard"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify user, listing, booking, and revenue metrics are displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC004",
+    "title": "Complete a rent or deposit payment",
+    "description": "A tenant can submit a rent or deposit payment and see a confirmation with an invoice.",
+    "category": "Payments",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /landing"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the phone number field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login or sign-in form"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the OTP field with a valid code"
+      },
+      {
+        "type": "action",
+        "description": "Submit the verification form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to the payment experience"
+      },
+      {
+        "type": "action",
+        "description": "Choose a rent or deposit payment"
+      },
+      {
+        "type": "action",
+        "description": "Enter payment details"
+      },
+      {
+        "type": "action",
+        "description": "Submit the payment"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a payment confirmation is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify an invoice is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC005",
+    "title": "Submit a booking request",
+    "description": "A tenant can select available dates for a property and submit a booking request that is marked pending.",
+    "category": "Booking management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /landing"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the phone number field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login or sign-in form"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the OTP field with a valid code"
+      },
+      {
+        "type": "action",
+        "description": "Submit the verification form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to the booking experience"
+      },
+      {
+        "type": "action",
+        "description": "Select available dates"
+      },
+      {
+        "type": "action",
+        "description": "Submit the booking request"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the booking is shown as pending"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC006",
+    "title": "Create a new property listing",
+    "description": "A landlord can create and save a complete property listing with all required details and images.",
+    "category": "Property listings management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /landing"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the phone number field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login or sign-in form"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the OTP field with a valid code"
+      },
+      {
+        "type": "action",
+        "description": "Submit the verification form"
+      },
+      {
+        "type": "action",
+        "description": "Start a new property listing"
+      },
+      {
+        "type": "action",
+        "description": "Enter the property title, description, address, city, price, property type, bedrooms, bathrooms, and amenities"
+      },
+      {
+        "type": "action",
+        "description": "Add property images"
+      },
+      {
+        "type": "action",
+        "description": "Save the listing"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the new listing is created and available in the property management view"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC007",
+    "title": "Select a conversation and send a message",
+    "description": "This verifies that an authenticated user can open a chat, send a message, and see it added to the thread.",
+    "category": "Messaging dashboard",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /chat"
+      },
+      {
+        "type": "action",
+        "description": "Select a conversation"
+      },
+      {
+        "type": "action",
+        "description": "Type a message into the message field"
+      },
+      {
+        "type": "action",
+        "description": "Send the message"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the new message appears in the chat thread"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the conversation remains open"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC008",
+    "title": "Approve or reject a pending booking",
+    "description": "A landlord can review a pending booking request and update its status by approving or rejecting it.",
+    "category": "Booking management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /landing"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the phone number field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login or sign-in form"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the OTP field with a valid code"
+      },
+      {
+        "type": "action",
+        "description": "Submit the verification form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to the booking management experience"
+      },
+      {
+        "type": "action",
+        "description": "Review a pending booking request"
+      },
+      {
+        "type": "action",
+        "description": "Approve or reject the request"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the booking status is updated"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC009",
+    "title": "Open management sections from the admin dashboard",
+    "description": "This test verifies that an admin can access the main management sections for users, listings, bookings, and reports from the dashboard.",
+    "category": "Admin dashboard",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_USER}} into the phone number field"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_PASSWORD}} into the verification field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Open the admin dashboard"
+      },
+      {
+        "type": "action",
+        "description": "Open the users management section"
+      },
+      {
+        "type": "action",
+        "description": "Open the listings management section"
+      },
+      {
+        "type": "action",
+        "description": "Open the bookings management section"
+      },
+      {
+        "type": "action",
+        "description": "Open the reports management section"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the admin management sections are displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC010",
+    "title": "Search properties by location and review matching results",
+    "description": "This verifies that a tenant can search by location and see matching property listings.",
+    "category": "Property discovery and search",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the property search experience"
+      },
+      {
+        "type": "action",
+        "description": "Search for a location"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify matching property listings are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the search results reflect the entered location"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC011",
+    "title": "View a booking update notification",
+    "description": "This test verifies that a tenant can see a booking update notification and open the related context to review the update details.",
+    "category": "Notifications",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_USER}} into the phone number field"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_PASSWORD}} into the verification field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Open the notifications area"
+      },
+      {
+        "type": "action",
+        "description": "Open the booking-related notification"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the relevant booking update details are displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC012",
+    "title": "Filter and sort property results",
+    "description": "This verifies that a tenant can narrow property listings with filters and sorting options.",
+    "category": "Property discovery and search",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the property search experience"
+      },
+      {
+        "type": "action",
+        "description": "Search for a location"
+      },
+      {
+        "type": "action",
+        "description": "Apply property filters"
+      },
+      {
+        "type": "action",
+        "description": "Sort the results"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the property listings update to match the selected filters"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the results are ordered by the selected sort option"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC013",
+    "title": "Open a new message notification and read the thread",
+    "description": "This test verifies that a user can open a new message notification and reach the related conversation thread with the message visible.",
+    "category": "Notifications",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_USER}} into the phone number field"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_PASSWORD}} into the verification field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Open the notifications area"
+      },
+      {
+        "type": "action",
+        "description": "Open the message notification"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the related conversation thread is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the new message is visible in the thread"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC014",
+    "title": "Update an existing property listing",
+    "description": "A landlord can open an existing listing, change its details, and save the updated information.",
+    "category": "Property listings management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /landing"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the phone number field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login or sign-in form"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the OTP field with a valid code"
+      },
+      {
+        "type": "action",
+        "description": "Submit the verification form"
+      },
+      {
+        "type": "action",
+        "description": "Open an existing property listing"
+      },
+      {
+        "type": "action",
+        "description": "Update the property details or images"
+      },
+      {
+        "type": "action",
+        "description": "Save the changes"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the updated listing details are shown in the property management view"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC015",
+    "title": "Open a chat and see the latest conversation content",
+    "description": "This verifies that an authenticated user can open an existing conversation and view the current thread content.",
+    "category": "Messaging dashboard",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /chat"
+      },
+      {
+        "type": "action",
+        "description": "Select a conversation"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the conversation thread is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify recent messages are visible"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC016",
+    "title": "See notifications for booking, message, and payment updates",
+    "description": "This test verifies that a signed-in user can review the notifications area and see updates for core activity types.",
+    "category": "Notifications",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_USER}} into the phone number field"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_PASSWORD}} into the verification field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Open the notifications area"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify booking, message, and payment notifications are displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC017",
+    "title": "Switch between result views and open a property",
+    "description": "This verifies that a tenant can switch between grid and list views and open a property detail page.",
+    "category": "Property discovery and search",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the property search experience"
+      },
+      {
+        "type": "action",
+        "description": "Search for a location"
+      },
+      {
+        "type": "action",
+        "description": "Switch to grid view"
+      },
+      {
+        "type": "action",
+        "description": "Switch to list view"
+      },
+      {
+        "type": "action",
+        "description": "Open a property"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the property details are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the selected property remains visible in the detail view"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC018",
+    "title": "Open a notification and return to its related property context",
+    "description": "This test verifies that a user can follow a notification back to the associated property or booking context and review the linked details.",
+    "category": "Notifications",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_USER}} into the phone number field"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_PASSWORD}} into the verification field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Open the notifications area"
+      },
+      {
+        "type": "action",
+        "description": "Open a property-related notification"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the associated property details are displayed"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC019",
+    "title": "Remove a property listing",
+    "description": "A landlord can delete an existing property listing from the platform.",
+    "category": "Property listings management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /landing"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the phone number field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login or sign-in form"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the OTP field with a valid code"
+      },
+      {
+        "type": "action",
+        "description": "Submit the verification form"
+      },
+      {
+        "type": "action",
+        "description": "Open an existing property listing"
+      },
+      {
+        "type": "action",
+        "description": "Remove the listing from the platform"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the listing is no longer available in the property management view"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC020",
+    "title": "Export an analytics report from the admin area",
+    "description": "This test verifies that an admin can open the analytics area and generate or export a report from the dashboard tools.",
+    "category": "Admin dashboard",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_USER}} into the phone number field"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_PASSWORD}} into the verification field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Open the admin analytics area"
+      },
+      {
+        "type": "action",
+        "description": "Generate or export a report"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a report confirmation or completed export state is visible"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC021",
+    "title": "Review booking history",
+    "description": "A user can open the booking dashboard and review past bookings and their status history.",
+    "category": "Booking management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /landing"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the phone number field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login or sign-in form"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the OTP field with a valid code"
+      },
+      {
+        "type": "action",
+        "description": "Submit the verification form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to the booking dashboard"
+      },
+      {
+        "type": "action",
+        "description": "Review past bookings"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify booking status history is displayed"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC022",
+    "title": "View unread and read notification states",
+    "description": "This test verifies that a signed-in user can distinguish unread and read notifications in the notifications area.",
+    "category": "Notifications",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_USER}} into the phone number field"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_PASSWORD}} into the verification field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Open the notifications area"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify unread notifications are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify read notifications are displayed"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC023",
+    "title": "Review payment history",
+    "description": "A user can open payment history and review previous payments and transaction records.",
+    "category": "Payments",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /landing"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the phone number field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login or sign-in form"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the OTP field with a valid code"
+      },
+      {
+        "type": "action",
+        "description": "Submit the verification form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to the payment history experience"
+      },
+      {
+        "type": "action",
+        "description": "Review previous payments"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify transaction records are displayed"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC024",
+    "title": "Review moderation actions in the admin dashboard",
+    "description": "This test verifies that an admin can access moderation controls and see the result of a moderation action in the dashboard.",
+    "category": "Admin dashboard",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_USER}} into the phone number field"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_PASSWORD}} into the verification field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Open the admin moderation area"
+      },
+      {
+        "type": "action",
+        "description": "Perform a moderation action on a visible item"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the moderated item reflects the updated moderation state"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC025",
+    "title": "Handle a search with no matches",
+    "description": "This verifies that a tenant sees an empty state when a property search returns no results.",
+    "category": "Property discovery and search",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the property search experience"
+      },
+      {
+        "type": "action",
+        "description": "Search for a location with no matching properties"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify an empty state message is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify no property listings are displayed"
+      }
+    ],
+    "priority": "Low"
+  }
+]

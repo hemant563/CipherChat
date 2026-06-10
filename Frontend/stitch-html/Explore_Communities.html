@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Communities Discovery | ChatSphere</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Geist:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "primary-fixed": "#dce1ff",
+                      "on-surface-variant": "#444651",
+                      "secondary-fixed": "#e1e0ff",
+                      "surface-container-low": "#f2f4f6",
+                      "tertiary": "#4b1c00",
+                      "surface-container-lowest": "#ffffff",
+                      "on-tertiary-fixed": "#341100",
+                      "surface-container-high": "#e6e8ea",
+                      "inverse-on-surface": "#eff1f3",
+                      "on-secondary-fixed-variant": "#2f2ebe",
+                      "on-error": "#ffffff",
+                      "surface-dim": "#d8dadc",
+                      "primary": "#00236f",
+                      "outline-variant": "#c5c5d3",
+                      "tertiary-container": "#6e2c00",
+                      "inverse-surface": "#2d3133",
+                      "success-green": "#10B981",
+                      "on-secondary-fixed": "#07006c",
+                      "on-surface": "#191c1e",
+                      "on-primary-container": "#90a8ff",
+                      "primary-fixed-dim": "#b6c4ff",
+                      "on-secondary": "#ffffff",
+                      "text-primary": "#0F172A",
+                      "surface-white": "#FFFFFF",
+                      "primary-container": "#1e3a8a",
+                      "inverse-primary": "#b6c4ff",
+                      "surface-container": "#eceef0",
+                      "on-primary-fixed": "#00164e",
+                      "on-error-container": "#93000a",
+                      "tertiary-fixed-dim": "#ffb691",
+                      "surface-tint": "#4059aa",
+                      "outline": "#757682",
+                      "background": "#f7f9fb",
+                      "on-primary-fixed-variant": "#264191",
+                      "text-secondary": "#64748B",
+                      "error-container": "#ffdad6",
+                      "on-tertiary": "#ffffff",
+                      "error": "#ba1a1a",
+                      "on-secondary-container": "#fffbff",
+                      "surface": "#f7f9fb",
+                      "surface-variant": "#e0e3e5",
+                      "security-blue": "#1E293B",
+                      "secondary-fixed-dim": "#c0c1ff",
+                      "on-background": "#191c1e",
+                      "on-primary": "#ffffff",
+                      "surface-container-highest": "#e0e3e5",
+                      "surface-bright": "#f7f9fb",
+                      "tertiary-fixed": "#ffdbcb",
+                      "on-tertiary-container": "#f39461",
+                      "on-tertiary-fixed-variant": "#773205",
+                      "secondary-container": "#6063ee",
+                      "border-subtle": "#E2E8F0",
+                      "secondary": "#4648d4"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "max-width": "1280px",
+                      "gutter": "16px",
+                      "margin-mobile": "16px",
+                      "unit": "4px",
+                      "margin-desktop": "32px"
+              },
+              "fontFamily": {
+                      "body-md": ["Inter"],
+                      "label-md": ["Geist"],
+                      "label-sm": ["Geist"],
+                      "body-lg": ["Inter"],
+                      "headline-lg-mobile": ["Geist"],
+                      "display-lg": ["Geist"],
+                      "headline-lg": ["Geist"],
+                      "title-md": ["Geist"]
+              },
+              "fontSize": {
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                      "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.03em", "fontWeight": "500"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .message-shadow {
+            box-shadow: 0 4px 12px rgba(0, 35, 111, 0.04);
+        }
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+        }
+        .hero-gradient {
+            background: linear-gradient(135deg, #00236f 0%, #4648d4 100%);
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #e2e8f0;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md overflow-hidden flex h-screen">
+<!-- SideNavBar (Shared Component) -->
+<aside class="hidden md:flex flex-col h-full py-6 bg-surface-white dark:bg-inverse-surface h-screen w-[320px] left-0 top-0 border-r border-border-subtle dark:border-outline-variant transition-all duration-150">
+<div class="px-6 mb-8">
+<h1 class="font-headline-lg text-headline-lg font-bold text-primary dark:text-primary-fixed-dim">ChatSphere</h1>
+<p class="font-label-md text-label-md text-on-surface-variant opacity-70">Encrypted</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-4 text-on-surface-variant dark:text-outline-variant px-6 py-4 hover:bg-surface-container dark:hover:bg-on-surface-variant transition-colors cursor-pointer group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">chat</span>
+<span class="font-label-md text-label-md">Chats</span>
+</a>
+<a class="flex items-center gap-4 text-primary dark:text-inverse-primary font-bold border-l-4 border-primary dark:border-inverse-primary bg-primary-fixed dark:bg-primary-container px-6 py-4 transition-colors" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">groups</span>
+<span class="font-label-md text-label-md">Communities</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant dark:text-outline-variant px-6 py-4 hover:bg-surface-container dark:hover:bg-on-surface-variant transition-colors cursor-pointer group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">call</span>
+<span class="font-label-md text-label-md">Calls</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant dark:text-outline-variant px-6 py-4 hover:bg-surface-container dark:hover:bg-on-surface-variant transition-colors cursor-pointer group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</nav>
+<div class="mt-auto border-t border-border-subtle px-6 pt-6">
+<div class="flex items-center gap-4 text-on-surface-variant dark:text-outline-variant py-4 cursor-pointer hover:bg-surface-container rounded-lg px-4 transition-all">
+<img alt="User Profile Avatar" class="w-10 h-10 rounded-full object-cover" data-alt="A clean, professional studio headshot of a friendly man with a warm smile, wearing a casual navy blue shirt. The background is a soft, out-of-focus modern office setting with natural lighting, maintaining a bright and minimalist aesthetic consistent with a high-end secure messaging application." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDCYgh1j_S-omU2_2TeDP0gOqHLAdPXkHZ-cSKS579GG8Ov8c1JcD2cs-XTrvUlUZcSJF1SFWnAbME_HyWLZQlITqMwgrbd4QGrtHqam0XqdktWdWwAEaE0FkaVzuAQKAh1p2zzjx18cF0UpG_fsbrSqz-G9mwS3hc3N4FPJTYwe6rgOGgDcUkCTVDLI1Fq0rt46uO5yjuk2SbKvH2w3yLXxAeiXsqPVeo26m7np8ydAwiceF89FnZ9U7jOIaDEbZJCUd9qOGaq7-q5"/>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md font-bold text-on-surface">Alex Rivera</span>
+<span class="text-xs text-on-surface-variant">@arivera_secure</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 flex flex-col h-full overflow-hidden bg-background">
+<!-- TopAppBar (Shared Component) -->
+<header class="flex justify-between items-center w-full px-margin-desktop h-16 bg-surface-white dark:bg-inverse-surface border-b border-border-subtle dark:border-outline-variant sticky top-0 z-10">
+<div class="flex items-center gap-4">
+<h2 class="font-title-md text-title-md font-semibold text-text-primary dark:text-inverse-on-surface">Communities</h2>
+<div class="bg-success-green/10 text-success-green px-2 py-0.5 rounded flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+<span class="text-[10px] font-bold tracking-wider uppercase">End-to-End Secure</span>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="hidden lg:flex items-center bg-surface-container-low border border-border-subtle rounded-full px-4 py-1.5 w-64">
+<span class="material-symbols-outlined text-outline text-[20px]">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-label-md w-full placeholder:text-outline" placeholder="Search groups..." type="text"/>
+</div>
+<div class="flex items-center gap-4 text-on-surface-variant">
+<span class="material-symbols-outlined hover:text-primary cursor-pointer transition-all duration-200">lock</span>
+<span class="material-symbols-outlined hover:text-primary cursor-pointer transition-all duration-200">videocam</span>
+<span class="material-symbols-outlined hover:text-primary cursor-pointer transition-all duration-200">call</span>
+<span class="material-symbols-outlined hover:text-primary cursor-pointer transition-all duration-200">more_vert</span>
+</div>
+</div>
+</header>
+<!-- Scrollable Content Container -->
+<div class="flex-1 overflow-y-auto px-margin-desktop py-8 custom-scrollbar">
+<!-- Featured Community Hero Section -->
+<section class="mb-12">
+<div class="relative h-[320px] rounded-xl overflow-hidden shadow-xl group">
+<img alt="Tech Community" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="An ultra-modern technology lab filled with glowing blue lights, holographic interface screens, and clean white furniture. The aesthetic is futuristic and high-tech, using a cold color palette with indigo and cyan accents. The mood is highly professional and focused, representing a leading digital innovation community." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4qf_b-O2DZ8C4c3TiOgLcp4mtPNvb8pF3GSxM6lUX-XbbD8zyEZcTdxdwivVluw6OpfJObTYvdTpt8gRjSM100-Q9d9rcHDtPsCsHX8v39RE35bWyzGACGfLKx5oenGbOXHSsHQVxx6ayL6JiyIYe1WSQ7BT10FbJbIo61kMFh8fKEeztck9RJk4yNN_YgiVocG5LzZBHa6PHeI0_XAS4N1c13e_eutPRUHB2LlxzRwXD-_B6HCxWjy6-3rARo3_OVnpRg7Bso2V7"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent flex flex-col justify-end p-10">
+<div class="flex items-center gap-2 mb-3">
+<span class="bg-primary text-white text-[10px] font-bold px-2 py-1 rounded tracking-widest uppercase">Featured Community</span>
+<span class="bg-white/20 backdrop-blur-md text-white text-[10px] font-bold px-2 py-1 rounded tracking-widest uppercase flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">groups</span> 12.4k Members
+                            </span>
+</div>
+<h3 class="font-display-lg text-display-lg text-white mb-4 leading-tight">Global AI &amp; Robotics Forum</h3>
+<p class="text-white/80 max-w-xl font-body-lg text-body-lg mb-6">Discuss the future of artificial intelligence, machine learning, and automation with industry experts from across the globe.</p>
+<button class="bg-primary text-white px-8 py-3 rounded-lg font-bold w-fit hover:bg-primary-container transition-all transform active:scale-95 flex items-center gap-2">
+                            Join Community <span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Filter Categories Chips -->
+<section class="mb-10 flex items-center gap-3 flex-wrap">
+<button class="bg-primary text-white px-5 py-2 rounded-full font-label-md text-label-md border border-primary">All Topics</button>
+<button class="bg-white text-on-surface-variant hover:bg-surface-container px-5 py-2 rounded-full font-label-md text-label-md border border-border-subtle transition-all">Tech</button>
+<button class="bg-white text-on-surface-variant hover:bg-surface-container px-5 py-2 rounded-full font-label-md text-label-md border border-border-subtle transition-all">Design</button>
+<button class="bg-white text-on-surface-variant hover:bg-surface-container px-5 py-2 rounded-full font-label-md text-label-md border border-border-subtle transition-all">Gaming</button>
+<button class="bg-white text-on-surface-variant hover:bg-surface-container px-5 py-2 rounded-full font-label-md text-label-md border border-border-subtle transition-all">DevOps</button>
+<button class="bg-white text-on-surface-variant hover:bg-surface-container px-5 py-2 rounded-full font-label-md text-label-md border border-border-subtle transition-all">Security</button>
+<button class="bg-white text-on-surface-variant hover:bg-surface-container px-5 py-2 rounded-full font-label-md text-label-md border border-border-subtle transition-all">Startups</button>
+<div class="h-6 w-[1px] bg-border-subtle mx-2"></div>
+<button class="text-primary font-label-md text-label-md flex items-center gap-1 hover:underline">
+<span class="material-symbols-outlined text-[18px]">tune</span> Filter
+                </button>
+</section>
+<!-- Community Discovery Grid -->
+<section class="bento-grid pb-20">
+<!-- Card 1 -->
+<div class="bg-surface-white border border-border-subtle rounded-xl p-6 message-shadow hover:border-primary/50 transition-all cursor-pointer group">
+<div class="flex justify-between items-start mb-6">
+<div class="w-14 h-14 bg-primary-fixed rounded-xl flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[32px]">code</span>
+</div>
+<span class="bg-surface-container-low text-on-surface-variant text-[12px] font-bold px-2 py-1 rounded">Tech</span>
+</div>
+<h4 class="font-title-md text-title-md text-text-primary mb-2 group-hover:text-primary transition-colors">Rust Developers</h4>
+<p class="text-text-secondary text-label-md line-clamp-2 mb-6">A high-performance community focused on systems programming, memory safety, and modern Rust crates.</p>
+<div class="flex items-center justify-between mt-auto">
+<div class="flex -space-x-2">
+<img alt="Member" class="w-8 h-8 rounded-full border-2 border-white object-cover" data-alt="Close-up portrait of a young professional with dark hair and a confident expression, set against a soft grey background. Minimalist studio lighting, high contrast, professional tech aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCv3SEMtdl-HtRXI5Ghic-Nh5i5F20VnjM0TnZvtOCQDc2IBCi8DQHP-NjywQHxJBYAy-swlYLcAav4BMzulCtqtUUtJnK8FmsqcWtPy2Mcsn-yHMKWxpWk8X9sBv6CdGiWPeWgUFcyz89WphQ_VnYCPHdvDU4kILrGBTNeF3GaXX86WizncWrjAhSmjq6cgpHkuAbgGYSK5XIzHHu9Vp0H4NgJKUlTM5yN36Uw9YpIjy4HPsHTVewYxCpQ7u6e1KN09cq6_HQrIFVz"/>
+<img alt="Member" class="w-8 h-8 rounded-full border-2 border-white object-cover" data-alt="Portrait of a woman with a bright smile, natural lighting, wearing modern glasses, and a vibrant yellow sweater. Warm and approachable personality, clean focus." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAU_0lBTRhQQxvfxrsu3vnG7j3wFprSoN3hlNiPE-vgcrvnxtNObxbvloclFnRQ9l8KaxlYx4w3j0ygVmcyyLzlXrrXgmJdziK2X-fnw-I85y-Cvg7XNN7B2Ub5NfQZSvqUrlQ8FHGsz-riMogeL9su4FvHnqNPjkpsSpoAovynpCKb7u6fRn42jLS_3yz3SI5VwJa0Jih6292QDXV_ExaHOQAxYlZ-ZFDq7nCO3j4PFAb9XQc224XruLdVYcmJO9IWAXLWUHHPQczb"/>
+<div class="w-8 h-8 rounded-full border-2 border-white bg-surface-container flex items-center justify-center text-[10px] font-bold">+8k</div>
+</div>
+<button class="text-primary font-bold text-label-md flex items-center gap-1 group-hover:gap-2 transition-all">
+                            View <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface-white border border-border-subtle rounded-xl p-6 message-shadow hover:border-primary/50 transition-all cursor-pointer group">
+<div class="flex justify-between items-start mb-6">
+<div class="w-14 h-14 bg-secondary-fixed rounded-xl flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[32px]">palette</span>
+</div>
+<span class="bg-surface-container-low text-on-surface-variant text-[12px] font-bold px-2 py-1 rounded">Design</span>
+</div>
+<h4 class="font-title-md text-title-md text-text-primary mb-2 group-hover:text-primary transition-colors">UI/UX Mentors</h4>
+<p class="text-text-secondary text-label-md line-clamp-2 mb-6">Daily design challenges, feedback sessions, and portfolio reviews from senior product designers.</p>
+<div class="flex items-center justify-between mt-auto">
+<div class="flex -space-x-2">
+<img alt="Member" class="w-8 h-8 rounded-full border-2 border-white object-cover" data-alt="Professional studio portrait of a man with a clean beard and stylish glasses, softly lit, representing a creative design mentor. Modern and sophisticated visual style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBVohlPjbt_7r1f5i4QxEOnILzPP0zy2ApX28kww8U3A5ZTlkSKoRnH_hqYHeIiDtfvlIroNaIprlERMbxtxiOPlDtzLTsxH3zveBLq7R5JnzEHy1tlR1xpT2UEP3Z8V1DHoEtOk5CER_TXSD4YPE5qQQi6O0FtNpuxsrFmmgJ5Z3JHrrIYGztePAK9BSl_WiWksErvq4lzYqg8ghTj3KmHB-h3gdtZXfOpQH_mBrhYypGrU0ZlP-5zl5l9RgIofpwtgE7Bz7CdkYA-"/>
+<div class="w-8 h-8 rounded-full border-2 border-white bg-surface-container flex items-center justify-center text-[10px] font-bold">+3k</div>
+</div>
+<button class="text-primary font-bold text-label-md flex items-center gap-1 group-hover:gap-2 transition-all">
+                            View <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="bg-surface-white border border-border-subtle rounded-xl p-6 message-shadow hover:border-primary/50 transition-all cursor-pointer group">
+<div class="flex justify-between items-start mb-6">
+<div class="w-14 h-14 bg-tertiary-fixed rounded-xl flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined text-[32px]">videogame_asset</span>
+</div>
+<span class="bg-surface-container-low text-on-surface-variant text-[12px] font-bold px-2 py-1 rounded">Gaming</span>
+</div>
+<h4 class="font-title-md text-title-md text-text-primary mb-2 group-hover:text-primary transition-colors">Indie Dev Hub</h4>
+<p class="text-text-secondary text-label-md line-clamp-2 mb-6">A place for independent game developers to share assets, devlogs, and collaborate on new IPs.</p>
+<div class="flex items-center justify-between mt-auto">
+<div class="flex -space-x-2">
+<img alt="Member" class="w-8 h-8 rounded-full border-2 border-white object-cover" data-alt="Cool and creative portrait of a young person in a hoodie with neon atmospheric lighting in the background, implying a gaming and development context. High energy and digital art style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCYuRQZmRvPg4sriQ5_2GyiQrZ0JVdM_Fb9TCXG9kwM4Nu_8o_lF1WVpzt4wc-ZL1xbe2Qpp1IFJpO1ETfI15aG8W7ma6-iDFr1KOqNztxl80a2sDNBE20_iiB_atAACLWeD9DbmBmHRIFt28E-KS__IYMGDz9N7P1wAsVUS7G1Eh7eQzLGJeLWGIkUH-PdZxJiMMGcmwXDFCwVo9gcIrE3MGzOU8Wz4xdswR-j5vXUBQiv_uvkReAAd2VcXbfiY8tIwiCyalXbKl75"/>
+<div class="w-8 h-8 rounded-full border-2 border-white bg-surface-container flex items-center justify-center text-[10px] font-bold">+15k</div>
+</div>
+<button class="text-primary font-bold text-label-md flex items-center gap-1 group-hover:gap-2 transition-all">
+                            View <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="bg-surface-white border border-border-subtle rounded-xl p-6 message-shadow hover:border-primary/50 transition-all cursor-pointer group">
+<div class="flex justify-between items-start mb-6">
+<div class="w-14 h-14 bg-primary-fixed rounded-xl flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[32px]">shield</span>
+</div>
+<span class="bg-surface-container-low text-on-surface-variant text-[12px] font-bold px-2 py-1 rounded">Security</span>
+</div>
+<h4 class="font-title-md text-title-md text-text-primary mb-2 group-hover:text-primary transition-colors">Zero Trust Collective</h4>
+<p class="text-text-secondary text-label-md line-clamp-2 mb-6">Expert discussion on cybersecurity, encryption protocols, and privacy-first architectural patterns.</p>
+<div class="flex items-center justify-between mt-auto">
+<div class="flex -space-x-2">
+<img alt="Member" class="w-8 h-8 rounded-full border-2 border-white object-cover" data-alt="Sharp and professional business portrait of a woman in a tech-focused setting. The lighting is crisp and clear, conveying authority and expertise in cybersecurity. Dark suit, neutral background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAAyArsWd7uMc5mtjPIbounNBWqdgRP60wF6NgxrdT0ZBRJg3595tpA3WOpawswl3Bv6ZvJWgb550gG1UyfOsQjgd7Q6cpOZDEd1ZYLaRxPxmS9IUG0-_nRJvsLUmwwrp3PUnN714gNGFvKHWnV2LVzwXzMPxxmEp6AwTdQCWakgD269_KtEEdn5dC2JiIZZkouTL0edFaUDoB36T2vPfzO7mEwnk0pbmCxZb_n0Z2rmjLXhhim5l6KDShqGKlQQj3kkkHlIriGTEJ"/>
+<div class="w-8 h-8 rounded-full border-2 border-white bg-surface-container flex items-center justify-center text-[10px] font-bold">+5k</div>
+</div>
+<button class="text-primary font-bold text-label-md flex items-center gap-1 group-hover:gap-2 transition-all">
+                            View <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Card 5 -->
+<div class="bg-surface-white border border-border-subtle rounded-xl p-6 message-shadow hover:border-primary/50 transition-all cursor-pointer group">
+<div class="flex justify-between items-start mb-6">
+<div class="w-14 h-14 bg-secondary-fixed rounded-xl flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[32px]">rocket_launch</span>
+</div>
+<span class="bg-surface-container-low text-on-surface-variant text-[12px] font-bold px-2 py-1 rounded">Startups</span>
+</div>
+<h4 class="font-title-md text-title-md text-text-primary mb-2 group-hover:text-primary transition-colors">Bootstrapped Builders</h4>
+<p class="text-text-secondary text-label-md line-clamp-2 mb-6">Founders helping founders. Share growth strategies, funding tips, and technical debt management.</p>
+<div class="flex items-center justify-between mt-auto">
+<div class="flex -space-x-2">
+<img alt="Member" class="w-8 h-8 rounded-full border-2 border-white object-cover" data-alt="Candid and energetic portrait of a startup founder in a modern coworking space. Natural light, blurred background, genuine expression of passion and drive. Professional yet relaxed startup vibe." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpogi0gLd7Z0aOFiuuFgWat7iAXRNVsuJRtyelrA3h3ckOxgbMrvUrWHY6_iXMVTA9J-vSsa83CE1aChj6AkPbUZ-FvTAly_FY9kQBbEXnjerUWFu41LXV3SpP3RYiSr-nLdzKjr6JPEYTavUWj_VVyvjkkqEctvKG0D6H4RV00wiLMoIFZYDvhObJCcaL--XCw4OenHN_YacbfWJacVK9--pTOTSrrkf_hylGZkyU3sYXotE5lY0oDsUdY1D1Waf2u2GCrHGrT8EL"/>
+<div class="w-8 h-8 rounded-full border-2 border-white bg-surface-container flex items-center justify-center text-[10px] font-bold">+2k</div>
+</div>
+<button class="text-primary font-bold text-label-md flex items-center gap-1 group-hover:gap-2 transition-all">
+                            View <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Card 6 -->
+<div class="bg-surface-white border border-border-subtle rounded-xl p-6 message-shadow hover:border-primary/50 transition-all cursor-pointer group">
+<div class="flex justify-between items-start mb-6">
+<div class="w-14 h-14 bg-tertiary-fixed rounded-xl flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined text-[32px]">architecture</span>
+</div>
+<span class="bg-surface-container-low text-on-surface-variant text-[12px] font-bold px-2 py-1 rounded">Design</span>
+</div>
+<h4 class="font-title-md text-title-md text-text-primary mb-2 group-hover:text-primary transition-colors">Spatial Computing</h4>
+<p class="text-text-secondary text-label-md line-clamp-2 mb-6">Exploring the intersection of AR, VR, and physical world interfaces. Design for the next dimension.</p>
+<div class="flex items-center justify-between mt-auto">
+<div class="flex -space-x-2">
+<img alt="Member" class="w-8 h-8 rounded-full border-2 border-white object-cover" data-alt="Portrait of a creative designer with an artistic flair, set against a background of high-end industrial design elements. Clean composition, sophisticated aesthetic, soft and even lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKe3FgErknrNrZJ-OiUMviITsatF51bBw7ZZUFKrzN4CiAhtxaCljbvtbt1RuAEYTZakyIztazX9jeN_xjpMAHgadHesvMutUPVtt6neacGmB2jOY2vg4RMGT0VAJ7bNVbBZfK5dAu2OO6L2O3LYhQC4fZMk-aJTiE-e-J4M27ILjV27zXnxm9IMCpIfNW_f-or6xTw1bGNaFSFjT19pbNa67lLTRs-rfk_4J966KflZLt3Msffmso5k8fFJ8_ahDAZYYKH_XxqiYK"/>
+<div class="w-8 h-8 rounded-full border-2 border-white bg-surface-container flex items-center justify-center text-[10px] font-bold">+1k</div>
+</div>
+<button class="text-primary font-bold text-label-md flex items-center gap-1 group-hover:gap-2 transition-all">
+                            View <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- FAB (Suppressed on this page as per rules, but included logic for future reference) -->
+<!-- The user is in "Discovery" mode, so we keep the interface clean and focus on navigation -->
+<script>
+        // Micro-interactions for the cards
+        document.querySelectorAll('.bento-grid > div').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-4px)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0px)';
+            });
+        });
+
+        // Search bar focus effect
+        const searchInput = document.querySelector('input[type="text"]');
+        const searchContainer = searchInput.parentElement;
+        searchInput.addEventListener('focus', () => {
+            searchContainer.classList.add('ring-2', 'ring-primary/20', 'border-primary');
+        });
+        searchInput.addEventListener('blur', () => {
+            searchContainer.classList.remove('ring-2', 'ring-primary/20', 'border-primary');
+        });
+    </script>
+</body></html>

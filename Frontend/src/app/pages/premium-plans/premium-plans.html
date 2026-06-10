@@ -1,0 +1,124 @@
+<main class="flex-1 flex flex-col h-full overflow-y-auto bg-background p-4 md:p-8">
+  <div class="max-w-5xl mx-auto w-full">
+    
+    <!-- Header -->
+    <div class="text-center mb-12">
+      <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-tr from-amber-400 to-yellow-600 mb-6 shadow-lg shadow-amber-500/30">
+        <span class="material-symbols-outlined text-white text-[32px]">workspace_premium</span>
+      </div>
+      <h1 class="font-display-lg text-display-lg font-bold text-text-primary mb-4">CipherChat Premium</h1>
+      <p class="text-text-secondary font-body-lg text-body-lg max-w-2xl mx-auto">
+        Upgrade your experience with exclusive features, enhanced privacy, and the official Verified Badge.
+      </p>
+    </div>
+
+    <!-- Active Subscription Banner -->
+    <div *ngIf="isPremium()" class="bg-gradient-to-r from-amber-500/10 to-yellow-500/10 border border-amber-500/20 rounded-2xl p-6 mb-12 flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-amber-400 to-yellow-600 flex items-center justify-center shadow-md">
+          <span class="material-symbols-outlined text-white">verified</span>
+        </div>
+        <div>
+          <h3 class="font-title-lg text-title-lg font-bold text-amber-600 dark:text-amber-400">You are a Premium Member!</h3>
+          <p class="text-text-secondary font-body-sm text-body-sm">Your verified badge is active and premium features are unlocked.</p>
+        </div>
+      </div>
+      <button class="px-6 py-2 rounded-lg border border-amber-500/30 text-amber-600 dark:text-amber-400 font-label-md text-label-md hover:bg-amber-500/10 transition-colors">
+        Manage Subscription
+      </button>
+    </div>
+
+    <!-- Pricing Cards -->
+    <div *ngIf="!isPremium()" class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+      
+      <!-- Monthly Plan -->
+      <div (click)="selectPlan('monthly')" class="relative rounded-3xl p-8 border-2 transition-all cursor-pointer bg-surface-white hover:shadow-xl"
+           [ngClass]="activePlan() === 'monthly' ? 'border-primary shadow-lg scale-[1.02]' : 'border-border-subtle hover:border-primary/50'">
+        <div class="flex justify-between items-start mb-6">
+          <div>
+            <h3 class="font-title-lg text-title-lg font-bold text-text-primary">Monthly</h3>
+            <p class="text-text-secondary">Flexible, cancel anytime.</p>
+          </div>
+          <div class="w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors"
+               [ngClass]="activePlan() === 'monthly' ? 'border-primary bg-primary' : 'border-outline'">
+            <div *ngIf="activePlan() === 'monthly'" class="w-2 h-2 rounded-full bg-white"></div>
+          </div>
+        </div>
+        <div class="mb-8">
+          <span class="font-display-lg text-[40px] font-bold text-text-primary">₹499</span>
+          <span class="text-text-secondary">/month</span>
+        </div>
+        <ul class="space-y-4 mb-8">
+          <li class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-success-green">check_circle</span>
+            <span class="text-text-primary">Verified Badge</span>
+          </li>
+          <li class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-success-green">check_circle</span>
+            <span class="text-text-primary">Unlimited AI Smart Replies</span>
+          </li>
+          <li class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-success-green">check_circle</span>
+            <span class="text-text-primary">Never delete messages</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Yearly Plan -->
+      <div (click)="selectPlan('yearly')" class="relative rounded-3xl p-8 border-2 transition-all cursor-pointer bg-gradient-to-b from-amber-50 to-white dark:from-amber-900/20 dark:to-surface-white hover:shadow-xl"
+           [ngClass]="activePlan() === 'yearly' ? 'border-amber-500 shadow-amber-500/20 scale-[1.02] shadow-xl' : 'border-border-subtle hover:border-amber-400/50'">
+        <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-amber-500 to-yellow-500 text-white px-4 py-1 rounded-full text-[12px] font-bold tracking-wider uppercase shadow-md">
+          Most Popular - Save 20%
+        </div>
+        <div class="flex justify-between items-start mb-6">
+          <div>
+            <h3 class="font-title-lg text-title-lg font-bold text-amber-700 dark:text-amber-400">Yearly</h3>
+            <p class="text-text-secondary">Best value for power users.</p>
+          </div>
+          <div class="w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors"
+               [ngClass]="activePlan() === 'yearly' ? 'border-amber-500 bg-amber-500' : 'border-outline'">
+            <div *ngIf="activePlan() === 'yearly'" class="w-2 h-2 rounded-full bg-white"></div>
+          </div>
+        </div>
+        <div class="mb-8">
+          <span class="font-display-lg text-[40px] font-bold text-text-primary">₹4799</span>
+          <span class="text-text-secondary">/year</span>
+        </div>
+        <ul class="space-y-4 mb-8">
+          <li class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-amber-500">verified</span>
+            <span class="text-text-primary font-medium">Gold Verified Badge</span>
+          </li>
+          <li class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-success-green">check_circle</span>
+            <span class="text-text-primary">Unlimited AI Smart Replies</span>
+          </li>
+          <li class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-success-green">check_circle</span>
+            <span class="text-text-primary">Priority Support</span>
+          </li>
+          <li class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-success-green">check_circle</span>
+            <span class="text-text-primary">Never delete messages</span>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- Purchase Action -->
+    <div *ngIf="!isPremium()" class="mt-12 flex flex-col items-center gap-4">
+      <button (click)="initiatePayment()" [disabled]="isLoading()" class="bg-gradient-to-r from-amber-500 to-yellow-500 text-white font-bold text-lg px-12 py-4 rounded-xl shadow-lg shadow-amber-500/30 hover:shadow-xl hover:scale-105 transition-all flex items-center gap-3 disabled:opacity-70 disabled:cursor-not-allowed">
+        <span *ngIf="!isLoading()" class="material-symbols-outlined">lock</span>
+        <span *ngIf="isLoading()" class="material-symbols-outlined animate-spin">progress_activity</span>
+        {{ isLoading() ? 'Processing...' : 'Secure Checkout' }}
+      </button>
+
+      <button (click)="initiateInsecureCheckout()" [disabled]="isLoading()" class="text-on-surface-variant text-sm underline hover:text-primary transition-colors disabled:opacity-50">
+        Simulate Checkout (Testing Bypass)
+      </button>
+    </div>
+
+  </div>
+
+</main>

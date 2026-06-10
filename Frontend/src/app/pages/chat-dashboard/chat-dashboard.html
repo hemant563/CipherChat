@@ -1,0 +1,441 @@
+<!-- SIDE NAVIGATION RAIL (Shared Component) -->
+<div class="flex h-full w-full">
+
+<!-- Mobile Backdrop -->
+<div *ngIf="showChatList()" (click)="toggleChatList()" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 lg:hidden"></div>
+
+<!-- CHAT LIST PANEL (Sub-Sidebar) -->
+<section [ngClass]="[
+  showChatList() ? 'flex absolute z-50 h-full shadow-2xl translate-x-0' : 'hidden md:flex',
+  isSidebarCollapsed() ? 'w-[84px]' : 'w-80'
+]" class="shrink-0 bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100 border-r border-border-subtle flex-col transition-all duration-300">
+<div class="flex flex-col h-full overflow-hidden w-full" [ngClass]="isSidebarCollapsed() ? 'p-3' : 'p-6'">
+<div class="flex items-center mb-6" [ngClass]="isSidebarCollapsed() ? 'justify-center' : 'justify-between'">
+  <div *ngIf="!isSidebarCollapsed()" class="flex items-center gap-2">
+    <h2 class="font-bold text-xl text-primary drop-shadow-sm tracking-tight">CipherChat</h2>
+  </div>
+  <button (click)="toggleSidebarCollapse()" class="p-1.5 text-on-surface-variant hover:text-primary transition-colors bg-white/80 rounded-full shadow-sm flex items-center justify-center shrink-0" [title]="isSidebarCollapsed() ? 'Expand Sidebar' : 'Collapse Sidebar'">
+    <span class="material-symbols-outlined text-[20px]">{{ isSidebarCollapsed() ? 'keyboard_double_arrow_right' : 'keyboard_double_arrow_left' }}</span>
+  </button>
+</div>
+<div *ngIf="!isSidebarCollapsed()" class="relative mb-6">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-on-surface-variant text-sm">search</span>
+<input autocomplete="off" name="chat-search" [ngModel]="searchQuery()" (ngModelChange)="searchQuery.set($event)" class="w-full bg-white/80 backdrop-blur-sm border-none rounded-xl py-2 pl-10 pr-4 text-label-md focus:ring-2 focus:ring-primary-fixed outline-none shadow-sm transition-all" placeholder="Search conversations..." type="text"/>
+</div>
+<div *ngIf="!isSidebarCollapsed()" class="flex items-center justify-between mb-4">
+  <h3 class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-bold">Active Chats</h3>
+  <div class="flex gap-2">
+    <button *ngIf="pendingRequests().length > 0" (click)="openRequests()" class="relative p-1 text-on-surface-variant hover:text-primary transition-colors bg-white/80 rounded-full shadow-sm" title="Incoming Requests">
+      <span class="material-symbols-outlined text-[18px]">notifications</span>
+      <span class="absolute -top-1 -right-1 w-4 h-4 bg-error text-white text-[10px] font-bold flex items-center justify-center rounded-full animate-pulse">{{ pendingRequests().length }}</span>
+    </button>
+    <button (click)="openAddContact()" class="p-1 text-on-surface-variant hover:text-primary transition-colors bg-white/80 rounded-full shadow-sm" title="Add Contact">
+      <span class="material-symbols-outlined text-[18px]">person_add</span>
+    </button>
+  </div>
+</div>
+<div class="space-y-2 overflow-y-auto custom-scrollbar flex-grow">
+<!-- Chat Item Dynamic -->
+<div *ngFor="let chat of filteredChats()" 
+     (click)="selectChat(chat._id || chat.id)"
+     [ngClass]="[
+       (chat._id || chat.id) === activeChatId() ? 'bg-white border-primary-fixed shadow-md shadow-primary/5' : 'hover:bg-white/60 border-transparent hover:shadow-sm',
+       isSidebarCollapsed() ? 'p-2 justify-center' : 'p-3 gap-3'
+     ]"
+     class="rounded-xl flex items-center cursor-pointer border transition-all duration-200"
+     [title]="isSidebarCollapsed() ? chat.name : ''">
+<div class="relative shrink-0 flex items-center justify-center">
+<img *ngIf="chat.avatar?.includes('http')" [alt]="chat.name + ' Avatar'" class="w-12 h-12 rounded-full object-cover" [src]="chat.avatar"/>
+<div *ngIf="!chat.avatar?.includes('http')" class="w-12 h-12 rounded-full bg-primary-fixed text-on-primary-fixed flex items-center justify-center font-bold text-lg">
+  {{ chat.avatar || chat.name.charAt(0) }}
+</div>
+<div *ngIf="!chat.isGroupChat && chat.otherUserId && presenceService.isOnline(chat.otherUserId)" class="absolute bottom-0 right-0 w-3 h-3 bg-success-green border-2 border-surface-white rounded-full"></div>
+</div>
+<div *ngIf="!isSidebarCollapsed()" class="flex-grow min-w-0">
+<div class="flex justify-between items-center mb-0.5">
+<span class="font-label-md text-label-md font-bold truncate flex items-center gap-1">
+  {{ chat.name }}
+  <span *ngIf="chat.isPremium || chat.isAdmin" class="material-symbols-outlined text-[14px]" [ngClass]="(chat.isAdmin || chat.premiumPlan === 'yearly') ? 'text-amber-500' : 'text-blue-500'" title="Verified Account">verified</span>
+</span>
+<span class="text-[10px] text-on-surface-variant font-bold">{{ chat.messages.length > 0 ? (chat.messages[chat.messages.length - 1].createdAt | date:'shortTime') : (chat.lastMessage ? (chat.lastMessage.createdAt | date:'shortTime') : '') }}</span>
+</div>
+<div class="flex justify-between items-center gap-2">
+  <p class="text-label-sm text-on-surface-variant truncate w-full">
+    <ng-container *ngIf="typingUsers()[chat._id || chat.id || '']?.length; else noTypingTpl">
+      <span class="text-primary animate-pulse font-medium">Typing...</span>
+    </ng-container>
+    <ng-template #noTypingTpl>
+      <ng-container *ngIf="chat.isLocked && !unlockedSessionChats().has(chat._id)">
+        <span class="material-symbols-outlined text-[12px] inline-block align-middle mr-1">lock</span>
+        Locked Message
+      </ng-container>
+      <ng-container *ngIf="!chat.isLocked || unlockedSessionChats().has(chat._id)">
+        {{ getMessagePreview(chat.messages.length > 0 ? chat.messages[chat.messages.length - 1].content : (chat.lastMessage ? chat.lastMessage.content : '')) }}
+      </ng-container>
+    </ng-template>
+  </p>
+  <span *ngIf="chat.unreadCount" class="bg-primary-fixed text-on-primary-fixed text-[10px] font-bold px-1.5 py-0.5 rounded-full shrink-0 min-w-[20px] text-center">{{ chat.unreadCount > 99 ? '99+' : chat.unreadCount }}</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- MAIN CONTENT CANVAS -->
+<main class="flex-grow flex flex-col bg-surface-white h-full relative">
+<!-- TOP APP BAR (Shared Component) -->
+<header class="flex justify-between items-center w-full px-margin-desktop h-16 bg-gradient-to-br from-primary-fixed via-surface to-secondary-fixed border-b border-border-subtle shrink-0">
+<div class="flex items-center gap-4">
+<button (click)="toggleChatList()" class="md:hidden p-2 text-on-surface-variant hover:bg-surface-container rounded-full" title="Open Chats">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<div class="flex items-center gap-3" *ngIf="activeChat()">
+<div class="relative">
+<img *ngIf="activeChat()!.avatar?.includes('http')" [alt]="activeChat()!.name" class="w-10 h-10 rounded-full object-cover" [src]="activeChat()!.avatar"/>
+<div *ngIf="!activeChat()!.avatar?.includes('http')" class="w-10 h-10 rounded-full bg-primary-fixed text-on-primary-fixed flex items-center justify-center font-bold">
+  {{ activeChat()!.avatar || activeChat()!.name.charAt(0) }}
+</div>
+<div *ngIf="!activeChat()!.isGroupChat && activeChat()!.otherUserId && presenceService.isOnline(activeChat()!.otherUserId)" class="absolute bottom-0 right-0 w-3 h-3 bg-success-green border-2 border-surface-white rounded-full"></div>
+</div>
+<div>
+<div class="flex items-center gap-1.5 min-w-0">
+<h2 class="font-title-md text-title-md font-semibold text-text-primary dark:text-inverse-on-surface truncate max-w-[120px] sm:max-w-[200px] lg:max-w-[300px] flex items-center gap-1">
+  {{activeChat()!.name}} <span class="font-normal text-on-surface-variant text-sm ml-1">{{activeChat()!.handle}}</span>
+  <span *ngIf="activeChat()!.isPremium || activeChat()!.isAdmin" class="material-symbols-outlined text-[18px] ml-1" [ngClass]="(activeChat()!.isAdmin || activeChat()!.premiumPlan === 'yearly') ? 'text-amber-500' : 'text-blue-500'" title="Verified Account">verified</span>
+</h2>
+</div>
+<div class="flex items-center gap-1 text-[11px] text-success-green font-medium">
+<span class="material-symbols-outlined text-[12px]">lock</span>
+                                End-to-End Encrypted
+                            </div>
+                            <div *ngIf="!activeChat()?.isGroupChat && activeChat()?.otherUserId" class="text-[11px] text-on-surface-variant font-medium mt-0.5">
+                                <ng-container *ngIf="typingUsers()[activeChatId()!]?.length; else statusTpl">
+                                    <span class="text-primary animate-pulse">Typing...</span>
+                                </ng-container>
+                                <ng-template #statusTpl>
+                                  <ng-container *ngIf="presenceService.isOnline(activeChat()!.otherUserId)">
+                                      <span class="text-success-green">Online</span>
+                                  </ng-container>
+                                  <ng-container *ngIf="!presenceService.isOnline(activeChat()!.otherUserId) && presenceService.getLastSeen(activeChat()!.otherUserId)">
+                                      Last seen {{ presenceService.getLastSeen(activeChat()!.otherUserId) | date:'shortTime' }}
+                                  </ng-container>
+                                </ng-template>
+                            </div>
+                            <div *ngIf="activeChat()?.isGroupChat" class="text-[11px] text-on-surface-variant font-medium mt-0.5">
+                              <span *ngIf="typingUsers()[activeChatId()!]?.length" class="text-primary animate-pulse">
+                                {{ typingUsers()[activeChatId()!][0].username }} is typing...
+                              </span>
+                            </div>
+</div>
+</div>
+</div>
+    <div class="flex items-center gap-2" *ngIf="activeChat()">
+        <div class="hidden sm:flex items-center gap-2">
+            <button (click)="initiateCall('video')" class="p-2 text-on-surface-variant hover:text-primary transition-all duration-200 cursor-pointer">
+                <span class="material-symbols-outlined" data-icon="videocam">videocam</span>
+            </button>
+            <button (click)="initiateCall('audio')" class="p-2 text-on-surface-variant hover:text-primary transition-all duration-200 cursor-pointer">
+                <span class="material-symbols-outlined" data-icon="call">call</span>
+            </button>
+            <button (click)="toggleLockCurrentChat()" class="p-2 text-on-surface-variant hover:text-primary transition-all duration-200 cursor-pointer">
+                <span class="material-symbols-outlined" data-icon="lock">{{ activeChat()?.isLocked ? 'lock' : 'lock_open' }}</span>
+            </button>
+        </div>
+        <div class="relative">
+            <button (click)="toggleAutoDeleteMenu(); $event.stopPropagation()" class="p-2 text-on-surface-variant hover:text-primary transition-all duration-200 cursor-pointer" title="Auto-Delete Settings">
+                <span class="material-symbols-outlined">auto_delete</span>
+            </button>
+            <div *ngIf="showAutoDeleteMenu()" (click)="$event.stopPropagation()" class="absolute top-12 right-0 bg-surface-white border border-border-subtle shadow-xl rounded-xl p-2 w-56 z-50 flex flex-col gap-1">
+              <h4 class="px-3 py-2 text-xs font-bold text-on-surface-variant uppercase tracking-wider border-b border-border-subtle mb-1">Auto-Delete (For You)</h4>
+              <button (click)="setAutoDeleteSetting('midnight')" [class.bg-primary-container]="getAutoDeleteSetting(activeChatId()) === 'midnight'" [class.text-primary]="getAutoDeleteSetting(activeChatId()) === 'midnight'" class="flex items-center gap-2 px-3 py-2 text-sm text-on-surface hover:bg-surface-container rounded-lg text-left transition-colors">
+                <span class="material-symbols-outlined text-[18px]">dark_mode</span> Midnight (IST)
+              </button>
+              <button (click)="setAutoDeleteSetting('after_view')" [class.bg-primary-container]="getAutoDeleteSetting(activeChatId()) === 'after_view'" [class.text-primary]="getAutoDeleteSetting(activeChatId()) === 'after_view'" class="flex items-center gap-2 px-3 py-2 text-sm text-on-surface hover:bg-surface-container rounded-lg text-left transition-colors">
+                <span class="material-symbols-outlined text-[18px]">visibility_off</span> After View
+              </button>
+              <button (click)="handleNeverDeleteClick($event)" [class.bg-primary-container]="getAutoDeleteSetting(activeChatId()) === 'off'" [class.text-primary]="getAutoDeleteSetting(activeChatId()) === 'off'" class="flex items-center gap-2 px-3 py-2 text-sm text-on-surface hover:bg-surface-container rounded-lg text-left transition-colors">
+                <span class="material-symbols-outlined text-[18px]">block</span>
+                <span>Never</span>
+                <span *ngIf="!myUser()?.isPremium && !myUser()?.isAdmin" class="material-symbols-outlined text-[14px] text-amber-500 ml-auto">lock</span>
+              </button>
+            </div>
+        </div>
+        <button (click)="openUserProfile()" class="p-2 text-on-surface-variant hover:text-primary transition-all duration-200 cursor-pointer">
+            <span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+        </button>
+    </div>
+</header>
+<!-- CHAT AREA -->
+<ng-container *ngIf="activeChat(); else emptyState">
+<div class="flex-grow overflow-y-auto p-6 space-y-6 custom-scrollbar bg-background" id="chat-messages">
+<!-- Timestamp Separator -->
+<div class="flex justify-center">
+<span class="bg-surface-container text-on-surface-variant font-label-sm text-[11px] px-3 py-1 rounded-full uppercase tracking-widest">Today</span>
+</div>
+
+<div class="flex justify-center my-4">
+<div class="bg-success-green/10 border border-success-green/20 px-4 py-2 rounded-xl flex items-center gap-2">
+<span class="material-symbols-outlined text-success-green text-sm" style="font-variation-settings: 'FILL' 1;">lock</span>
+<span class="text-success-green font-label-md text-[12px] font-bold">Messages are secured with Post-Quantum Encryption</span>
+</div>
+</div>
+
+<ng-container *ngFor="let msg of activeChat()?.messages">
+<!-- Outgoing Message -->
+<div *ngIf="msg.sender?._id === myUser()?._id" class="flex flex-col items-end gap-1 ml-auto max-w-[80%] group">
+<div class="bg-primary text-white p-4 rounded-t-2xl rounded-bl-2xl text-body-md message-shadow">
+    <ng-container *ngIf="!isImageMessage(msg.content)">{{msg.content}}</ng-container>
+    <img *ngIf="isImageMessage(msg.content)" [src]="extractImageUrl(msg.content)" class="max-w-xs rounded-xl" />
+</div>
+<div class="flex items-center gap-1 mr-1">
+<span class="text-[10px] text-on-surface-variant">{{msg.createdAt | date:'shortTime'}}</span>
+<span *ngIf="msg.readBy && msg.readBy.length > 0" class="material-symbols-outlined text-[14px] text-primary" style="font-variation-settings: 'FILL' 1;">done_all</span>
+<span *ngIf="!msg.readBy || msg.readBy.length === 0" class="material-symbols-outlined text-[14px] text-on-surface-variant">done</span>
+<button (click)="deleteMessage(msg._id || msg.id); $event.stopPropagation()" class="ml-1 p-0.5 text-on-surface-variant hover:text-error transition-colors opacity-0 group-hover:opacity-100" title="Delete message">
+<span class="material-symbols-outlined text-[14px]">delete</span>
+</button>
+</div>
+</div>
+
+<!-- Incoming Message -->
+<div *ngIf="msg.sender?._id !== myUser()?._id" class="flex items-end gap-3 max-w-[80%]">
+<img *ngIf="activeChat()!.avatar?.includes('http')" [alt]="activeChat()!.name" class="w-8 h-8 rounded-full mb-1 object-cover" [src]="activeChat()!.avatar"/>
+<div *ngIf="!activeChat()!.avatar?.includes('http')" class="w-8 h-8 rounded-full bg-primary-fixed text-on-primary-fixed flex items-center justify-center font-bold text-xs mb-1 shrink-0">
+  {{ activeChat()!.avatar || activeChat()!.name.charAt(0) }}
+</div>
+<div class="flex flex-col gap-1">
+<div *ngIf="activeChat()?.isGroupChat" class="flex items-center gap-1 ml-1 mb-0.5">
+  <span class="text-[11px] font-bold text-text-primary">{{ msg.sender?.displayName || msg.sender?.username }}</span>
+  <span *ngIf="msg.sender?.isPremium || msg.sender?.isAdmin" class="material-symbols-outlined text-[12px]" [ngClass]="(msg.sender?.isAdmin || msg.sender?.premiumPlan === 'yearly') ? 'text-amber-500' : 'text-blue-500'" title="Verified Account">verified</span>
+</div>
+<div class="bg-surface-white border border-border-subtle p-4 rounded-t-2xl rounded-br-2xl text-body-md text-text-primary message-shadow">
+    <ng-container *ngIf="!isImageMessage(msg.content)">{{msg.content}}</ng-container>
+    <img *ngIf="isImageMessage(msg.content)" [src]="extractImageUrl(msg.content)" class="max-w-xs rounded-xl" />
+</div>
+<span class="text-[10px] text-on-surface-variant ml-1">{{msg.createdAt | date:'shortTime'}}</span>
+</div>
+</div>
+</ng-container>
+
+</div>
+<!-- CHAT INPUT AREA -->
+<div class="p-6 bg-surface-white border-t border-border-subtle shrink-0">
+  <ng-container *ngIf="canSendMessage(); else readonlyMode">
+    <!-- Smart Replies -->
+    <div *ngIf="smartReplies().length > 0 || aiLoading()" class="max-w-max-width mx-auto flex gap-2 overflow-x-auto custom-scrollbar animate-fadeIn mb-3">
+  <div *ngIf="aiLoading()" class="flex items-center gap-1.5 px-4 py-2 rounded-full bg-surface-container border border-border-subtle shrink-0">
+    <div class="w-1.5 h-1.5 bg-primary rounded-full animate-bounce" style="animation-delay: 0ms"></div>
+    <div class="w-1.5 h-1.5 bg-primary rounded-full animate-bounce" style="animation-delay: 150ms"></div>
+    <div class="w-1.5 h-1.5 bg-primary rounded-full animate-bounce" style="animation-delay: 300ms"></div>
+  </div>
+  <button *ngFor="let reply of smartReplies()" (click)="useSmartReply(reply)" class="shrink-0 px-4 py-2 rounded-full bg-surface-white border border-primary text-primary font-label-md text-sm hover:bg-primary hover:text-white transition-colors shadow-sm">
+    {{ reply }}
+  </button>
+</div>
+<div *ngIf="typingUsers()[activeChatId()!]?.length" class="text-xs text-primary font-medium px-4 py-1 animate-pulse">
+  {{ typingUsers()[activeChatId()!][0].username }} is typing...
+</div>
+<div class="max-w-max-width mx-auto flex items-center gap-4 bg-surface-container-lowest border border-border-subtle rounded-2xl p-2 pr-3 shadow-sm focus-within:ring-2 focus-within:ring-primary-fixed transition-all duration-300">
+<div class="flex items-center gap-1">
+<div class="relative">
+<button type="button" (click)="toggleEmojiPicker(); $event.stopPropagation()" class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">sentiment_satisfied</span>
+</button>
+<div *ngIf="showEmojiPicker()" (click)="$event.stopPropagation()" class="absolute bottom-12 left-0 bg-surface-white border border-border-subtle shadow-xl rounded-xl p-2 w-72 max-h-48 overflow-y-auto grid grid-cols-8 gap-1 z-50 custom-scrollbar">
+  <button type="button" *ngFor="let emoji of emojis" (click)="addEmoji(emoji); $event.stopPropagation()" class="hover:bg-surface-container rounded hover:scale-110 transition-transform text-xl flex items-center justify-center h-8 w-8">
+    {{ emoji }}
+  </button>
+</div>
+</div>
+<input type="file" #fileInput hidden (change)="onFileSelected($event)">
+<button (click)="fileInput.click()" class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">attach_file</span>
+</button>
+</div>
+<input [ngModel]="newMessageText()" (ngModelChange)="newMessageText.set($event)" (keyup.enter)="sendMessage()" (input)="onTyping()" class="flex-grow bg-transparent border-none focus:ring-0 text-body-md py-2 px-1 placeholder:text-outline outline-none" placeholder="Type an encrypted message..." type="text"/>
+<div class="flex items-center gap-2">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">mic</span>
+</button>
+<button (click)="sendMessage()" class="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center hover:bg-primary-container transition-all shadow-md active:scale-95">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">send</span>
+</button>
+</div>
+</div>
+    <div class="text-center mt-2">
+      <span class="text-[10px] text-outline uppercase tracking-tighter">Your data is yours. CipherChat does not store plain text logs.</span>
+    </div>
+  </ng-container>
+
+  <ng-template #readonlyMode>
+    <div class="max-w-max-width mx-auto bg-surface-container border border-border-subtle rounded-2xl py-4 px-6 text-center shadow-sm">
+      <p class="text-on-surface-variant font-label-md flex items-center justify-center gap-2">
+        <span class="material-symbols-outlined text-[20px]">lock</span>
+        Only admins can send messages in this community
+      </p>
+    </div>
+  </ng-template>
+</div>
+</ng-container>
+
+<ng-template #emptyState>
+    <div class="relative flex-grow flex flex-col items-center justify-center bg-background p-6 text-center overflow-hidden">
+        <app-particle-bg></app-particle-bg>
+        <div class="relative z-10 flex flex-col items-center justify-center">
+            <img src="/logo.png" alt="CipherChat Logo" class="w-[512px] h-auto object-contain mb-8 drop-shadow-xl hover:scale-105 transition-transform duration-500 ease-in-out" />
+            <h2 class="font-title-lg text-2xl md:text-3xl font-bold text-on-surface-variant mb-3 tracking-tight">Welcome to CipherChat</h2>
+            <p class="text-body-lg text-outline max-w-md mx-auto">Select a conversation from the sidebar to start messaging securely with Post-Quantum Encryption.</p>
+        </div>
+    </div>
+</ng-template>
+</main>
+
+</div>
+
+<!-- Add Contact Modal -->
+<div *ngIf="showAddContactModal()" class="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 backdrop-blur-sm">
+  <div class="bg-surface-white rounded-2xl w-full max-w-sm p-6 shadow-2xl m-4">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-xl font-bold text-on-surface">Add Contact</h3>
+      <button (click)="closeAddContact()" class="text-on-surface-variant hover:text-error transition-colors">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+    <p class="text-sm text-on-surface-variant mb-4">Enter a username to send a chat request.</p>
+    <div class="mb-4">
+      <input type="text" [ngModel]="newContactUsername()" (ngModelChange)="newContactUsername.set($event)" placeholder="@username" class="w-full bg-surface-container-high border-none rounded-xl px-4 py-3 text-on-surface focus:ring-2 focus:ring-primary outline-none transition-shadow" (keyup.enter)="sendRequest()"/>
+    </div>
+    <div class="flex justify-end gap-2">
+      <button (click)="closeAddContact()" class="px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors">Cancel</button>
+      <button (click)="sendRequest()" [disabled]="!newContactUsername().trim()" class="px-4 py-2 bg-primary text-white rounded-xl hover:bg-primary-fixed transition-colors disabled:opacity-50 flex items-center gap-2 shadow-md hover:shadow-lg">
+        <span class="material-symbols-outlined text-[18px]">send</span> Send Request
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Pending Requests Modal -->
+<div *ngIf="showRequestsModal()" class="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 backdrop-blur-sm">
+  <div class="bg-surface-white rounded-2xl w-full max-w-md p-6 shadow-2xl m-4 max-h-[80vh] flex flex-col">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-xl font-bold text-on-surface">Incoming Requests</h3>
+      <button (click)="closeRequests()" class="text-on-surface-variant hover:text-error transition-colors">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+    
+    <div *ngIf="pendingRequests().length === 0" class="text-center py-8 text-on-surface-variant">
+      <span class="material-symbols-outlined text-4xl mb-2 opacity-50">inbox</span>
+      <p>No pending requests.</p>
+    </div>
+
+    <div class="overflow-y-auto space-y-3">
+      <div *ngFor="let req of pendingRequests()" class="flex items-center justify-between p-3 bg-surface-container rounded-xl border border-outline/10">
+        <div class="flex items-center gap-3">
+          <div class="relative shrink-0">
+            <div class="w-10 h-10 rounded-full bg-primary-fixed text-on-primary-fixed flex items-center justify-center font-bold overflow-hidden">
+              <img *ngIf="req.avatar?.includes('http')" [src]="req.avatar" class="w-full h-full object-cover"/>
+              <span *ngIf="!req.avatar?.includes('http')">{{ req.displayName ? req.displayName.charAt(0) : 'U' }}</span>
+            </div>
+            <div *ngIf="presenceService.isOnline(req._id || req.id)" class="absolute bottom-0 right-0 w-3 h-3 bg-success-green border-2 border-surface-white rounded-full"></div>
+          </div>
+          <div>
+            <p class="font-bold text-on-surface text-sm">{{ req.displayName }}</p>
+            <p class="text-xs text-on-surface-variant">@{{ req.username }}</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-1">
+          <button (click)="rejectRequest(req._id || req.id)" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-error/10 text-error transition-colors" title="Reject">
+            <span class="material-symbols-outlined text-[18px]">close</span>
+          </button>
+          <button (click)="acceptRequest(req._id || req.id)" class="w-8 h-8 flex items-center justify-center rounded-full bg-success-green/10 hover:bg-success-green/20 text-success-green transition-colors" title="Accept">
+            <span class="material-symbols-outlined text-[18px]">check</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Set PIN Modal -->
+<div *ngIf="showSetPinModal()" class="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 backdrop-blur-sm">
+  <div class="bg-surface-white rounded-2xl w-full max-w-sm p-6 shadow-2xl m-4">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-xl font-bold text-on-surface">Setup Chat Lock PIN</h3>
+      <button (click)="closePinModals()" class="text-on-surface-variant hover:text-error transition-colors">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+    <p class="text-sm text-on-surface-variant mb-4">Please set a 4+ digit PIN to lock this and any future chats. You must remember this PIN.</p>
+    <div class="mb-4">
+      <input type="password" autocomplete="new-password" name="new-pin" [ngModel]="pinInput()" (ngModelChange)="pinInput.set($event)" placeholder="Enter new PIN" class="w-full bg-surface-container-high border-none rounded-xl px-4 py-3 text-on-surface focus:ring-2 focus:ring-primary outline-none transition-shadow" (keyup.enter)="setupPin()"/>
+      <p *ngIf="pinError()" class="text-error text-xs mt-1">{{ pinError() }}</p>
+    </div>
+    <div class="flex justify-end gap-2">
+      <button (click)="closePinModals()" class="px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors">Cancel</button>
+      <button (click)="setupPin()" [disabled]="pinInput().length < 4" class="px-4 py-2 bg-primary text-white rounded-xl hover:bg-primary-fixed transition-colors disabled:opacity-50 flex items-center gap-2 shadow-md hover:shadow-lg">
+        <span class="material-symbols-outlined text-[18px]">lock</span> Set PIN
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Unlock Modal -->
+<div *ngIf="showUnlockModal()" class="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 backdrop-blur-sm">
+  <div class="bg-surface-white rounded-2xl w-full max-w-sm p-6 shadow-2xl m-4 text-center">
+    <div class="flex items-center justify-center mb-4">
+      <div class="w-16 h-16 bg-primary-container text-primary rounded-full flex items-center justify-center">
+        <span class="material-symbols-outlined text-3xl">lock</span>
+      </div>
+    </div>
+    <h3 class="text-xl font-bold text-on-surface mb-2">Chat Locked</h3>
+    <p class="text-sm text-on-surface-variant mb-6">Enter your PIN to access this chat.</p>
+    <div class="mb-4">
+      <input type="password" autocomplete="new-password" name="unlock-pin" [ngModel]="pinInput()" (ngModelChange)="pinInput.set($event)" placeholder="Enter PIN" class="w-full bg-surface-container-high border-none rounded-xl px-4 py-3 text-center text-on-surface focus:ring-2 focus:ring-primary outline-none transition-shadow tracking-[0.5em] font-bold" (keyup.enter)="verifyPin()"/>
+      <p *ngIf="pinError()" class="text-error text-xs mt-1">{{ pinError() }}</p>
+    </div>
+    <div class="flex justify-between gap-2">
+      <button (click)="closePinModals()" class="px-4 py-2 w-full rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors">Cancel</button>
+      <button (click)="verifyPin()" [disabled]="!pinInput()" class="px-4 py-2 w-full bg-primary text-white rounded-xl hover:bg-primary-fixed transition-colors disabled:opacity-50 flex items-center justify-center gap-2 shadow-md hover:shadow-lg">
+        Unlock
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- User Profile Modal -->
+<div *ngIf="showUserProfile() && selectedUserProfile()" class="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 backdrop-blur-sm" (click)="closeUserProfile()">
+  <div (click)="$event.stopPropagation()" class="bg-surface-white rounded-2xl w-full max-w-sm p-6 shadow-2xl m-4 relative flex flex-col items-center text-center">
+    <button (click)="closeUserProfile()" class="absolute top-4 right-4 text-on-surface-variant hover:text-error transition-colors">
+      <span class="material-symbols-outlined">close</span>
+    </button>
+    
+    <div class="relative w-24 h-24 mb-4">
+      <div class="w-full h-full rounded-full bg-primary-fixed text-on-primary-fixed flex items-center justify-center font-bold text-3xl overflow-hidden border-4 border-surface-container shadow-md">
+        <img *ngIf="selectedUserProfile().avatar" [src]="selectedUserProfile().avatar" class="w-full h-full object-cover"/>
+        <span *ngIf="!selectedUserProfile().avatar">{{ selectedUserProfile().displayName?.charAt(0) || selectedUserProfile().username?.charAt(0) || 'U' }}</span>
+      </div>
+      <div *ngIf="presenceService.isOnline(selectedUserProfile()._id || selectedUserProfile().id)" class="absolute bottom-1 right-1 w-5 h-5 bg-success-green border-4 border-surface-white rounded-full z-10"></div>
+    </div>
+    
+    <div class="flex items-center gap-1 justify-center">
+      <h3 class="text-xl font-bold text-on-surface">{{ selectedUserProfile().displayName || selectedUserProfile().username }}</h3>
+      <span *ngIf="selectedUserProfile().isPremium || selectedUserProfile().isAdmin" class="material-symbols-outlined text-[20px]" [ngClass]="(selectedUserProfile().isAdmin || selectedUserProfile().premiumPlan === 'yearly') ? 'text-amber-500' : 'text-blue-500'" title="Verified Account">verified</span>
+    </div>
+    <p class="text-sm text-on-surface-variant mb-2">@{{ selectedUserProfile().username || selectedUserProfile().handle?.replace('@','') }}</p>
+    
+    <p *ngIf="selectedUserProfile().bio" class="text-sm text-on-surface-variant mt-2 mb-6 px-4 italic">
+      "{{ selectedUserProfile().bio }}"
+    </p>
+    <div *ngIf="!selectedUserProfile().bio" class="mb-6"></div>
+    
+    <div class="w-full border-t border-border-subtle pt-4 flex flex-col gap-2">
+      <button *ngIf="!isUserBlocked()" (click)="blockUser()" class="w-full py-3 rounded-xl bg-error/10 text-error font-bold flex items-center justify-center gap-2 hover:bg-error/20 transition-colors">
+        <span class="material-symbols-outlined">block</span> Block User
+      </button>
+      <button *ngIf="isUserBlocked()" (click)="unblockUser()" class="w-full py-3 rounded-xl bg-surface-container-high text-on-surface font-bold flex items-center justify-center gap-2 hover:bg-surface-container-highest transition-colors border border-border-subtle">
+        <span class="material-symbols-outlined">check_circle</span> Unblock User
+      </button>
+    </div>
+  </div>
+</div>

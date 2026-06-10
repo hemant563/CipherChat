@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.custom-scrollbar::-webkit-scrollbar { width: 4px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+.message-shadow { box-shadow: 0 4px 12px rgba(30, 41, 59, 0.04); }
+.active-rail-indicator::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background-color: #00236f;
+}
+
+/* Ensure Angular host components expand to fill the available space */
+html, body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    background-color: theme('colors.surface-white');
+}
+
+app-root, app-layout, app-chat-dashboard, app-explore-communities, app-calls-dashboard, app-profile-settings {
+    display: block;
+    height: 100%;
+    width: 100%;
+}

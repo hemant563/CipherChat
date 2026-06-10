@@ -1,0 +1,61 @@
+version: "2"
+type: frontend
+tech_stack:
+  - TypeScript
+  - Angular
+  - Tailwind CSS
+routes:
+  - path: /landing
+    file: src/app/pages/landing-page/landing-page.ts
+    auth_required: false
+    description: Landing page for login and signup via OTP
+  - path: /chat
+    file: src/app/pages/chat-dashboard/chat-dashboard.ts
+    auth_required: true
+    description: Main dashboard for messaging and groups
+  - path: /calls
+    file: src/app/pages/calls-dashboard/calls-dashboard.ts
+    auth_required: true
+    description: History of all audio and video calls
+  - path: /communities
+    file: src/app/pages/explore-communities/explore-communities.ts
+    auth_required: true
+    description: Explore and join public groups
+  - path: /profile
+    file: src/app/pages/profile-settings/profile-settings.ts
+    auth_required: true
+    description: Manage user profile and settings
+features:
+  - name: User Authentication
+    description: Login and signup via phone number and OTP
+    files:
+      - src/app/pages/landing-page/landing-page.ts
+      - src/app/services/auth.service.ts
+    entry_route: /landing
+    user_interactions:
+      - Enter phone number
+      - Click Send OTP
+      - Enter OTP code
+      - Provide username and password
+      - Click Verify & Register
+    api_calls:
+      - method: POST
+        endpoint: /api/v1/auth/send-otp
+      - method: POST
+        endpoint: /api/v1/auth/register
+    auth_required: false
+  - name: Messaging
+    description: Send and receive messages in chat
+    files:
+      - src/app/pages/chat-dashboard/chat-dashboard.ts
+      - src/app/services/chat.service.ts
+    entry_route: /chat
+    user_interactions:
+      - Click on a contact in the sidebar
+      - Type message in input field
+      - Click send button
+    api_calls:
+      - method: GET
+        endpoint: /api/v1/chats
+    auth_required: true
+known_limitations: []

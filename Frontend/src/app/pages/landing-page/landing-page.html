@@ -1,0 +1,179 @@
+<main #mainContainer class="relative bg-gradient-to-br from-pink-100 via-pink-50 to-blue-100 flex flex-col w-full h-screen px-6 lg:px-16 py-12 lg:py-4 overflow-y-auto overflow-x-hidden">
+  <app-particle-bg></app-particle-bg>
+
+  <div class="relative z-10 w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center justify-between my-auto">
+    
+    <!-- Left Side: Branding & Description -->
+    <div class="text-center lg:text-left animate-fade-in-up">
+      <img src="/logo.png" alt="CipherChat Logo" class="w-full max-w-[640px] md:max-w-[960px] lg:max-w-[1280px] h-auto object-contain mx-auto lg:mx-0 mb-6 drop-shadow-md" />
+      
+      <ul class="mt-8 space-y-5 max-w-md mx-auto lg:mx-0 text-left">
+        <li class="flex items-center gap-4 text-text-secondary">
+          <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+            <span class="material-symbols-outlined text-[22px]">lock</span>
+          </div>
+          <div>
+            <h3 class="font-bold text-text-primary text-base">End-to-End Encrypted</h3>
+            <p class="text-sm">Your messages are secured with AES-256 and Post-Quantum algorithms.</p>
+          </div>
+        </li>
+        <li class="flex items-center gap-4 text-text-secondary">
+          <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+            <span class="material-symbols-outlined text-[22px]">security</span>
+          </div>
+          <div>
+            <h3 class="font-bold text-text-primary text-base">Absolute Privacy</h3>
+            <p class="text-sm">We never track, read, or sell your personal data.</p>
+          </div>
+        </li>
+        <li class="flex items-center gap-4 text-text-secondary">
+          <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+            <span class="material-symbols-outlined text-[22px]">bolt</span>
+          </div>
+          <div>
+            <h3 class="font-bold text-text-primary text-base">Instant & Reliable</h3>
+            <p class="text-sm">Lightning fast message delivery with 99.9% uptime.</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Right Side: Auth Card -->
+    <div class="bg-white rounded-2xl shadow-2xl p-6 sm:p-10 animate-fade-in-up mx-auto lg:mx-0 lg:ml-auto" style="animation-delay: 100ms; max-width: 540px; width: 100%; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);">
+      
+      <!-- Box Title -->
+      <div class="text-center mb-4">
+        <h2 class="font-display-md text-3xl font-bold tracking-tight bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 bg-clip-text text-transparent pb-1">CipherChat</h2>
+      </div>
+
+      <!-- Header / Sub-title -->
+      <h3 class="text-title-lg font-medium text-gray-600 mb-6 text-center">
+        <ng-container *ngIf="authMode() === 'SIGNUP' && step() === 'DETAILS'">Create an Account</ng-container>
+        <ng-container *ngIf="authMode() === 'SIGNUP' && step() === 'OTP'">Verify Identity</ng-container>
+        <ng-container *ngIf="authMode() === 'LOGIN'">Welcome Back</ng-container>
+      </h3>
+      
+      <!-- Error Message Banner -->
+      <div *ngIf="errorMessage()" class="bg-red-50 text-red-700 border border-red-200 p-3 rounded-lg mb-6 flex items-center gap-2 text-label-md">
+        <span class="material-symbols-outlined text-[20px]">error</span>
+        <span>{{ errorMessage() }}</span>
+      </div>
+      
+      <!-- SIGNUP / LOGIN DETAILS -->
+      <div *ngIf="step() === 'DETAILS'" class="space-y-5">
+        
+        <!-- Username Input -->
+        <div>
+          <label class="block text-label-md font-semibold text-gray-900 mb-1.5">Username</label>
+          <div class="relative">
+            <span class="absolute left-3.5 top-1/2 -translate-y-1/2 material-symbols-outlined text-gray-500 text-[20px]">person</span>
+            <input [ngModel]="username()" (ngModelChange)="onUsernameChange($event)" (keyup.enter)="authMode() === 'LOGIN' ? doLogin() : requestOtp()" type="text" placeholder="Enter your username" class="w-full bg-white border border-gray-300 rounded-lg pl-11 pr-10 py-2.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors text-body-md" />
+            <span *ngIf="authMode() === 'SIGNUP' && isCheckingUsername()" class="absolute right-3.5 top-1/2 -translate-y-1/2 material-symbols-outlined text-gray-400 animate-spin text-[20px]">sync</span>
+            <span *ngIf="authMode() === 'SIGNUP' && !isCheckingUsername() && usernameAvailable() === true" class="absolute right-3.5 top-1/2 -translate-y-1/2 material-symbols-outlined text-green-500 text-[20px]">check_circle</span>
+            <span *ngIf="authMode() === 'SIGNUP' && !isCheckingUsername() && usernameAvailable() === false" class="absolute right-3.5 top-1/2 -translate-y-1/2 material-symbols-outlined text-red-500 text-[20px]">cancel</span>
+          </div>
+          <p *ngIf="authMode() === 'SIGNUP' && usernameAvailable() === false" class="text-red-500 text-xs mt-1">Username is already taken</p>
+          <p *ngIf="authMode() === 'SIGNUP' && usernameAvailable() === true" class="text-green-600 text-xs mt-1">Username is available</p>
+        </div>
+
+        <!-- Password Input -->
+        <div>
+          <label class="block text-label-md font-semibold text-gray-900 mb-1.5">Password</label>
+          <div class="relative">
+            <span class="absolute left-3.5 top-1/2 -translate-y-1/2 material-symbols-outlined text-gray-500 text-[20px]">key</span>
+            <input [ngModel]="password()" (ngModelChange)="password.set($event)" (keyup.enter)="authMode() === 'LOGIN' ? doLogin() : requestOtp()" type="password" placeholder="Enter your password" class="w-full bg-white border border-gray-300 rounded-lg pl-11 pr-4 py-2.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors text-body-md" />
+          </div>
+          <div class="flex justify-end mt-1.5" *ngIf="authMode() === 'LOGIN'">
+            <button (click)="requestForgotPassword()" class="text-xs text-primary hover:text-primary/80 font-semibold transition-colors">Forgot Password?</button>
+          </div>
+        </div>
+
+        <div *ngIf="authMode() === 'SIGNUP'">
+          <label class="block text-label-md font-semibold text-gray-900 mb-1.5">Email Address</label>
+          <div class="relative group">
+            <span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-gray-500 group-focus-within:text-primary transition-colors">mail</span>
+            <input 
+              name="email"
+              [ngModel]="email()"
+              (ngModelChange)="email.set($event)"
+              class="w-full bg-white border border-gray-300 rounded-lg py-2.5 pl-12 pr-4 text-gray-900 placeholder-gray-400 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" 
+              placeholder="Enter your email" 
+              type="email"
+              autocomplete="email"
+              required/>
+          </div>
+        </div>
+        
+        <!-- Action Buttons -->
+        <button *ngIf="authMode() === 'SIGNUP'" (click)="requestOtp()" class="w-full bg-primary text-white rounded-lg py-3 font-bold hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 mt-2">
+          Register
+          <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+        </button>
+
+        <button *ngIf="authMode() === 'LOGIN'" (click)="doLogin()" class="w-full bg-primary text-white rounded-lg py-3 font-bold hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 mt-2">
+          Sign in
+          <span class="material-symbols-outlined text-[18px]">login</span>
+        </button>
+
+      </div>
+
+      <!-- OTP Verification Step (Only during Signup) -->
+      <div *ngIf="step() === 'OTP'" class="space-y-5">
+        <div>
+          <label class="block text-body-md text-gray-600 text-center mb-3">
+            Enter the 6-digit code sent to<br>
+            <span *ngIf="authMode() === 'SIGNUP'" class="font-bold text-gray-900">{{ email() }}</span>
+            <span *ngIf="authMode() === 'LOGIN'" class="font-bold text-gray-900">your registered email</span>
+          </label>
+          <input [ngModel]="otp()" (ngModelChange)="otp.set($event)" (keyup.enter)="verifyOtpAndRegister()" type="text" placeholder="------" maxlength="6" class="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors text-center text-headline-sm font-mono tracking-[0.5em]" />
+        </div>
+        <button (click)="verifyOtpAndRegister()" class="w-full bg-primary text-white rounded-lg py-3 font-bold hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 mt-2">
+          <span class="material-symbols-outlined text-[18px]">verified</span> Verify & Register
+        </button>
+        <div class="text-center text-body-sm text-gray-600 mt-4 space-y-1">
+          <p>Didn't receive code? <button (click)="requestOtp()" class="text-primary hover:text-primary/80 font-semibold transition-colors">Resend</button></p>
+          <p>Wrong email? <button (click)="step.set('DETAILS')" class="text-primary hover:text-primary/80 font-semibold transition-colors">Change Email</button></p>
+        </div>
+      </div>
+
+      <!-- Forgot Password Step -->
+      <div *ngIf="step() === 'FORGOT_PASSWORD'" class="space-y-5">
+        <div>
+          <label class="block text-body-md text-gray-600 text-center mb-3">
+            Enter the 6-digit code sent to<br>
+            <span class="font-bold text-gray-900">your registered email</span>
+          </label>
+          <input [ngModel]="otp()" (ngModelChange)="otp.set($event)" type="text" placeholder="------" maxlength="6" class="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors text-center text-headline-sm font-mono tracking-[0.5em] mb-4" />
+          
+          <label class="block text-label-md font-semibold text-gray-900 mb-1.5 text-left">New Password</label>
+          <div class="relative">
+            <span class="absolute left-3.5 top-1/2 -translate-y-1/2 material-symbols-outlined text-gray-500 text-[20px]">key</span>
+            <input [ngModel]="newPassword()" (ngModelChange)="newPassword.set($event)" (keyup.enter)="resetPassword()" type="password" placeholder="Enter new password" class="w-full bg-white border border-gray-300 rounded-lg pl-11 pr-4 py-2.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors text-body-md" />
+          </div>
+        </div>
+        
+        <button (click)="resetPassword()" class="w-full bg-primary text-white rounded-lg py-3 font-bold hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 mt-2">
+          <span class="material-symbols-outlined text-[18px]">lock_reset</span> Reset Password
+        </button>
+        <div class="text-center text-body-sm text-gray-600 mt-4 space-y-1">
+          <p>Didn't receive code? <button (click)="requestForgotPassword()" class="text-primary hover:text-primary/80 font-semibold transition-colors">Resend</button></p>
+          <p><button (click)="step.set('DETAILS')" class="text-primary hover:text-primary/80 font-semibold transition-colors">Back to Login</button></p>
+        </div>
+      </div>
+
+      <!-- Toggle Mode Link -->
+      <div *ngIf="step() === 'DETAILS'" class="mt-8 text-center text-body-md text-gray-600">
+        <ng-container *ngIf="authMode() === 'SIGNUP'">
+          Already have an account? 
+        </ng-container>
+        <ng-container *ngIf="authMode() === 'LOGIN'">
+          New to CipherChat? 
+        </ng-container>
+        <button (click)="toggleMode()" class="text-primary font-semibold hover:underline transition-colors">
+          {{ authMode() === 'SIGNUP' ? 'Sign in' : 'Create an account' }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+</main>

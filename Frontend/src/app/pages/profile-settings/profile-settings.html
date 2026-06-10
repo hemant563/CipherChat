@@ -1,0 +1,508 @@
+<div class="flex h-screen overflow-hidden">
+<!-- SideNavBar (Authority: JSON) -->
+
+<!-- Main Content Canvas -->
+<main class="flex-1 flex flex-col h-full bg-background overflow-y-auto custom-scrollbar">
+<!-- TopAppBar (Authority: JSON) -->
+<header class="flex justify-between items-center w-full px-6 md:px-margin-desktop h-16 bg-surface-white dark:bg-inverse-surface border-b border-border-subtle dark:border-outline-variant sticky top-0 z-10">
+<div class="flex items-center gap-3">
+<span class="md:hidden material-symbols-outlined text-primary">menu</span>
+<h2 class="font-title-md text-title-md font-semibold text-text-primary dark:text-inverse-on-surface">Profile Settings</h2>
+</div>
+
+</header>
+<!-- Dashboard Content -->
+<div class="max-w-4xl mx-auto w-full px-6 py-10 space-y-10">
+<!-- Profile Header Section -->
+<section class="bg-surface-white rounded-xl border border-border-subtle p-8 flex flex-col md:flex-row items-center gap-8 shadow-[0_4px_12px_rgba(30,41,59,0.04)] relative overflow-hidden">
+<div class="absolute top-0 right-0 p-4">
+<div class="flex items-center gap-2 px-3 py-1 bg-green-50 rounded-full border border-success-green/20">
+<span class="material-symbols-outlined text-[16px] text-success-green" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+<span class="text-success-green font-label-sm text-label-sm">Security Status: High</span>
+</div>
+</div>
+<div class="relative group">
+<div class="w-32 h-32 rounded-full overflow-hidden border-4 border-primary-fixed shadow-lg bg-primary-fixed flex items-center justify-center relative" [ngClass]="isEditing() ? 'cursor-pointer' : ''" (click)="isEditing() ? fileInput.click() : null">
+<img *ngIf="isEditing() ? editForm.avatar() : profile.avatar()" [alt]="profile.name() + ' Avatar'" class="w-full h-full object-cover" [src]="getAvatarUrl(isEditing() ? editForm.avatar() : profile.avatar())"/>
+<span *ngIf="isEditing() ? !editForm.avatar() : !profile.avatar()" class="text-4xl text-white font-bold">{{ profile.name() ? profile.name().charAt(0) : 'U' }}</span>
+<div *ngIf="isEditing()" class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+  <span class="material-symbols-outlined text-white text-[32px]">photo_camera</span>
+</div>
+<input type="file" #fileInput hidden accept="image/*" (change)="onAvatarSelected($event)">
+</div>
+<button *ngIf="!isEditing()" (click)="toggleEdit()" class="absolute bottom-1 right-1 bg-primary text-white p-2 rounded-full shadow-md hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+</div>
+<div class="text-center md:text-left w-full max-w-md">
+<ng-container *ngIf="!isEditing()">
+  <div class="flex items-center justify-center md:justify-start gap-2 mb-1">
+    <h3 class="font-headline-lg text-headline-lg text-text-primary">{{ profile.name() }}</h3>
+    <span *ngIf="profile.isPremium() || profile.isAdmin()" class="material-symbols-outlined text-[24px]" [ngClass]="(profile.isAdmin() || profile.premiumPlan() === 'yearly') ? 'text-amber-500' : 'text-blue-500'" title="Verified Account">verified</span>
+  </div>
+  <p class="font-body-md text-text-secondary mb-4">{{ profile.username() }}</p>
+  <p class="font-body-md text-text-primary">{{ profile.bio() }}</p>
+</ng-container>
+
+<ng-container *ngIf="isEditing()">
+  <div class="space-y-4 w-full text-left">
+    <div>
+      <label class="block text-xs font-label-sm text-text-secondary mb-1 ml-1">Display Name (Nickname)</label>
+      <input type="text" [ngModel]="editForm.name()" (ngModelChange)="editForm.name.set($event)" placeholder="Display Name" class="w-full bg-surface-container border border-border-subtle rounded-lg px-4 py-2 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all font-body-md text-text-primary">
+    </div>
+    
+    <div>
+      <label class="block text-xs font-label-sm text-text-secondary mb-1 ml-1">Unique Username</label>
+      <div class="relative w-full">
+        <input type="text" [ngModel]="editForm.username()" (ngModelChange)="onUsernameChange($event)" placeholder="Username" class="w-full bg-surface-container border border-border-subtle rounded-lg px-4 py-2 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all font-body-md text-text-primary"
+               [ngClass]="{'border-error focus:border-error focus:ring-error': usernameAvailable() === false, 'border-success-green focus:border-success-green focus:ring-success-green': usernameAvailable() === true && (editForm.username() || '').toLowerCase() !== (profile.username() || '').toLowerCase()}">
+        <div class="absolute right-3 top-1/2 -translate-y-1/2 flex items-center">
+          <span *ngIf="isCheckingUsername()" class="material-symbols-outlined animate-spin text-text-secondary text-[18px]">progress_activity</span>
+          <span *ngIf="!isCheckingUsername() && usernameAvailable() === true && (editForm.username() || '').toLowerCase() !== (profile.username() || '').toLowerCase()" class="material-symbols-outlined text-success-green text-[18px]">check_circle</span>
+          <span *ngIf="!isCheckingUsername() && usernameAvailable() === false" class="material-symbols-outlined text-error text-[18px]">cancel</span>
+        </div>
+      </div>
+      <p *ngIf="usernameAvailable() === false" class="text-error text-xs ml-1 mt-1">Username is already taken</p>
+    </div>
+    
+    <div>
+      <label class="block text-xs font-label-sm text-text-secondary mb-1 ml-1">Bio</label>
+      <textarea [ngModel]="editForm.bio()" (ngModelChange)="editForm.bio.set($event)" placeholder="Bio" rows="2" class="w-full bg-surface-container border border-border-subtle rounded-lg px-4 py-2 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all font-body-md text-text-primary resize-none"></textarea>
+    </div>
+    <p class="text-xs text-text-secondary">Click on your profile picture above to upload a new avatar.</p>
+    <div class="flex gap-3 pt-2">
+      <button (click)="saveProfile()" [disabled]="isLoading()" class="bg-primary text-white px-6 py-2 rounded-lg font-label-md hover:bg-primary-dark transition-colors flex items-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed">
+        <span *ngIf="isLoading()" class="material-symbols-outlined animate-spin text-[18px]">progress_activity</span>
+        {{ isLoading() ? 'Saving...' : 'Save' }}
+      </button>
+      <button (click)="toggleEdit()" class="bg-surface-container-high text-text-primary px-6 py-2 rounded-lg font-label-md hover:bg-surface-container-highest transition-colors border border-border-subtle">Cancel</button>
+    </div>
+  </div>
+</ng-container>
+</div>
+<div class="ml-auto flex flex-col items-center md:items-end gap-3 w-full md:w-auto mt-6 md:mt-0">
+<ng-container *ngIf="!isEditing()">
+  <button *ngIf="!profile.isPremium()" (click)="goToPremium()" class="w-full md:w-auto px-6 py-2.5 bg-gradient-to-r from-amber-500 to-yellow-500 text-white font-bold rounded-lg shadow-lg shadow-amber-500/20 hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2">
+    <span class="material-symbols-outlined">workspace_premium</span> Get Premium
+  </button>
+  <button *ngIf="profile.isPremium()" (click)="goToPremium()" class="w-full md:w-auto px-6 py-2.5 bg-surface-container border border-amber-500/30 text-amber-600 dark:text-amber-400 font-bold rounded-lg hover:bg-surface-container-high transition-colors flex items-center justify-center gap-2">
+    <span class="material-symbols-outlined">workspace_premium</span> Premium Active
+  </button>
+</ng-container>
+</div>
+</section>
+<!-- Settings Grid (Asymmetric/Bento-ish) -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<!-- Privacy Section -->
+<div class="bg-surface-white rounded-xl border border-border-subtle p-6 flex flex-col gap-6 shadow-[0_4px_12px_rgba(30,41,59,0.04)]">
+<div class="flex items-center gap-3 border-b border-border-subtle pb-4">
+<span class="material-symbols-outlined text-primary">visibility_off</span>
+<h4 class="font-title-md text-title-md">Privacy</h4>
+</div>
+<p class="text-label-sm text-text-secondary">Note: Changes to your privacy settings apply immediately across all your connected devices.</p>
+<div class="space-y-4">
+
+<!-- Active Status -->
+<div class="flex items-center justify-between p-3 rounded-lg hover:bg-surface-container-low transition-colors group cursor-pointer" (click)="toggle('hideActiveStatus')">
+  <div class="flex items-center gap-3 flex-1 min-w-0">
+    <div class="w-9 h-9 rounded-full flex items-center justify-center shrink-0"
+         [ngClass]="settings.hideActiveStatus() ? 'bg-error/10' : 'bg-success-green/10'">
+      <span class="material-symbols-outlined text-[20px]"
+            [ngClass]="settings.hideActiveStatus() ? 'text-error' : 'text-success-green'">
+        {{ settings.hideActiveStatus() ? 'wifi_off' : 'wifi' }}
+      </span>
+    </div>
+    <div class="min-w-0">
+      <p class="font-label-md text-label-md text-text-primary font-semibold">Active Status</p>
+      <p class="text-label-sm font-label-sm text-text-secondary leading-snug pr-4">
+        {{ settings.hideActiveStatus()
+          ? 'Your active status is hidden — friends cannot see when you\'re online'
+          : 'Your friends in chats can see when you\'re online' }}
+      </p>
+    </div>
+  </div>
+  <div class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out ml-2"
+       [ngClass]="settings.hideActiveStatus() ? 'bg-error' : 'bg-outline-variant'">
+    <span class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
+          [ngClass]="settings.hideActiveStatus() ? 'translate-x-5' : 'translate-x-0'"></span>
+  </div>
+</div>
+<!-- Read Receipts -->
+<div class="flex items-center justify-between p-3 rounded-lg hover:bg-surface-container-low transition-colors group cursor-pointer" (click)="toggle('readReceipts')">
+<p class="font-label-md text-label-md text-text-primary">Read Receipts</p>
+<div class="flex items-center gap-2">
+<span class="text-label-sm font-label-sm" [ngClass]="settings.readReceipts() ? 'text-success-green' : 'text-text-secondary'">{{ settings.readReceipts() ? 'On' : 'Off' }}</span>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Security Section -->
+<div class="bg-surface-white rounded-xl border border-border-subtle p-6 flex flex-col gap-6 shadow-[0_4px_12px_rgba(30,41,59,0.04)]">
+<div class="flex items-center gap-3 border-b border-border-subtle pb-4">
+<span class="material-symbols-outlined text-primary">security</span>
+<h4 class="font-title-md text-title-md">Security</h4>
+</div>
+<div class="space-y-4">
+<!-- Two-Step Verification -->
+<div class="flex items-center justify-between p-3 bg-primary-fixed/30 rounded-xl border border-primary-fixed">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">key</span>
+<div>
+<p class="font-label-md text-label-md text-text-primary">Two-Step Verification</p>
+<p class="text-label-sm font-label-sm text-on-primary-fixed-variant">{{ settings.twoStep() ? 'Enabled via OTP' : 'Disabled' }}</p>
+</div>
+</div>
+<button (click)="openManageModal()" class="bg-primary text-white px-3 py-1 rounded-lg text-label-sm font-label-sm hover:opacity-90 transition-opacity">Manage</button>
+</div>
+<!-- Active Sessions -->
+<div (click)="toggleSessions()" class="flex items-center justify-between p-3 rounded-lg hover:bg-surface-container-low transition-colors cursor-pointer">
+<p class="font-label-md text-label-md text-text-primary">Active Sessions</p>
+<span class="text-label-sm font-label-sm text-text-secondary">{{ sessions.length }} devices</span>
+</div>
+<!-- Expanded Sessions Panel -->
+<div *ngIf="showSessions()" class="space-y-2 pl-3 animate-fadeIn">
+<div *ngFor="let s of sessions" class="flex items-center justify-between p-3 bg-surface-container-low rounded-lg">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant text-[20px]">devices</span>
+<div>
+<p class="font-label-sm text-label-sm text-text-primary font-bold">{{ s.device }}</p>
+<p class="text-[11px] text-text-secondary">{{ s.location }}</p>
+</div>
+</div>
+<span class="text-[11px] font-bold" [ngClass]="s.lastActive === 'Now' ? 'text-success-green' : 'text-text-secondary'">{{ s.lastActive }}</span>
+</div>
+</div>
+<!-- End-to-end Keys -->
+<div class="flex items-center justify-between p-3 rounded-lg hover:bg-surface-container-low transition-colors cursor-pointer" (click)="openE2eModal()">
+<p class="font-label-md text-label-md text-text-primary">End-to-end Keys</p>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</div>
+<!-- Chat Lock PIN -->
+<div class="flex items-center justify-between p-3 rounded-lg hover:bg-surface-container-low transition-colors cursor-pointer" (click)="openChangePinModal()">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant">lock_reset</span>
+<p class="font-label-md text-label-md text-text-primary">Change Chat Lock PIN</p>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</div>
+</div>
+</div>
+<!-- AI Assistant Section -->
+<div class="bg-surface-white rounded-xl border border-border-subtle p-6 flex flex-col gap-6 shadow-[0_4px_12px_rgba(30,41,59,0.04)]">
+<div class="flex items-center gap-3 border-b border-border-subtle pb-4">
+<span class="material-symbols-outlined text-primary">psychology</span>
+<h4 class="font-title-md text-title-md">AI Assistant</h4>
+</div>
+<div class="flex items-center gap-4 p-4 bg-surface-container rounded-xl transition-all" (click)="toggle('aiSmartReplies')" [ngClass]="isAiLocked() ? 'opacity-70 cursor-not-allowed border border-error/30' : 'cursor-pointer'">
+<div class="w-12 h-12 rounded-full bg-gradient-to-tr from-primary to-secondary flex items-center justify-center shrink-0" [ngClass]="isAiLocked() ? 'grayscale' : ''">
+<span class="material-symbols-outlined text-white">auto_awesome</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-text-primary flex flex-wrap items-center gap-2">
+  Smart Replies
+  <span *ngIf="isAiLocked()" class="bg-gradient-to-r from-yellow-500 to-orange-500 text-white text-[10px] px-2 py-0.5 rounded-full uppercase font-bold tracking-wider whitespace-nowrap shadow-sm">Premium Required</span>
+</p>
+<p class="text-label-sm font-label-sm" [ngClass]="isAiLocked() ? 'text-error font-medium' : 'text-text-secondary'">
+  {{ isAiLocked() ? (aiLimitReached() ? 'Usage limit reached. Buy Premium to reactivate.' : 'Premium required to use AI features.') : (settings.aiSmartReplies() ? 'Generative responses enabled' : 'Smart replies disabled') }}
+</p>
+</div>
+<div class="ml-auto">
+<div class="relative inline-flex h-6 w-11 flex-shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none" [ngClass]="isAiLocked() ? 'bg-surface-container-high' : (settings.aiSmartReplies() ? 'bg-primary' : 'bg-outline-variant')">
+<span class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out" [ngClass]="settings.aiSmartReplies() && !isAiLocked() ? 'translate-x-5' : 'translate-x-0'"></span>
+</div>
+</div>
+</div>
+<button (click)="openAiConfig()" 
+        [ngClass]="isAiLocked() ? 'opacity-70 border-error/30 text-error bg-surface-container' : 'border-primary text-primary hover:bg-primary-fixed'"
+        class="w-full py-3 rounded-xl border font-label-md text-label-md transition-colors flex items-center justify-center gap-2">
+  <span *ngIf="isAiLocked()" class="material-symbols-outlined text-[18px]">lock</span>
+  Configure AI Training Data
+</button>
+</div>
+<!-- Notifications Section -->
+<div class="bg-surface-white rounded-xl border border-border-subtle p-6 flex flex-col gap-6 shadow-[0_4px_12px_rgba(30,41,59,0.04)]">
+<div class="flex items-center gap-3 border-b border-border-subtle pb-4">
+<span class="material-symbols-outlined text-primary">notifications</span>
+<h4 class="font-title-md text-title-md">Notifications</h4>
+</div>
+<div class="space-y-4">
+<!-- Message Tones -->
+<div (click)="cycleMessageTone()" class="flex items-center justify-between p-3 rounded-lg hover:bg-surface-container-low transition-colors cursor-pointer">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant">chat_bubble</span>
+<p class="font-label-md text-label-md text-text-primary">Message Tones</p>
+</div>
+<span class="text-label-sm font-label-sm text-text-secondary">{{ messageTone() }}</span>
+</div>
+<!-- Haptic Feedback -->
+<div (click)="toggle('hapticFeedback')" class="flex items-center justify-between p-3 rounded-lg hover:bg-surface-container-low transition-colors cursor-pointer">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant">vibration</span>
+<p class="font-label-md text-label-md text-text-primary">Haptic Feedback</p>
+</div>
+<div class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none" [ngClass]="settings.hapticFeedback() ? 'bg-primary' : 'bg-outline-variant'">
+<span class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out" [ngClass]="settings.hapticFeedback() ? 'translate-x-5' : 'translate-x-0'"></span>
+</div>
+</div>
+<!-- Desktop Alerts -->
+<div (click)="toggle('desktopAlerts')" class="flex items-center justify-between p-3 rounded-lg hover:bg-surface-container-low transition-colors cursor-pointer">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant">desktop_windows</span>
+<p class="font-label-md text-label-md text-text-primary">Desktop Alerts</p>
+</div>
+<span class="text-label-sm font-label-sm" [ngClass]="settings.desktopAlerts() ? 'text-success-green' : 'text-text-secondary'">{{ settings.desktopAlerts() ? 'On' : 'Off' }}</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Payment History Section -->
+<div class="mt-8 bg-surface-white rounded-xl border border-border-subtle p-6 shadow-[0_4px_12px_rgba(30,41,59,0.04)]" *ngIf="profile.isPremium() || paymentHistory().length > 0">
+  <div class="flex items-center gap-3 border-b border-border-subtle pb-4 mb-4">
+    <span class="material-symbols-outlined text-primary">receipt_long</span>
+    <h4 class="font-title-md text-title-md">Payment History</h4>
+  </div>
+  
+  <div *ngIf="paymentHistory().length === 0" class="text-text-secondary text-sm">
+    No payment history found.
+  </div>
+
+  <div *ngIf="paymentHistory().length > 0" class="space-y-3">
+    <div *ngFor="let payment of paymentHistory()" class="flex items-center justify-between p-4 bg-surface-container-low rounded-lg border border-border-subtle hover:bg-surface-container transition-colors">
+      <div class="flex items-center gap-4">
+        <div class="w-10 h-10 rounded-full flex items-center justify-center text-white shadow-sm" [ngClass]="payment.status === 'success' ? 'bg-success-green' : (payment.status === 'failed' ? 'bg-error' : 'bg-amber-500')">
+          <span class="material-symbols-outlined text-[20px]">
+            {{ payment.status === 'success' ? 'check_circle' : (payment.status === 'failed' ? 'error' : 'pending') }}
+          </span>
+        </div>
+        <div>
+          <p class="font-title-sm text-title-sm font-bold capitalize">{{ payment.plan }} Premium</p>
+          <p class="text-xs text-text-secondary">{{ payment.createdAt | date:'mediumDate' }} • {{ payment.razorpayOrderId }}</p>
+        </div>
+      </div>
+      <div class="text-right">
+        <p class="font-title-sm text-title-sm font-bold" [ngClass]="payment.status === 'success' ? 'text-success-green' : 'text-text-primary'">
+          ₹{{ payment.amount }}
+        </p>
+        <p class="text-xs capitalize" [ngClass]="{'text-success-green': payment.status === 'success', 'text-error': payment.status === 'failed', 'text-amber-500': payment.status !== 'success' && payment.status !== 'failed'}">
+          {{ payment.status }}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- About Section -->
+<div class="mt-8">
+<div (click)="openAboutModal()" class="bg-surface-white rounded-xl border border-border-subtle p-4 flex items-center justify-between hover:bg-surface-container-low transition-colors cursor-pointer shadow-sm">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">info</span>
+</div>
+<div>
+<p class="font-title-sm text-title-sm text-text-primary">About CipherChat</p>
+<p class="font-body-sm text-body-sm text-text-secondary">App info, developer details & support</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</div>
+</div>
+
+<!-- Danger Zone -->
+<div class="mt-8 pt-8 border-t border-border-subtle flex flex-col items-center gap-4">
+<button (click)="confirmLogout()" class="flex items-center gap-2 text-error px-6 py-3 rounded-xl hover:bg-error-container/20 transition-colors">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-label-md text-label-md">Logout from CipherChat</span>
+</button>
+
+<button (click)="openDeleteAccountModal()" class="flex items-center justify-center gap-2 text-white bg-error px-6 py-3 rounded-xl hover:bg-error/90 transition-colors shadow-sm w-full max-w-[280px]">
+<span class="material-symbols-outlined">delete_forever</span>
+<span class="font-label-md text-label-md">Delete Account Permanently</span>
+</button>
+</div>
+</div>
+
+<!-- ============ MODALS ============ -->
+
+<!-- 2FA Manage Modal -->
+<div *ngIf="showManageModal()" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50" (click)="closeManageModal()">
+<div (click)="$event.stopPropagation()" class="bg-surface-white rounded-2xl p-8 w-full max-w-md shadow-2xl mx-4">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-primary text-[28px]">key</span>
+<h3 class="font-title-lg text-title-lg font-bold text-text-primary">Two-Step Verification</h3>
+</div>
+<p class="text-text-secondary font-body-md mb-6">Two-Step Verification adds an extra layer of security. When enabled, you'll need to enter a one-time code sent to your phone each time you log in.</p>
+<div class="flex items-center justify-between p-4 bg-surface-container rounded-xl mb-6">
+<span class="font-label-md text-label-md text-text-primary">Status</span>
+<span class="font-label-md text-label-md font-bold" [ngClass]="settings.twoStep() ? 'text-success-green' : 'text-error'">{{ settings.twoStep() ? 'Enabled' : 'Disabled' }}</span>
+</div>
+<div class="flex gap-3">
+<button (click)="toggle('twoStep')" class="flex-1 py-3 rounded-xl font-label-md text-label-md font-bold transition-colors"
+  [ngClass]="settings.twoStep() ? 'bg-error/10 text-error hover:bg-error/20' : 'bg-primary text-white hover:opacity-90'">
+  {{ settings.twoStep() ? 'Disable' : 'Enable' }}
+</button>
+<button (click)="closeManageModal()" class="flex-1 py-3 rounded-xl border border-border-subtle text-text-secondary font-label-md text-label-md hover:bg-surface-container transition-colors">Cancel</button>
+</div>
+</div>
+</div>
+
+<!-- Logout Confirmation Modal -->
+<div *ngIf="showLogoutConfirm()" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50" (click)="cancelLogout()">
+<div (click)="$event.stopPropagation()" class="bg-surface-white rounded-2xl p-8 w-full max-w-sm shadow-2xl mx-4 text-center">
+<div class="w-16 h-16 bg-error/10 rounded-full flex items-center justify-center mx-auto mb-4">
+<span class="material-symbols-outlined text-error text-[32px]">logout</span>
+</div>
+<h3 class="font-title-lg text-title-lg font-bold text-text-primary mb-2">Logout?</h3>
+<p class="text-text-secondary font-body-md mb-6">Are you sure you want to logout from CipherChat on this device?</p>
+<div class="flex gap-3">
+<button (click)="doLogout()" class="flex-1 py-3 rounded-xl bg-error text-white font-label-md text-label-md font-bold hover:opacity-90 transition-opacity">Logout</button>
+<button (click)="cancelLogout()" class="flex-1 py-3 rounded-xl border border-border-subtle text-text-secondary font-label-md text-label-md hover:bg-surface-container transition-colors">Cancel</button>
+</div>
+</div>
+</div>
+
+<!-- Delete Account Confirmation Modal -->
+<div *ngIf="showDeleteAccountModal()" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50" (click)="closeDeleteAccountModal()">
+<div (click)="$event.stopPropagation()" class="bg-surface-white rounded-2xl p-8 w-full max-w-md shadow-2xl mx-4 text-center border-t-4 border-error">
+<div class="w-16 h-16 bg-error/10 rounded-full flex items-center justify-center mx-auto mb-4">
+<span class="material-symbols-outlined text-error text-[32px]">warning</span>
+</div>
+<h3 class="font-title-lg text-title-lg font-bold text-text-primary mb-2">Delete Account?</h3>
+<p class="text-text-secondary font-body-md mb-4 text-left">This action is <strong>irreversible</strong>. It will permanently delete your account, remove all your messages from everywhere, remove you from all groups, and delete your payment history and media.</p>
+
+<div class="mb-6 text-left">
+  <label class="block text-label-sm text-text-secondary mb-1">Type <strong>DELETE</strong> to confirm:</label>
+  <input type="text" [ngModel]="deleteConfirmInput()" (ngModelChange)="deleteConfirmInput.set($event)" placeholder="DELETE" class="w-full bg-surface-container border border-border-subtle rounded-xl px-4 py-3 text-on-surface focus:ring-2 focus:ring-error outline-none transition-shadow" />
+</div>
+
+<div class="flex gap-3">
+<button (click)="doDeleteAccount()" [disabled]="deleteConfirmInput() !== 'DELETE'" class="flex-1 py-3 rounded-xl bg-error text-white font-label-md text-label-md font-bold hover:opacity-90 transition-opacity disabled:opacity-50">Delete Account</button>
+<button (click)="closeDeleteAccountModal()" class="flex-1 py-3 rounded-xl border border-border-subtle text-text-secondary font-label-md text-label-md hover:bg-surface-container transition-colors">Cancel</button>
+</div>
+</div>
+</div>
+
+<!-- Change Chat Lock PIN Modal -->
+<div *ngIf="showChangePinModal()" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50" (click)="closeChangePinModal()">
+  <div (click)="$event.stopPropagation()" class="bg-surface-white rounded-2xl p-8 w-full max-w-sm shadow-2xl mx-4">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-xl font-bold text-on-surface">Change Chat Lock PIN</h3>
+      <button (click)="closeChangePinModal()" class="text-on-surface-variant hover:text-error transition-colors">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+    <p class="text-sm text-text-secondary mb-4">Enter your current PIN to set a new one. If you haven't set a PIN yet, leave the old PIN blank.</p>
+    
+    <div class="space-y-4 mb-6">
+      <div>
+        <label class="block text-label-sm text-text-secondary mb-1">Current PIN</label>
+        <input type="password" [ngModel]="oldPinInput()" (ngModelChange)="oldPinInput.set($event)" placeholder="Enter current PIN (if any)" class="w-full bg-surface-container border border-border-subtle rounded-xl px-4 py-3 text-on-surface focus:ring-2 focus:ring-primary outline-none transition-shadow" />
+      </div>
+      <div>
+        <label class="block text-label-sm text-text-secondary mb-1">New PIN</label>
+        <input type="password" [ngModel]="newPinInput()" (ngModelChange)="newPinInput.set($event)" placeholder="Enter new 4+ digit PIN" class="w-full bg-surface-container border border-border-subtle rounded-xl px-4 py-3 text-on-surface focus:ring-2 focus:ring-primary outline-none transition-shadow" (keyup.enter)="saveNewPin()"/>
+        <p *ngIf="pinError()" class="text-error text-xs mt-1">{{ pinError() }}</p>
+      </div>
+    </div>
+    
+    <div class="flex justify-end gap-2">
+      <button (click)="closeChangePinModal()" class="px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors">Cancel</button>
+      <button (click)="saveNewPin()" [disabled]="newPinInput().length < 4" class="px-4 py-2 bg-primary text-white rounded-xl hover:bg-primary-fixed transition-colors disabled:opacity-50 shadow-md hover:shadow-lg">
+        Save New PIN
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- AI Config Toast -->
+<div *ngIf="showAiConfigToast()" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-primary text-white px-6 py-3 rounded-xl shadow-xl flex items-center gap-3 z-50 animate-fadeIn">
+<span class="material-symbols-outlined">check_circle</span>
+<span class="font-label-md text-label-md">AI Training Data configuration opened successfully</span>
+</div>
+
+<!-- E2E Information Modal -->
+<div *ngIf="showE2eModal()" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50" (click)="closeE2eModal()">
+<div (click)="$event.stopPropagation()" class="bg-surface-white rounded-2xl p-8 w-full max-w-md shadow-2xl mx-4">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-success-green text-[28px]">lock</span>
+<h3 class="font-title-lg text-title-lg font-bold text-text-primary">End-to-End Encryption</h3>
+</div>
+<p class="text-text-secondary font-body-md mb-6">
+Your messages and calls are secured with end-to-end encryption. This means nobody, not even CipherChat, can read or listen to them.
+<br><br>
+Your unique cryptographic keys are generated and stored securely on your device. You can verify keys with your contacts to guarantee your connection is safe from interception.
+</p>
+<div class="flex items-center gap-3 p-4 bg-success-green/10 rounded-xl mb-6 border border-success-green/20">
+<span class="material-symbols-outlined text-success-green">verified_user</span>
+<div class="flex flex-col">
+    <span class="font-label-md text-label-md text-text-primary font-bold">Connection is Secure</span>
+    <span class="font-body-sm text-body-sm text-text-secondary">Your keys are active and protecting your chats.</span>
+</div>
+</div>
+<div class="flex justify-end gap-3">
+<button (click)="closeE2eModal()" class="px-6 py-2.5 rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container transition-colors">Close</button>
+</div>
+</div>
+</div>
+
+<!-- About Information Modal -->
+<div *ngIf="showAboutModal()" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 transition-opacity duration-300" (click)="closeAboutModal()">
+<div (click)="$event.stopPropagation()" class="bg-surface-white rounded-2xl p-8 w-full max-w-lg shadow-2xl mx-4 transform scale-100 transition-transform duration-300 relative overflow-hidden">
+<!-- Background decor -->
+<div class="absolute -top-24 -right-24 w-48 h-48 bg-primary/10 rounded-full blur-3xl pointer-events-none"></div>
+
+<div class="flex justify-between items-start mb-6 relative">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-primary to-secondary flex items-center justify-center shadow-lg text-white font-bold text-2xl tracking-tighter">CS</div>
+<div>
+<h3 class="font-display-sm text-display-sm font-bold text-text-primary m-0">CipherChat</h3>
+<p class="text-text-secondary font-label-sm text-label-sm m-0">Version 1.0.0 (Build 2026)</p>
+</div>
+</div>
+<button (click)="closeAboutModal()" class="p-2 hover:bg-surface-container rounded-full text-text-secondary transition-colors">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+
+<div class="space-y-6">
+<!-- App Info -->
+<div>
+<h4 class="font-title-sm text-title-sm text-text-primary mb-2 flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-primary">apps</span> About the App
+</h4>
+<p class="text-text-secondary font-body-md text-sm leading-relaxed">
+CipherChat is a modern, real-time communication platform designed for speed, security, and seamless connections. It features end-to-end encrypted messaging, high-quality WebRTC audio/video calls, and AI-powered smart replies.
+</p>
+</div>
+
+<!-- Developer Info -->
+<div class="bg-surface-container-low rounded-xl p-4 border border-border-subtle">
+<h4 class="font-title-sm text-title-sm text-text-primary mb-3 flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-primary">code</span> Developer Info
+</h4>
+<div class="space-y-2 text-sm">
+<div class="flex justify-between items-center">
+<span class="text-text-secondary">Developer Name:</span>
+<span class="font-medium text-text-primary">Hemant Dangi</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-text-secondary">Email:</span>
+<a href="mailto:cipherchat09@gmail.com" class="text-primary hover:underline font-medium">cipherchat09&#64;gmail.com</a>
+</div>
+</div>
+</div>
+
+<!-- Action Buttons -->
+<div class="flex flex-col sm:flex-row gap-3 pt-2">
+<button onclick="navigator.clipboard.writeText('Hemant Dangi\\ncipherchat09@gmail.com'); alert('Contact info copied!');" class="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-border-subtle font-label-md text-label-md text-text-primary hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-[18px]">content_copy</span> Copy Contact Info
+</button>
+<a href="https://mail.google.com/mail/?view=cm&fs=1&to=cipherchat09@gmail.com&su=CipherChat+Support+Request" target="_blank" rel="noopener noreferrer" class="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-primary text-white font-label-md text-label-md hover:bg-primary-container hover:text-on-primary-container transition-colors">
+<span class="material-symbols-outlined text-[18px]">support_agent</span> Contact Support
+</a>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>

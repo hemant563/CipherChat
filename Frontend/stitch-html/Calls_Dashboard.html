@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ChatSphere | Calls Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Geist:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "security-blue": "#1E293B",
+                      "primary-fixed-dim": "#b6c4ff",
+                      "on-secondary-fixed": "#07006c",
+                      "on-primary-fixed-variant": "#264191",
+                      "primary-fixed": "#dce1ff",
+                      "surface-dim": "#d8dadc",
+                      "secondary-fixed-dim": "#c0c1ff",
+                      "surface-tint": "#4059aa",
+                      "on-error-container": "#93000a",
+                      "surface-variant": "#e0e3e5",
+                      "primary-container": "#1e3a8a",
+                      "inverse-surface": "#2d3133",
+                      "secondary-fixed": "#e1e0ff",
+                      "on-tertiary-fixed-variant": "#773205",
+                      "error-container": "#ffdad6",
+                      "inverse-on-surface": "#eff1f3",
+                      "border-subtle": "#E2E8F0",
+                      "tertiary-container": "#6e2c00",
+                      "tertiary-fixed": "#ffdbcb",
+                      "tertiary": "#4b1c00",
+                      "text-primary": "#0F172A",
+                      "error": "#ba1a1a",
+                      "tertiary-fixed-dim": "#ffb691",
+                      "surface-container": "#eceef0",
+                      "surface": "#f7f9fb",
+                      "primary": "#00236f",
+                      "background": "#f7f9fb",
+                      "outline": "#757682",
+                      "on-tertiary-fixed": "#341100",
+                      "on-error": "#ffffff",
+                      "on-secondary-container": "#fffbff",
+                      "surface-container-lowest": "#ffffff",
+                      "outline-variant": "#c5c5d3",
+                      "on-secondary-fixed-variant": "#2f2ebe",
+                      "on-primary": "#ffffff",
+                      "on-tertiary-container": "#f39461",
+                      "on-surface": "#191c1e",
+                      "on-primary-fixed": "#00164e",
+                      "secondary-container": "#6063ee",
+                      "on-primary-container": "#90a8ff",
+                      "surface-container-highest": "#e0e3e5",
+                      "success-green": "#10B981",
+                      "on-surface-variant": "#444651",
+                      "on-tertiary": "#ffffff",
+                      "surface-white": "#FFFFFF",
+                      "surface-container-high": "#e6e8ea",
+                      "text-secondary": "#64748B",
+                      "inverse-primary": "#b6c4ff",
+                      "surface-bright": "#f7f9fb",
+                      "on-secondary": "#ffffff",
+                      "surface-container-low": "#f2f4f6",
+                      "on-background": "#191c1e",
+                      "secondary": "#4648d4"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "max-width": "1280px",
+                      "margin-desktop": "32px",
+                      "gutter": "16px",
+                      "margin-mobile": "16px",
+                      "unit": "4px"
+              },
+              "fontFamily": {
+                      "headline-lg": ["Geist"],
+                      "display-lg": ["Geist"],
+                      "label-sm": ["Geist"],
+                      "body-md": ["Inter"],
+                      "label-md": ["Geist"],
+                      "title-md": ["Geist"],
+                      "headline-lg-mobile": ["Geist"],
+                      "body-lg": ["Inter"]
+              },
+              "fontSize": {
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.03em", "fontWeight": "500"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                      "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                      "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+        body {
+            background-color: #f7f9fb;
+            font-family: 'Inter', sans-serif;
+            color: #0F172A;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #E2E8F0;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="antialiased">
+<!-- SideNavBar Anchor Component -->
+<aside class="h-screen w-[320px] fixed left-0 top-0 bg-surface-white border-r border-subtle flex flex-col py-6 z-50">
+<div class="px-8 mb-10">
+<h1 class="font-headline-lg text-headline-lg font-bold text-primary">ChatSphere</h1>
+<p class="font-label-md text-label-md text-text-secondary">Secure Workspace</p>
+</div>
+<nav class="flex-1 space-y-2 px-4">
+<!-- Navigation Items Mapping -->
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-text-secondary hover:bg-surface-container transition-colors duration-200 group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary" data-icon="chat">chat</span>
+<span class="font-label-md text-label-md">Chats</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-text-secondary hover:bg-surface-container transition-colors duration-200 group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary" data-icon="group">group</span>
+<span class="font-label-md text-label-md">Communities</span>
+</a>
+<!-- Active Navigation State for Calls -->
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-primary font-bold border-l-4 border-primary bg-surface-container-low transition-transform duration-150 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined" data-icon="call" style="font-variation-settings: 'FILL' 1;">call</span>
+<span class="font-label-md text-label-md">Calls</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-text-secondary hover:bg-surface-container transition-colors duration-200 group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary" data-icon="settings">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</nav>
+<div class="mt-auto px-6">
+<button class="w-full bg-primary text-on-primary py-4 rounded-xl font-title-md text-title-md flex items-center justify-center gap-3 shadow-lg shadow-primary/10 hover:brightness-110 transition-all">
+<span class="material-symbols-outlined" data-icon="add_call">add_call</span>
+                New Call
+            </button>
+<div class="mt-8 flex items-center gap-3 p-3 bg-surface-container rounded-xl">
+<img alt="User profile avatar" class="w-10 h-10 rounded-full object-cover" data-alt="A professional headshot of a middle-aged male executive with a friendly, confident expression. He is wearing a minimalist navy blue suit against a clean, soft-lit grey studio background. The lighting is high-end and diffused, creating a polished corporate aesthetic that aligns with a secure and premium technology brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuClmHVWemhQSgTnVwmIhu894B83c8aIdUSrpacjy-xJS1X2vzvHNHRKhPCzY7kGnVzTMbhy_HCRKYqIssfifh9RfURT__9SXZ8ng1N2LjgsrEd83IkQHAYPrdTmhFRgSLXDtI_NdEJ_3Dq5j0c0mVfQbQdeGp2lcra1L-6kCW1jJuXfX4ftJe0QP0KPHlPs9daep6cy4uwr75Un8bErCm28L5NmGAyskTpUAmOWd_g2lqaNHoXBM7nQR4w00ddKO4aKTdaiDNL7fQ_m"/>
+<div>
+<p class="font-label-md text-label-md font-bold text-text-primary">Alex Sterling</p>
+<p class="font-label-sm text-label-sm text-text-secondary">Security Lead</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-[320px] min-h-screen">
+<!-- TopAppBar Anchor Component -->
+<header class="sticky top-0 w-full px-margin-desktop py-4 bg-surface-white/80 backdrop-blur-md border-b border-subtle flex justify-between items-center z-40">
+<div class="flex items-center gap-4">
+<span class="font-title-md text-title-md text-primary font-bold">Calls</span>
+<div class="flex items-center gap-2 bg-success-green/10 text-success-green px-3 py-1 rounded-full border border-success-green/20">
+<span class="material-symbols-outlined text-[16px]" data-icon="lock" style="font-variation-settings: 'FILL' 1;">lock</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider font-bold">End-to-End Encrypted</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 bg-surface-container text-primary font-bold px-5 py-2.5 rounded-lg hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined" data-icon="call">call</span>
+<span class="font-label-md text-label-md">Audio Call</span>
+</button>
+<button class="flex items-center gap-2 bg-primary text-on-primary font-bold px-5 py-2.5 rounded-lg shadow-md shadow-primary/10 hover:brightness-110 transition-all">
+<span class="material-symbols-outlined" data-icon="videocam">videocam</span>
+<span class="font-label-md text-label-md">Video Call</span>
+</button>
+</div>
+<div class="h-8 w-[1px] bg-subtle mx-2"></div>
+<div class="flex items-center gap-1">
+<button class="p-2 text-text-secondary hover:text-primary transition-colors focus:ring-2 ring-primary ring-offset-2 rounded-lg">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 text-text-secondary hover:text-primary transition-colors focus:ring-2 ring-primary ring-offset-2 rounded-lg">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Content Canvas -->
+<section class="p-margin-desktop max-w-5xl mx-auto">
+<div class="mb-8">
+<h2 class="font-headline-lg text-headline-lg font-bold text-text-primary mb-2">Recent Activity</h2>
+<p class="font-body-md text-body-md text-text-secondary">Track your secure voice and video communication history.</p>
+</div>
+<!-- Bento Layout for Analytics/Status (Contextual Element) -->
+<div class="grid grid-cols-12 gap-gutter mb-8">
+<div class="col-span-8 bg-surface-white border border-subtle rounded-2xl p-6 flex items-center justify-between">
+<div>
+<p class="font-label-md text-label-md text-text-secondary mb-1">Total Call Duration (This Week)</p>
+<h3 class="font-display-lg text-display-lg text-primary">12h 45m</h3>
+</div>
+<div class="flex gap-4">
+<div class="text-center">
+<p class="text-success-green font-bold text-headline-lg">24</p>
+<p class="font-label-sm text-label-sm text-text-secondary">Completed</p>
+</div>
+<div class="text-center">
+<p class="text-error font-bold text-headline-lg">3</p>
+<p class="font-label-sm text-label-sm text-text-secondary">Missed</p>
+</div>
+</div>
+</div>
+<div class="col-span-4 bg-security-blue text-white rounded-2xl p-6 relative overflow-hidden">
+<div class="relative z-10">
+<p class="font-label-md text-label-md text-primary-fixed-dim mb-4">Security Level</p>
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-success-green" data-icon="verified_user">verified_user</span>
+<p class="font-title-md text-title-md font-bold">Maximum</p>
+</div>
+<p class="font-label-sm text-label-sm opacity-80">Quantum-resistant encryption active for all calls.</p>
+</div>
+<!-- Abstract Background Graphic -->
+<div class="absolute right-[-20px] bottom-[-20px] opacity-10">
+<span class="material-symbols-outlined text-[120px]" data-icon="security">security</span>
+</div>
+</div>
+</div>
+<!-- Call Logs List -->
+<div class="bg-surface-white border border-subtle rounded-2xl overflow-hidden shadow-sm">
+<div class="px-6 py-4 border-b border-subtle bg-surface-container-lowest flex justify-between items-center">
+<span class="font-label-md text-label-md font-bold text-text-primary">Call Log</span>
+<div class="flex gap-4">
+<button class="font-label-sm text-label-sm text-primary font-bold">All</button>
+<button class="font-label-sm text-label-sm text-text-secondary hover:text-primary">Missed</button>
+</div>
+</div>
+<div class="divide-y divide-subtle">
+<!-- Call Item 1: Missed -->
+<div class="p-6 flex items-center justify-between hover:bg-surface-container-low transition-colors group">
+<div class="flex items-center gap-4">
+<div class="relative">
+<img alt="Sarah Connor avatar" class="w-12 h-12 rounded-full object-cover" data-alt="A close-up portrait of a professional woman in her early 30s with a warm, intelligent smile. She is in a bright, modern office with soft-focus greenery in the background. The lighting is natural and flattering, emphasizing a clean and trustworthy persona for a high-security communications application." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDeLuttLzJkqz5m8M62loRlF6IO3o_6oNkF8lRFGwPQtTk61RziMJ9nTSRcP-MucmA0tMpZ5kNyjXFSv7SLz5k5Vd1KuXZGyj9WlzFq_NCN9VYZbIa7_AtksngWTblYAxMCh66tFpRJbrgPk7e8UC_2KXj9fix-cI5uuARnw9OhfjHAnDKofBoHn6xQH43YFRH_bWC1-N8YdM3JH-xPQGZagQB2c9_jA4vpPF4WWr0YVUlzqsCSefp0oF5ybncAmKKf-AcTOfSwvJ2B"/>
+<div class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-error border-2 border-surface-white rounded-full"></div>
+</div>
+<div>
+<h4 class="font-label-md text-label-md font-bold text-error">Sarah Connor</h4>
+<div class="flex items-center gap-2 text-text-secondary">
+<span class="material-symbols-outlined text-[16px]" data-icon="call_missed">call_missed</span>
+<p class="font-label-sm text-label-sm">Missed • Today, 10:45 AM</p>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="text-right">
+<p class="font-label-sm text-label-sm text-text-secondary">Audio Call</p>
+<p class="font-label-md text-label-md font-bold text-error">--:--</p>
+</div>
+<button class="p-3 rounded-full text-primary hover:bg-primary/10 transition-all opacity-0 group-hover:opacity-100">
+<span class="material-symbols-outlined" data-icon="call">call</span>
+</button>
+</div>
+</div>
+<!-- Call Item 2: Completed Video -->
+<div class="p-6 flex items-center justify-between hover:bg-surface-container-low transition-colors group">
+<div class="flex items-center gap-4">
+<div class="relative">
+<img alt="Marcus Wright avatar" class="w-12 h-12 rounded-full object-cover" data-alt="A professional portrait of a tech-savvy young man with glasses and a thoughtful expression. He is photographed in a high-tech workspace with soft blue accent lighting. The overall mood is sophisticated, modern, and focused, echoing the security and innovation themes of a minimalist digital interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCnjKZaKtpPNXG0zJI0b_QfQunbFlXXj6oEuN_GcEcDN7fsCTc1Z959WnIsTzDOIourQPiB3lH3xxXAizn5a_VHrBFyN-LXa62iRpr0u5IoYlOIIGE7ucbp2epP5BV-0R3dfmhb-6rK4M7kWagiGDOMStS_8Fd6TdZTyZ0M6FeabkuV9wLp8OMD_O2MQfmjYcVCp3zxAnwQeRmznlrUIsWRawFOboL29dHJSSoupWWA3vCskmAFTqt8HrQ1VwZ_QS95rt9f-xy0y77-"/>
+<div class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-success-green border-2 border-surface-white rounded-full"></div>
+</div>
+<div>
+<h4 class="font-label-md text-label-md font-bold text-text-primary">Marcus Wright</h4>
+<div class="flex items-center gap-2 text-text-secondary">
+<span class="material-symbols-outlined text-[16px]" data-icon="videocam">videocam</span>
+<p class="font-label-sm text-label-sm">Incoming • Yesterday, 4:20 PM</p>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="text-right">
+<p class="font-label-sm text-label-sm text-text-secondary">Video Call</p>
+<p class="font-label-md text-label-md font-bold text-text-primary">42m 12s</p>
+</div>
+<button class="p-3 rounded-full text-primary hover:bg-primary/10 transition-all opacity-0 group-hover:opacity-100">
+<span class="material-symbols-outlined" data-icon="videocam">videocam</span>
+</button>
+</div>
+</div>
+<!-- Call Item 3: Outgoing Audio -->
+<div class="p-6 flex items-center justify-between hover:bg-surface-container-low transition-colors group">
+<div class="flex items-center gap-4">
+<div class="relative">
+<img alt="David Miller avatar" class="w-12 h-12 rounded-full object-cover" data-alt="A clean, minimalist portrait of a professional man in a white linen shirt, suggesting a calm and competent demeanor. The background is a soft, out-of-focus architectural space with lots of natural light. The aesthetic is modern and premium, consistent with the high-trust branding of a secure communication app." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA0dP2O7XbljMVrzkxv9-FMDEbsNaz09F-dcmRCFyR5-a4UVc51MDmDUkn9jd3R7FcA5XNN1jwK8xcKiDtIjpSuaFGDK4XbLleErMu5ko9RYJUTuTfQDqEMxnGzSk_TQj_mR-U4xjqYuKmRj5_1nUPSB1F0du9Iw9MCjQTO6OIFw1n1d16rr8WuxqU1jkZHTlojawI2074Q0qpQipvBd7LeTkV4CRKyw5uxxXsif-8t-UPAy4IIAdK_20uEihsvsb5VH-_vsZPERAy3"/>
+<div class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-success-green border-2 border-surface-white rounded-full"></div>
+</div>
+<div>
+<h4 class="font-label-md text-label-md font-bold text-text-primary">David Miller</h4>
+<div class="flex items-center gap-2 text-text-secondary">
+<span class="material-symbols-outlined text-[16px]" data-icon="call_made">call_made</span>
+<p class="font-label-sm text-label-sm">Outgoing • May 14, 2:30 PM</p>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="text-right">
+<p class="font-label-sm text-label-sm text-text-secondary">Audio Call</p>
+<p class="font-label-md text-label-md font-bold text-text-primary">15m 04s</p>
+</div>
+<button class="p-3 rounded-full text-primary hover:bg-primary/10 transition-all opacity-0 group-hover:opacity-100">
+<span class="material-symbols-outlined" data-icon="call">call</span>
+</button>
+</div>
+</div>
+<!-- Call Item 4: Completed Audio -->
+<div class="p-6 flex items-center justify-between hover:bg-surface-container-low transition-colors group">
+<div class="flex items-center gap-4">
+<div class="relative">
+<img alt="Elena Fisher avatar" class="w-12 h-12 rounded-full object-cover" data-alt="A portrait of a confident woman in creative professional attire, set against a bright, minimalist art studio background. The lighting is soft and even, highlighting a clean, modern aesthetic. The style emphasizes approachability and professional reliability, perfect for a secure communication dashboard." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCSfrvW_40EWvHtymEPZcvr5ZCABu0MM_5sfDIwrfU_8e4muULUVdIOkCGpQaAwM8yYFotYsxwQbcVG9TyG2_36UxiCKvicEnZDpPwYoC2wKNVlws4pBR5Jhwb0BxrfquLmHcHaXA1ReataCBhem6FByX944upi2_zzwCF1CyDm3jUbbGlc8zih0uRAIWECG76wkmRH2QpSQE522UdZLNhfnhMzmXdFo2wb8KfdvsiqAV8WaiNxyduYP_5om-9_O6HqB2X5PGg4Cox9"/>
+<div class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-outline-variant border-2 border-surface-white rounded-full"></div>
+</div>
+<div>
+<h4 class="font-label-md text-label-md font-bold text-text-primary">Elena Fisher</h4>
+<div class="flex items-center gap-2 text-text-secondary">
+<span class="material-symbols-outlined text-[16px]" data-icon="call_received">call_received</span>
+<p class="font-label-sm text-label-sm">Incoming • May 13, 11:15 AM</p>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="text-right">
+<p class="font-label-sm text-label-sm text-text-secondary">Audio Call</p>
+<p class="font-label-md text-label-md font-bold text-text-primary">08m 45s</p>
+</div>
+<button class="p-3 rounded-full text-primary hover:bg-primary/10 transition-all opacity-0 group-hover:opacity-100">
+<span class="material-symbols-outlined" data-icon="call">call</span>
+</button>
+</div>
+</div>
+</div>
+<div class="p-6 bg-surface-container-low/30 text-center">
+<button class="text-primary font-bold font-label-md text-label-md hover:underline">View Older History</button>
+</div>
+</div>
+</section>
+</main>
+<!-- Global Privacy Badge (Fixed Bottom Right) -->
+<div class="fixed bottom-6 right-6 flex items-center gap-2 bg-surface-white border border-subtle shadow-xl px-4 py-2 rounded-full z-50">
+<span class="material-symbols-outlined text-success-green" data-icon="encrypted" style="font-variation-settings: 'FILL' 1;">encrypted</span>
+<span class="font-label-sm text-label-sm text-text-secondary">Connection Secure</span>
+</div>
+<script>
+        // Micro-interaction for buttons
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('mousedown', () => {
+                button.classList.add('scale-95');
+            });
+            button.addEventListener('mouseup', () => {
+                button.classList.remove('scale-95');
+            });
+            button.addEventListener('mouseleave', () => {
+                button.classList.remove('scale-95');
+            });
+        });
+
+        // Simple Fade-in effect for list items
+        document.addEventListener('DOMContentLoaded', () => {
+            const items = document.querySelectorAll('.divide-y > div');
+            items.forEach((item, index) => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateY(10px)';
+                item.style.transition = 'all 0.4s ease-out ' + (index * 0.1) + 's';
+                
+                setTimeout(() => {
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateY(0)';
+                }, 100);
+            });
+        });
+    </script>
+</body></html>

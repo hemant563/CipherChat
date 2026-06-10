@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ChatSphere | Secure. Private. Instant.</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Geist:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-fixed": "#dce1ff",
+                    "on-surface-variant": "#444651",
+                    "secondary-fixed": "#e1e0ff",
+                    "surface-container-low": "#f2f4f6",
+                    "tertiary": "#4b1c00",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary-fixed": "#341100",
+                    "surface-container-high": "#e6e8ea",
+                    "inverse-on-surface": "#eff1f3",
+                    "on-secondary-fixed-variant": "#2f2ebe",
+                    "on-error": "#ffffff",
+                    "surface-dim": "#d8dadc",
+                    "primary": "#00236f",
+                    "outline-variant": "#c5c5d3",
+                    "tertiary-container": "#6e2c00",
+                    "inverse-surface": "#2d3133",
+                    "success-green": "#10B981",
+                    "on-secondary-fixed": "#07006c",
+                    "on-surface": "#191c1e",
+                    "on-primary-container": "#90a8ff",
+                    "primary-fixed-dim": "#b6c4ff",
+                    "on-secondary": "#ffffff",
+                    "text-primary": "#0F172A",
+                    "surface-white": "#FFFFFF",
+                    "primary-container": "#1e3a8a",
+                    "inverse-primary": "#b6c4ff",
+                    "surface-container": "#eceef0",
+                    "on-primary-fixed": "#00164e",
+                    "on-error-container": "#93000a",
+                    "tertiary-fixed-dim": "#ffb691",
+                    "surface-tint": "#4059aa",
+                    "outline": "#757682",
+                    "background": "#f7f9fb",
+                    "on-primary-fixed-variant": "#264191",
+                    "text-secondary": "#64748B",
+                    "error-container": "#ffdad6",
+                    "on-tertiary": "#ffffff",
+                    "error": "#ba1a1a",
+                    "on-secondary-container": "#fffbff",
+                    "surface": "#f7f9fb",
+                    "surface-variant": "#e0e3e5",
+                    "security-blue": "#1E293B",
+                    "secondary-fixed-dim": "#c0c1ff",
+                    "on-background": "#191c1e",
+                    "on-primary": "#ffffff",
+                    "surface-container-highest": "#e0e3e5",
+                    "surface-bright": "#f7f9fb",
+                    "tertiary-fixed": "#ffdbcb",
+                    "on-tertiary-container": "#f39461",
+                    "on-tertiary-fixed-variant": "#773205",
+                    "secondary-container": "#6063ee",
+                    "border-subtle": "#E2E8F0",
+                    "secondary": "#4648d4"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "max-width": "1280px",
+                    "gutter": "16px",
+                    "margin-mobile": "16px",
+                    "unit": "4px",
+                    "margin-desktop": "32px"
+            },
+            "fontFamily": {
+                    "body-md": ["Inter"],
+                    "label-md": ["Geist"],
+                    "label-sm": ["Geist"],
+                    "body-lg": ["Inter"],
+                    "headline-lg-mobile": ["Geist"],
+                    "display-lg": ["Geist"],
+                    "headline-lg": ["Geist"],
+                    "title-md": ["Geist"]
+            },
+            "fontSize": {
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.03em", "fontWeight": "500"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(226, 232, 240, 0.5);
+        }
+        .hero-gradient {
+            background: radial-gradient(circle at 50% 50%, rgba(220, 225, 255, 0.3) 0%, rgba(247, 249, 251, 1) 70%);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md overflow-x-hidden">
+<!-- Top Navigation (Shell suppressed as per instructions for non-top-level landing focus, but based on TopAppBar guidelines) -->
+<header class="fixed top-0 left-0 w-full z-50 bg-surface-white/80 backdrop-blur-md border-b border-border-subtle h-16 flex items-center px-margin-desktop justify-between">
+<div class="flex items-center gap-2">
+<span class="font-title-md text-title-md font-bold text-primary tracking-tight">ChatSphere</span>
+<div class="flex items-center gap-1 px-2 py-0.5 rounded-full bg-success-green/10 text-success-green border border-success-green/20">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">lock</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider">Encrypted</span>
+</div>
+</div>
+<nav class="hidden md:flex gap-8">
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors" href="#">Features</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors" href="#">Security</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors" href="#">Communities</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="font-label-md text-label-md text-primary font-semibold hover:opacity-80 transition-opacity">Login</button>
+<button class="bg-primary-container text-white px-6 py-2.5 rounded-lg font-label-md text-label-md font-semibold shadow-sm hover:shadow-md transition-all">Download</button>
+</div>
+</header>
+<main class="pt-16">
+<!-- Hero Section -->
+<section class="relative min-h-[921px] flex items-center overflow-hidden hero-gradient">
+<div class="container mx-auto px-margin-desktop grid md:grid-cols-2 gap-12 items-center">
+<div class="z-10 space-y-6">
+<div class="inline-flex items-center gap-2 px-3 py-1 bg-primary-fixed text-on-primary-fixed rounded-full">
+<span class="material-symbols-outlined text-[18px]">verified_user</span>
+<span class="font-label-sm text-label-sm">Military-Grade Encryption Standard</span>
+</div>
+<h1 class="font-display-lg text-display-lg text-text-primary max-w-lg">
+                        Secure. Private. <span class="text-primary">Instant.</span>
+</h1>
+<p class="font-body-lg text-body-lg text-text-secondary max-w-md">
+                        Experience communication as it should be. No trackers, no data collection, just pure end-to-end encrypted messaging for the privacy-conscious era.
+                    </p>
+<div class="flex flex-col sm:flex-row gap-4 pt-4">
+<button class="bg-primary-container text-white px-8 py-4 rounded-xl font-label-md text-label-md font-bold flex items-center justify-center gap-2 hover:scale-[1.02] transition-transform shadow-lg shadow-primary/20">
+                            Start Chatting Now
+                            <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+<button class="bg-surface-white border border-border-subtle text-primary px-8 py-4 rounded-xl font-label-md text-label-md font-bold hover:bg-surface-container transition-colors">
+                            Explore Communities
+                        </button>
+</div>
+</div>
+<!-- Abstract Message UI Graphic -->
+<div class="relative hidden md:block">
+<div class="relative z-10 glass-card p-6 rounded-[2rem] shadow-2xl border-white/40 max-w-sm mx-auto">
+<div class="flex items-center gap-3 mb-6 border-b border-border-subtle pb-4">
+<div class="w-10 h-10 rounded-full bg-secondary-fixed flex items-center justify-center text-primary font-bold">A</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface leading-none">Alice</p>
+<p class="text-[10px] text-success-green flex items-center gap-1">
+<span class="w-1.5 h-1.5 bg-success-green rounded-full"></span> Encrypted
+                                </p>
+</div>
+</div>
+<div class="space-y-4">
+<div class="bg-surface-container-low p-3 rounded-tr-xl rounded-bl-xl rounded-br-xl max-w-[80%]">
+<p class="text-label-md text-on-surface-variant">Is this conversation truly private?</p>
+</div>
+<div class="bg-primary-container text-white p-3 rounded-tl-xl rounded-bl-xl rounded-br-xl ml-auto max-w-[80%] shadow-md">
+<p class="text-label-md">Absolutely. Not even ChatSphere can read our messages. 🛡️</p>
+</div>
+<div class="bg-surface-container-low p-3 rounded-tr-xl rounded-bl-xl rounded-br-xl max-w-[80%]">
+<p class="text-label-md text-on-surface-variant">That's what I needed to hear.</p>
+</div>
+</div>
+</div>
+<!-- Decorative Elements -->
+<div class="absolute -top-10 -right-10 w-64 h-64 bg-primary-fixed/30 rounded-full blur-3xl -z-10"></div>
+<div class="absolute -bottom-20 -left-10 w-80 h-80 bg-secondary-fixed/20 rounded-full blur-3xl -z-10"></div>
+</div>
+</div>
+</section>
+<!-- Value Proposition Section -->
+<section class="py-24 bg-surface-white">
+<div class="container mx-auto px-margin-desktop text-center mb-16">
+<h2 class="font-headline-lg text-headline-lg text-text-primary mb-4">Your Privacy is our Blueprint</h2>
+<p class="font-body-md text-body-md text-text-secondary max-w-2xl mx-auto">
+                    We built ChatSphere with a "Secure-Layer" philosophy. Every feature is designed to put you back in control of your digital identity.
+                </p>
+</div>
+<div class="container mx-auto px-margin-desktop grid md:grid-cols-3 gap-8">
+<div class="p-8 rounded-2xl border border-border-subtle hover:border-primary/30 transition-all group">
+<div class="w-12 h-12 bg-primary-fixed flex items-center justify-center rounded-xl mb-6 text-primary group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[32px]" style="font-variation-settings: 'FILL' 1;">encrypted</span>
+</div>
+<h3 class="font-title-md text-title-md text-text-primary mb-3">True E2EE</h3>
+<p class="font-body-md text-body-md text-text-secondary">
+                        Every message, file, and call is encrypted end-to-end. Keys are generated on your device and never leave it.
+                    </p>
+</div>
+<div class="p-8 rounded-2xl border border-border-subtle hover:border-primary/30 transition-all group">
+<div class="w-12 h-12 bg-primary-fixed flex items-center justify-center rounded-xl mb-6 text-primary group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[32px]" style="font-variation-settings: 'FILL' 1;">alternate_email</span>
+</div>
+<h3 class="font-title-md text-title-md text-text-primary mb-3">Username-Based</h3>
+<p class="font-body-md text-body-md text-text-secondary">
+                        Connect using a unique handle. No need to share your phone number or email address with strangers.
+                    </p>
+</div>
+<div class="p-8 rounded-2xl border border-border-subtle hover:border-primary/30 transition-all group">
+<div class="w-12 h-12 bg-primary-fixed flex items-center justify-center rounded-xl mb-6 text-primary group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[32px]" style="font-variation-settings: 'FILL' 1;">visibility_off</span>
+</div>
+<h3 class="font-title-md text-title-md text-text-primary mb-3">Hidden Phone Numbers</h3>
+<p class="font-body-md text-body-md text-text-secondary">
+                        Keep your personal details private. Your phone number is strictly for account recovery and is never visible.
+                    </p>
+</div>
+</div>
+</section>
+<!-- Features Bento Grid -->
+<section class="py-24 bg-background">
+<div class="container mx-auto px-margin-desktop">
+<div class="grid grid-cols-1 md:grid-cols-12 grid-rows-2 gap-4 h-full md:h-[600px]">
+<!-- Large Feature: AI Assistant -->
+<div class="md:col-span-8 md:row-span-1 rounded-3xl bg-security-blue text-white p-10 relative overflow-hidden group">
+<div class="relative z-10">
+<h3 class="font-headline-lg text-headline-lg mb-4">Embedded AI Assistant</h3>
+<p class="font-body-md text-body-md text-slate-300 max-w-sm">
+                                Private, localized AI that helps you summarize long threads and draft messages without ever reading your personal data.
+                            </p>
+</div>
+<div class="absolute right-0 bottom-0 w-1/2 h-full opacity-20 group-hover:opacity-40 transition-opacity">
+<img class="w-full h-full object-cover rounded-tl-[100px]" data-alt="A futuristic and clean representation of artificial intelligence as glowing blue crystalline structures and soft light nodes. The style is highly modern and technical, set against a deep midnight blue background that suggests security and high-end server technology. The lighting is ethereal and precise." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDHjv2nBTfK0GeDpKu2e7MIea8x6OLTLzQXrDGNd_urKKeMg2FN6Ik9IzUrzS6ajMYGR-VsLMHqykv_S_NHVESP55jfrPNTmagjV6dnX1sikPf_bfSmnCxT808eoWYBsdQqzEr1JMGUXAVlKD58vNnlhjSXA2rvy1dPOylq6R9RmSBdJZzTbgm4zfHro5UP1rrxNjxgOHtKB86V3xzZFVkL-N-V_rfErf3DMdBxLMSCnHcd4a5JpgfAVH3LE3jBM8BOvoKE7BXpOs7X"/>
+</div>
+</div>
+<!-- Real-time Messaging -->
+<div class="md:col-span-4 md:row-span-1 rounded-3xl bg-surface-white border border-border-subtle p-8 flex flex-col justify-between">
+<div>
+<span class="material-symbols-outlined text-primary text-[40px] mb-4">bolt</span>
+<h3 class="font-title-md text-title-md text-text-primary">Real-time Precision</h3>
+</div>
+<p class="font-body-md text-body-md text-text-secondary">
+                            Instant delivery across all devices with zero-latency sync.
+                        </p>
+</div>
+<!-- Voice/Video Calls -->
+<div class="md:col-span-4 md:row-span-1 rounded-3xl bg-primary-container text-white p-8 flex flex-col justify-between group cursor-pointer overflow-hidden relative">
+<div class="absolute inset-0 bg-gradient-to-br from-primary to-secondary opacity-50 group-hover:scale-110 transition-transform duration-500"></div>
+<div class="relative z-10">
+<span class="material-symbols-outlined text-white text-[40px] mb-4">videocam</span>
+<h3 class="font-title-md text-title-md">HD Secure Calling</h3>
+<p class="font-body-md text-body-md text-blue-100 mt-2">Crystal clear, P2P encrypted video and audio calls.</p>
+</div>
+</div>
+<!-- Multimedia Sharing -->
+<div class="md:col-span-8 md:row-span-1 rounded-3xl bg-surface-white border border-border-subtle p-8 flex items-center gap-10 overflow-hidden">
+<div class="flex-1">
+<h3 class="font-title-md text-title-md text-text-primary mb-2">Multimedia Vault</h3>
+<p class="font-body-md text-body-md text-text-secondary">
+                                Share high-resolution photos and 4K videos without compression loss, all stored in an encrypted vault.
+                            </p>
+</div>
+<div class="flex-shrink-0 w-1/3">
+<img class="w-full h-32 object-cover rounded-2xl rotate-3" data-alt="A professional flat-lay photograph of various digital media icons like high-resolution photo icons and video film strips, rendered in a 3D glassmorphic style. The color palette is composed of soft blues, whites, and metallic silvers. The lighting is clean studio lighting with soft shadows." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB1mLwumt5gvjreCwTNF2AneQgVVcYr-ed41aowKE45HwW9xZmmA-R8D0xSe6nXzRgwG08EQVH3EdkhjdKREJdW1IUGCPcIa-EHqJ0mgVDUOs3u4VYvjZtDba1O_sNuLQp2Z6MhOPGLNCwXihlr8NVKpaxPntoJlHLnEkhtiI74x5Yfgrsm-5ZgUHhIwPXYA8T3bx6k9heFB2kyz7Lhe343-m9fHkcRNbKeYLqh5U4nCCXWVvAYvUSY3SfraGObECwJ_fHgZ4hK0KyG"/>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Final CTA Section -->
+<section class="py-24 bg-surface-white border-t border-border-subtle relative overflow-hidden">
+<div class="container mx-auto px-margin-desktop text-center">
+<div class="max-w-3xl mx-auto space-y-8">
+<h2 class="font-display-lg text-display-lg text-text-primary">Ready for a private chat?</h2>
+<p class="font-body-lg text-body-lg text-text-secondary">Join over 2 million users who trust ChatSphere for their most sensitive conversations.</p>
+<div class="flex flex-col sm:flex-row justify-center gap-6">
+<a class="inline-flex items-center justify-center bg-primary-container text-white px-10 py-5 rounded-2xl font-label-md text-label-md font-bold hover:shadow-xl transition-all" href="#">
+                            Get ChatSphere for Desktop
+                        </a>
+<a class="inline-flex items-center justify-center bg-surface-container border border-border-subtle text-primary px-10 py-5 rounded-2xl font-label-md text-label-md font-bold hover:bg-surface-container-high transition-all" href="#">
+                             Download Mobile App
+                        </a>
+</div>
+</div>
+</div>
+<!-- Background Decoration -->
+<div class="absolute top-0 right-0 w-1/2 h-full opacity-[0.03] pointer-events-none">
+<span class="material-symbols-outlined text-[600px]">security</span>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-white border-t border-border-subtle pt-20 pb-10">
+<div class="container mx-auto px-margin-desktop">
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-10 mb-16">
+<div class="col-span-2">
+<div class="flex items-center gap-2 mb-6">
+<span class="font-title-md text-title-md font-bold text-primary tracking-tight">ChatSphere</span>
+</div>
+<p class="text-text-secondary font-body-md mb-6 max-w-xs">
+                        The world's most secure and private instant messaging platform. Built for trust.
+                    </p>
+<div class="flex gap-4">
+<a class="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center text-primary hover:bg-primary-fixed transition-colors" href="#">
+<span class="material-symbols-outlined">public</span>
+</a>
+<a class="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center text-primary hover:bg-primary-fixed transition-colors" href="#">
+<span class="material-symbols-outlined">shield_person</span>
+</a>
+<a class="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center text-primary hover:bg-primary-fixed transition-colors" href="#">
+<span class="material-symbols-outlined">help</span>
+</a>
+</div>
+</div>
+<div>
+<h4 class="font-label-md text-label-md font-bold text-text-primary mb-6">Product</h4>
+<ul class="space-y-4">
+<li><a class="text-text-secondary hover:text-primary transition-colors" href="#">Download</a></li>
+<li><a class="text-text-secondary hover:text-primary transition-colors" href="#">Features</a></li>
+<li><a class="text-text-secondary hover:text-primary transition-colors" href="#">Communities</a></li>
+<li><a class="text-text-secondary hover:text-primary transition-colors" href="#">Web Version</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-label-md text-label-md font-bold text-text-primary mb-6">Resources</h4>
+<ul class="space-y-4">
+<li><a class="text-text-secondary hover:text-primary transition-colors" href="#">Help Center</a></li>
+<li><a class="text-text-secondary hover:text-primary transition-colors" href="#">Safety Tips</a></li>
+<li><a class="text-text-secondary hover:text-primary transition-colors" href="#">Whitepaper</a></li>
+<li><a class="text-text-secondary hover:text-primary transition-colors" href="#">API Docs</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-label-md text-label-md font-bold text-text-primary mb-6">Security</h4>
+<ul class="space-y-4">
+<li><a class="text-text-secondary hover:text-primary transition-colors" href="#">Protocols</a></li>
+<li><a class="text-text-secondary hover:text-primary transition-colors" href="#">Audit Reports</a></li>
+<li><a class="text-text-secondary hover:text-primary transition-colors" href="#">Bounty Program</a></li>
+<li><a class="text-text-secondary hover:text-primary transition-colors" href="#">Compliance</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-label-md text-label-md font-bold text-text-primary mb-6">Legal</h4>
+<ul class="space-y-4">
+<li><a class="text-text-secondary hover:text-primary transition-colors" href="#">Privacy Policy</a></li>
+<li><a class="text-text-secondary hover:text-primary transition-colors" href="#">Terms of Service</a></li>
+<li><a class="text-text-secondary hover:text-primary transition-colors" href="#">Cookie Policy</a></li>
+</ul>
+</div>
+</div>
+<div class="border-t border-border-subtle pt-10 flex flex-col md:flex-row justify-between items-center gap-4">
+<p class="font-label-sm text-label-sm text-text-secondary">© 2024 ChatSphere Inc. No Rights Reserved. We don't even track your ownership.</p>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 bg-success-green rounded-full"></span>
+<span class="font-label-sm text-label-sm text-success-green">All Systems Operational</span>
+</div>
+</div>
+</div>
+</footer>
+<script>
+        // Micro-interaction for scroll effects
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 20) {
+                header.classList.add('shadow-sm');
+            } else {
+                header.classList.remove('shadow-sm');
+            }
+        });
+
+        // Hover effect enhancement for feature cards
+        const featureCards = document.querySelectorAll('.grid > div');
+        featureCards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-4px)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0px)';
+            });
+        });
+    </script>
+</body></html>

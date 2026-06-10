@@ -1,0 +1,98 @@
+<div *ngIf="callService.state().isCalling || callService.state().isReceiving" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-md">
+
+  <!-- BUG FIX: Hidden audio element for audio-only calls. Without this, remote
+       audio has no place to play when the video element is hidden. -->
+  <audio #remoteAudio autoplay [muted]="false" style="display:none;"></audio>
+
+  <!-- Remote Video (shown only for video calls with an active stream) -->
+  <video #remoteVideo
+    [class.hidden]="callService.state().callType === 'audio' || !callService.state().remoteStream"
+    autoplay
+    playsinline
+    [muted]="false"
+    class="absolute inset-0 w-full h-full object-cover">
+  </video>
+
+  <!-- Local Video PIP (shown only for video calls) -->
+  <video #localVideo
+    [class.hidden]="callService.state().callType === 'audio' || !callService.state().localStream"
+    autoplay
+    playsinline
+    muted
+    class="absolute bottom-24 right-8 w-48 h-72 object-cover rounded-2xl shadow-2xl border-2 border-surface-white/20 z-[101]">
+  </video>
+
+  <!-- Overlay UI -->
+  <div class="z-[102] flex flex-col items-center w-full transition-all duration-500"
+       [ngClass]="{
+         'relative max-w-md p-8 bg-surface-container/20 rounded-[3rem] border border-surface-white/10 shadow-2xl backdrop-blur-lg mx-4': !(callService.state().callType === 'video' && callService.state().statusText === 'Call Connected'),
+         'absolute bottom-8 left-1/2 -translate-x-1/2 p-4': callService.state().callType === 'video' && callService.state().statusText === 'Call Connected'
+       }">
+
+    <!-- User Avatar / Info -->
+    <div class="flex flex-col items-center mb-12 transition-opacity duration-500"
+         [class.hidden]="callService.state().callType === 'video' && callService.state().statusText === 'Call Connected'">
+      <div class="w-32 h-32 rounded-full mb-6 overflow-hidden ring-4 ring-primary-fixed ring-offset-4 ring-offset-black relative shadow-[0_0_40px_rgba(var(--color-primary-fixed),0.4)]">
+        <img *ngIf="callService.state().remoteUser?.avatar?.includes('http')" [src]="callService.state().remoteUser?.avatar" class="w-full h-full object-cover" />
+        <div *ngIf="!callService.state().remoteUser?.avatar?.includes('http')" class="w-full h-full bg-primary-fixed text-on-primary-fixed flex items-center justify-center font-bold text-5xl">
+          {{ callService.state().remoteUser?.displayName ? callService.state().remoteUser!.displayName.charAt(0).toUpperCase() : (callService.state().remoteUser?.username ? callService.state().remoteUser!.username.charAt(0).toUpperCase() : '?') }}
+        </div>
+      </div>
+      <h2 class="text-3xl font-bold text-white mb-2 tracking-tight">
+        {{ callService.state().remoteUser?.displayName || callService.state().remoteUser?.username || 'Unknown' }}
+      </h2>
+      <p class="text-lg text-surface-white/70 font-medium tracking-wide animate-pulse">
+        {{ callService.state().statusText }}
+      </p>
+    </div>
+
+    <!-- Controls -->
+    <div class="flex items-center justify-center gap-8 w-full">
+
+      <!-- Incoming Call Controls -->
+      <ng-container *ngIf="callService.state().isReceiving">
+        <button (click)="rejectCall()"
+          class="w-20 h-20 rounded-full bg-error text-white flex items-center justify-center hover:scale-110 hover:shadow-[0_0_30px_rgba(200,0,0,0.5)] transition-all duration-300"
+          title="Decline Call">
+          <span class="material-symbols-outlined text-4xl">call_end</span>
+        </button>
+        <button (click)="acceptCall()"
+          class="w-20 h-20 rounded-full bg-success-green text-white flex items-center justify-center hover:scale-110 hover:shadow-[0_0_30px_rgba(0,200,0,0.5)] transition-all duration-300 animate-bounce"
+          title="Accept Call">
+          <span class="material-symbols-outlined text-4xl">call</span>
+        </button>
+      </ng-container>
+
+      <!-- Active / Outgoing Call Controls -->
+      <ng-container *ngIf="callService.state().isCalling">
+        <button (click)="toggleMute()"
+          class="w-14 h-14 rounded-full bg-surface-white/20 text-white flex items-center justify-center hover:bg-surface-white/30 backdrop-blur-md transition-all"
+          [ngClass]="{'bg-error/80': callService.state().isMuted}"
+          [title]="callService.state().isMuted ? 'Unmute' : 'Mute'">
+          <span class="material-symbols-outlined text-2xl">{{ callService.state().isMuted ? 'mic_off' : 'mic' }}</span>
+        </button>
+
+        <button (click)="endCall()"
+          class="w-20 h-20 rounded-full bg-error text-white flex items-center justify-center hover:scale-110 hover:shadow-[0_0_30px_rgba(200,0,0,0.5)] transition-all duration-300"
+          title="End Call">
+          <span class="material-symbols-outlined text-4xl">call_end</span>
+        </button>
+
+        <button *ngIf="callService.state().callType === 'video'" (click)="toggleVideo()"
+          class="w-14 h-14 rounded-full bg-surface-white/20 text-white flex items-center justify-center hover:bg-surface-white/30 backdrop-blur-md transition-all"
+          [ngClass]="{'bg-error/80': callService.state().isVideoOff}"
+          [title]="callService.state().isVideoOff ? 'Turn on Camera' : 'Turn off Camera'">
+          <span class="material-symbols-outlined text-2xl">{{ callService.state().isVideoOff ? 'videocam_off' : 'videocam' }}</span>
+        </button>
+
+        <button *ngIf="callService.state().callType === 'audio'" (click)="toggleSpeaker()"
+          class="w-14 h-14 rounded-full bg-surface-white/20 text-white flex items-center justify-center hover:bg-surface-white/30 backdrop-blur-md transition-all"
+          [ngClass]="{'bg-error/80': callService.state().isSpeakerOff}"
+          [title]="callService.state().isSpeakerOff ? 'Speaker On' : 'Speaker Off'">
+          <span class="material-symbols-outlined text-2xl">{{ callService.state().isSpeakerOff ? 'volume_off' : 'volume_up' }}</span>
+        </button>
+      </ng-container>
+
+    </div>
+  </div>
+</div>

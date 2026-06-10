@@ -1,0 +1,305 @@
+<!-- SideNavBar (Shared Component) -->
+
+<!-- Main Content Canvas -->
+<main class="flex-1 flex flex-col h-full overflow-hidden bg-background">
+<!-- TopAppBar (Shared Component) -->
+<header class="flex justify-between items-center w-full px-margin-desktop h-16 bg-surface-white dark:bg-inverse-surface border-b border-border-subtle dark:border-outline-variant sticky top-0 z-10">
+<div class="flex items-center gap-2 md:gap-4 shrink-0 min-w-0">
+<h2 class="font-title-md text-title-md font-semibold text-text-primary dark:text-inverse-on-surface truncate">Communities</h2>
+<div class="hidden sm:flex bg-success-green/10 text-success-green px-2 py-0.5 rounded items-center gap-1 shrink-0">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+<span class="text-[10px] font-bold tracking-wider uppercase">Secure</span>
+</div>
+</div>
+<div class="flex items-center gap-2 md:gap-4 shrink-0">
+<div (click)="scrollToDiscovery()" class="hidden lg:flex items-center gap-2 px-4 py-1.5 bg-surface-container-low border border-border-subtle rounded-full text-text-secondary text-label-sm font-medium cursor-pointer hover:bg-surface-container hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[18px] text-primary">explore</span>
+<span>Discover New Groups</span>
+</div>
+<button (click)="openCreateModal()" class="flex items-center gap-1 md:gap-2 bg-primary text-on-primary font-bold px-3 md:px-5 py-2 md:py-2.5 rounded-lg shadow-md hover:brightness-110 transition-all shrink-0">
+<span class="material-symbols-outlined">add</span>
+<span class="hidden md:inline font-label-md text-label-md">Create</span>
+</button>
+</div>
+
+</header>
+<!-- Scrollable Content Container -->
+<div class="flex-1 overflow-y-auto px-margin-desktop py-8 custom-scrollbar">
+<!-- Featured Community Hero Section -->
+<section class="mb-12" *ngIf="featuredCommunity()">
+<div class="relative h-[320px] rounded-xl overflow-hidden shadow-xl group">
+<img alt="Community Cover" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" [src]="featuredCommunity().avatar || 'https://lh3.googleusercontent.com/aida-public/AB6AXuC4qf_b-O2DZ8C4c3TiOgLcp4mtPNvb8pF3GSxM6lUX-XbbD8zyEZcTdxdwivVluw6OpfJObTYvdTpt8gRjSM100-Q9d9rcHDtPsCsHX8v39RE35bWyzGACGfLKx5oenGbOXHSsHQVxx6ayL6JiyIYe1WSQ7BT10FbJbIo61kMFh8fKEeztck9RJk4yNN_YgiVocG5LzZBHa6PHeI0_XAS4N1c13e_eutPRUHB2LlxzRwXD-_B6HCxWjy6-3rARo3_OVnpRg7Bso2V7'"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent flex flex-col justify-end p-10">
+<div class="flex items-center gap-2 mb-3">
+<span class="bg-primary text-white text-[10px] font-bold px-2 py-1 rounded tracking-widest uppercase">Featured Community</span>
+<span class="bg-white/20 backdrop-blur-md text-white text-[10px] font-bold px-2 py-1 rounded tracking-widest uppercase flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">groups</span> {{ featuredCommunity().members }} Members
+</span>
+</div>
+<h3 class="font-display-lg text-display-lg text-white mb-4 leading-tight">{{ featuredCommunity().name }}</h3>
+<p class="text-white/80 max-w-xl font-body-lg text-body-lg mb-6">{{ featuredCommunity().description }}</p>
+<button (click)="joinFeatured()" class="px-8 py-3 rounded-lg font-bold w-fit transition-all transform active:scale-95 flex items-center gap-2" [ngClass]="featuredCommunity().joined ? 'bg-success-green/20 text-success-green backdrop-blur-sm' : (featuredCommunity().isPending ? 'bg-white/20 text-white backdrop-blur-sm cursor-not-allowed' : 'bg-primary text-white hover:bg-primary-container hover:text-on-primary-container')">
+    {{ featuredCommunity().joined ? 'Joined ✓' : (featuredCommunity().isPending ? 'Requested ⏳' : 'Join Community') }} <span *ngIf="!featuredCommunity().joined && !featuredCommunity().isPending" class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Filter Categories Chips -->
+<section class="mb-10 flex items-center gap-3 flex-wrap">
+<button *ngFor="let cat of categories" 
+        (click)="setCategory(cat)"
+        [ngClass]="activeCategory() === cat ? 'bg-primary text-white border-primary' : 'bg-white text-on-surface-variant hover:bg-surface-container border-border-subtle'"
+        class="px-5 py-2 rounded-full font-label-md text-label-md border transition-all">
+    {{ cat }}
+</button>
+<div class="h-6 w-[1px] bg-border-subtle mx-2"></div>
+<div class="relative">
+<button (click)="toggleFilterMenu()" class="text-primary font-label-md text-label-md flex items-center gap-1 hover:underline p-2 rounded hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-[18px]">tune</span> Sort By
+</button>
+
+<div *ngIf="showFilterMenu()" class="absolute right-0 top-full mt-2 w-48 bg-surface-white border border-border-subtle shadow-lg rounded-xl z-20 py-2 flex flex-col overflow-hidden">
+  <button (click)="setSort('popular')" class="px-4 py-3 text-left font-label-md text-label-md hover:bg-surface-container-low transition-colors flex items-center justify-between" [ngClass]="activeSort() === 'popular' ? 'text-primary font-bold' : 'text-text-primary'">
+    Most Popular <span *ngIf="activeSort() === 'popular'" class="material-symbols-outlined text-[18px]">check</span>
+  </button>
+  <button (click)="setSort('a-z')" class="px-4 py-3 text-left font-label-md text-label-md hover:bg-surface-container-low transition-colors flex items-center justify-between" [ngClass]="activeSort() === 'a-z' ? 'text-primary font-bold' : 'text-text-primary'">
+    Name (A-Z) <span *ngIf="activeSort() === 'a-z'" class="material-symbols-outlined text-[18px]">check</span>
+  </button>
+  <button (click)="setSort('z-a')" class="px-4 py-3 text-left font-label-md text-label-md hover:bg-surface-container-low transition-colors flex items-center justify-between" [ngClass]="activeSort() === 'z-a' ? 'text-primary font-bold' : 'text-text-primary'">
+    Name (Z-A) <span *ngIf="activeSort() === 'z-a'" class="material-symbols-outlined text-[18px]">check</span>
+  </button>
+</div>
+</div>
+</section>
+
+<!-- My Communities Section -->
+<section *ngIf="myCommunities().length > 0" class="mb-12 bg-surface-white rounded-xl border border-border-subtle p-6 flex flex-col gap-6 shadow-[0_4px_12px_rgba(30,41,59,0.04)]">
+<div class="flex items-center gap-3 border-b border-border-subtle pb-4">
+<span class="material-symbols-outlined text-primary">groups</span>
+<h4 class="font-title-md text-title-md font-bold">My Communities</h4>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+  <div *ngFor="let comm of myCommunities()" class="flex items-center justify-between p-4 rounded-lg bg-surface-container border border-border-subtle hover:bg-surface-container-high transition-colors shadow-sm gap-2 min-w-0">
+    <div class="flex items-center gap-3 min-w-0 flex-1">
+      <div class="w-10 h-10 md:w-12 md:h-12 rounded-full overflow-hidden border-2 border-primary-fixed bg-primary-fixed flex items-center justify-center shrink-0">
+        <img *ngIf="comm.avatar" [src]="getAvatarUrl(comm.avatar)" class="w-full h-full object-cover"/>
+        <span *ngIf="!comm.avatar" class="text-on-primary-fixed font-bold">{{ comm.name.charAt(0) }}</span>
+      </div>
+      <div class="min-w-0 flex-1">
+        <p class="font-label-md text-label-md text-text-primary font-bold truncate">{{ comm.name }}</p>
+        <p class="text-label-sm font-label-sm text-text-secondary truncate">{{ comm.members?.length || 0 }} Members</p>
+      </div>
+    </div>
+    <button (click)="openManageCommunity(comm)" class="shrink-0 bg-primary text-white px-3 md:px-4 py-1.5 md:py-2 rounded-lg font-label-sm hover:bg-primary-dark transition-colors shadow-sm whitespace-nowrap ml-1">Manage</button>
+  </div>
+</div>
+</section>
+
+<!-- Community Discovery Grid -->
+<section id="discovery-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 pb-20">
+<!-- Dynamic Community Card -->
+<div *ngFor="let comm of filteredCommunities()" class="relative bg-surface-white border border-border-subtle rounded-2xl p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer group flex flex-col items-center text-center h-full overflow-hidden">
+<!-- Subtle background decoration -->
+<div class="absolute top-0 left-0 w-full h-24 bg-gradient-to-b from-primary/5 to-transparent"></div>
+
+<!-- Category Badge -->
+<span class="absolute top-4 right-4 bg-surface-white/80 backdrop-blur-sm border border-border-subtle text-text-secondary text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest z-10 shadow-sm">{{ comm.category || 'Topic' }}</span>
+
+<!-- Avatar -->
+<div class="relative z-10 w-20 h-20 rounded-full flex items-center justify-center shrink-0 mb-4 bg-primary-fixed text-on-primary-fixed border-4 border-surface-white shadow-md group-hover:scale-105 transition-transform duration-300">
+<img *ngIf="comm.avatar?.includes('http')" [src]="comm.avatar" class="w-full h-full object-cover rounded-full" />
+<span *ngIf="!comm.avatar?.includes('http')" class="material-symbols-outlined text-[36px]">{{ comm.icon || 'groups' }}</span>
+</div>
+
+<!-- Text Content -->
+<div class="relative z-10 mb-6 flex-grow flex flex-col items-center">
+<h3 class="font-title-md text-[18px] font-bold text-text-primary mb-2 line-clamp-1 group-hover:text-primary transition-colors">{{ comm.name }}</h3>
+<p class="font-label-sm text-[13px] text-text-secondary line-clamp-2 leading-relaxed max-w-[90%]">{{ comm.description }}</p>
+</div>
+
+<!-- Footer area -->
+<div class="relative z-10 w-full flex items-center justify-between mt-auto pt-5 border-t border-border-subtle/50">
+<div class="flex items-center gap-2 text-text-secondary">
+<span class="material-symbols-outlined text-[18px] text-primary/70">group</span>
+<span class="text-[13px] font-semibold">{{ comm.members }} {{ comm.members === 1 ? 'Member' : 'Members' }}</span>
+</div>
+<button (click)="!comm.joined && !comm.isPending ? joinCommunity(comm.id) : null; $event.stopPropagation()" class="font-bold text-[13px] flex items-center gap-1.5 px-5 py-2 rounded-full transition-all duration-300 shadow-sm" [ngClass]="comm.joined ? 'bg-success-green/10 text-success-green border border-success-green/20' : (comm.isPending ? 'bg-surface-container text-text-secondary cursor-not-allowed border border-border-subtle' : 'bg-primary text-white hover:bg-primary-container hover:text-on-primary-container hover:shadow-md')">
+    {{ comm.joined ? 'Joined ✓' : (comm.isPending ? 'Requested ⏳' : 'Join') }} <span *ngIf="!comm.joined && !comm.isPending" class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<div *ngIf="filteredCommunities().length === 0" class="text-center py-12 text-text-secondary">
+  <span class="material-symbols-outlined text-6xl mb-4 opacity-50">search_off</span>
+  <p class="font-body-lg">No communities found matching your criteria.</p>
+</div>
+</section>
+</div>
+</main>
+
+<!-- Create Group Modal -->
+<div *ngIf="showCreateModal()" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+  <div class="bg-surface-white rounded-2xl w-full max-w-md p-6 m-4 shadow-2xl animate-fadeIn">
+    <div class="flex items-center justify-between mb-6">
+      <h3 class="text-xl font-bold text-text-primary">Create New Community</h3>
+      <button (click)="closeCreateModal()" class="text-text-secondary hover:text-error transition-colors">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+    
+    <div class="space-y-4">
+      <div>
+        <label class="block text-label-sm text-text-secondary mb-1">Community Name</label>
+        <input type="text" [(ngModel)]="newGroup.name" class="w-full bg-surface-container border border-border-subtle rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary outline-none" placeholder="E.g., Angular Enthusiasts">
+      </div>
+      <div>
+        <label class="block text-label-sm text-text-secondary mb-1">Description</label>
+        <textarea [(ngModel)]="newGroup.description" class="w-full bg-surface-container border border-border-subtle rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary outline-none h-20 resize-none" placeholder="What is this group about?"></textarea>
+      </div>
+
+      <div>
+        <label class="block text-label-sm text-text-secondary mb-1">Category</label>
+        <select [(ngModel)]="newGroup.category" class="w-full bg-surface-container border border-border-subtle rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary outline-none cursor-pointer">
+          <option value="Tech">Tech</option>
+          <option value="Design">Design</option>
+          <option value="Gaming">Gaming</option>
+          <option value="Music">Music</option>
+          <option value="Science">Science</option>
+          <option value="Fitness">Fitness</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block text-label-sm text-text-secondary mb-2 font-semibold">Who can join?</label>
+        <div class="flex items-center gap-6">
+          <label class="flex items-center gap-2 cursor-pointer text-text-primary text-sm">
+            <input type="radio" name="approval" [value]="false" [(ngModel)]="newGroup.approvalRequired" class="text-primary focus:ring-primary accent-primary w-4 h-4">
+            Anyone
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer text-text-primary text-sm">
+            <input type="radio" name="approval" [value]="true" [(ngModel)]="newGroup.approvalRequired" class="text-primary focus:ring-primary accent-primary w-4 h-4">
+            Approval Required
+          </label>
+        </div>
+      </div>
+      
+      <div>
+        <label class="block text-label-sm text-text-secondary mb-2 font-semibold">Who can send messages?</label>
+        <div class="flex items-center gap-6">
+          <label class="flex items-center gap-2 cursor-pointer text-text-primary text-sm">
+            <input type="radio" name="messages" [value]="false" [(ngModel)]="newGroup.onlyAdminsCanMessage" class="text-primary focus:ring-primary accent-primary w-4 h-4">
+            Everyone
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer text-text-primary text-sm">
+            <input type="radio" name="messages" [value]="true" [(ngModel)]="newGroup.onlyAdminsCanMessage" class="text-primary focus:ring-primary accent-primary w-4 h-4">
+            Admins Only
+          </label>
+        </div>
+      </div>
+    </div>
+    
+    <div class="mt-8 flex justify-end gap-3">
+      <button (click)="closeCreateModal()" class="px-5 py-2 text-text-secondary hover:bg-surface-container rounded-lg transition-colors font-label-md">Cancel</button>
+      <button (click)="createGroup()" [disabled]="!newGroup.name.trim()" class="px-5 py-2 bg-primary text-white rounded-lg hover:brightness-110 disabled:opacity-50 transition-all font-label-md shadow-md">Create Community</button>
+    </div>
+  </div>
+</div>
+<!-- Manage Community Modal -->
+<div *ngIf="showManageCommunityModal() && selectedCommunity()" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[60]" (click)="closeManageCommunity()">
+<div (click)="$event.stopPropagation()" class="bg-surface-white rounded-2xl p-8 w-full max-w-md shadow-2xl mx-4 max-h-[90vh] overflow-y-auto custom-scrollbar flex flex-col">
+  <div class="flex items-center justify-between mb-6 border-b border-border-subtle pb-4">
+    <div class="flex items-center gap-3">
+      <span class="material-symbols-outlined text-primary text-[28px]">settings</span>
+      <h3 class="font-title-lg text-title-lg font-bold text-text-primary">Manage Community</h3>
+    </div>
+    <button (click)="closeManageCommunity()" class="text-on-surface-variant hover:text-error transition-colors">
+      <span class="material-symbols-outlined">close</span>
+    </button>
+  </div>
+  
+  <!-- Community Details Edit -->
+  <div class="space-y-4 mb-6">
+    <h4 class="font-label-md font-bold text-text-primary">Community Details</h4>
+    <div class="flex items-center gap-4">
+      <div class="relative group shrink-0">
+        <div class="w-20 h-20 rounded-full overflow-hidden border-2 border-primary-fixed bg-primary-fixed flex items-center justify-center relative cursor-pointer" (click)="commAvatarInput.click()">
+          <img *ngIf="communityEditForm.avatar()" [src]="getAvatarUrl(communityEditForm.avatar())" class="w-full h-full object-cover"/>
+          <span *ngIf="!communityEditForm.avatar()" class="text-2xl text-on-primary-fixed font-bold">{{ communityEditForm.name() ? communityEditForm.name().charAt(0) : 'C' }}</span>
+          <div class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+            <span class="material-symbols-outlined text-white text-[20px]">photo_camera</span>
+          </div>
+        </div>
+        <input type="file" #commAvatarInput hidden accept="image/*" (change)="onCommunityAvatarSelected($event)">
+      </div>
+      <div class="flex-grow">
+        <label class="block text-label-sm text-text-secondary mb-1">Community Name</label>
+        <input type="text" [ngModel]="communityEditForm.name()" (ngModelChange)="communityEditForm.name.set($event)" class="w-full bg-surface-container border border-border-subtle rounded-lg px-4 py-2 text-text-primary focus:outline-none focus:border-primary transition-colors" />
+      </div>
+    </div>
+    <div class="flex justify-end">
+      <button (click)="saveCommunityChanges()" class="bg-primary text-white px-4 py-2 rounded-lg font-label-sm hover:opacity-90 transition-opacity">Save Details</button>
+    </div>
+  </div>
+
+  <!-- Pending Requests -->
+  <div *ngIf="selectedCommunity().pendingRequests?.length > 0" class="space-y-4 mb-6">
+    <h4 class="font-label-md font-bold text-text-primary">Pending Requests ({{ selectedCommunity().pendingRequests.length }})</h4>
+    <div class="max-h-48 overflow-y-auto custom-scrollbar space-y-2 border border-primary/20 rounded-lg p-2 bg-primary/5">
+      <div *ngFor="let req of selectedCommunity().pendingRequests" class="flex items-center justify-between p-2 rounded bg-surface-white shadow-sm border border-border-subtle">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-full bg-primary-fixed flex items-center justify-center overflow-hidden shrink-0">
+            <img *ngIf="req.user.avatar" [src]="getAvatarUrl(req.user.avatar)" class="w-full h-full object-cover"/>
+            <span *ngIf="!req.user.avatar" class="text-on-primary-fixed font-bold text-xs">{{ req.user.displayName?.charAt(0) || 'U' }}</span>
+          </div>
+          <div>
+            <p class="font-label-sm font-bold text-text-primary">{{ req.user.displayName || req.user.username }}</p>
+            <p class="text-[10px] text-text-secondary">@{{ req.user.username }}</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-1">
+          <button (click)="rejectCommunityRequest(req.user._id)" class="text-error hover:bg-error/10 w-7 h-7 rounded-full transition-colors flex items-center justify-center" title="Reject Request">
+            <span class="material-symbols-outlined text-[16px]">close</span>
+          </button>
+          <button (click)="acceptCommunityRequest(req.user._id)" class="text-success-green hover:bg-success-green/10 w-7 h-7 rounded-full transition-colors flex items-center justify-center" title="Accept Request">
+            <span class="material-symbols-outlined text-[16px]">check</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Members List -->
+  <div class="space-y-4 mb-8">
+    <h4 class="font-label-md font-bold text-text-primary">Members ({{ selectedCommunity().members?.length || 0 }})</h4>
+    <div class="max-h-48 overflow-y-auto custom-scrollbar space-y-2 border border-border-subtle rounded-lg p-2 bg-surface-container-lowest">
+      <div *ngFor="let member of selectedCommunity().members" class="flex items-center justify-between p-2 rounded hover:bg-surface-container transition-colors">
+        <div class="flex items-center gap-3">
+          <div class="relative shrink-0">
+            <div class="w-8 h-8 rounded-full bg-primary-fixed flex items-center justify-center overflow-hidden">
+              <img *ngIf="member.user?.avatar" [src]="getAvatarUrl(member.user.avatar)" class="w-full h-full object-cover"/>
+              <span *ngIf="!member.user?.avatar" class="text-on-primary-fixed font-bold text-xs">{{ member.user?.displayName?.charAt(0) || member.user?.username?.charAt(0) || 'U' }}</span>
+            </div>
+            <div *ngIf="member.user?._id && presenceService.isOnline(member.user._id)" class="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-success-green border-2 border-surface-white rounded-full"></div>
+          </div>
+          <div>
+            <p class="font-label-sm font-bold text-text-primary">{{ member.user?.displayName || member.user?.username || 'Unknown' }}</p>
+            <p class="text-[10px] text-text-secondary">{{ member.role | titlecase }}</p>
+          </div>
+        </div>
+        <button *ngIf="member.user?.username !== myUser()?.username" (click)="removeCommunityMember(member.user?._id)" class="text-error hover:bg-error/10 p-1 rounded transition-colors flex items-center" title="Remove Member">
+          <span class="material-symbols-outlined text-[16px]">person_remove</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Community -->
+  <div class="mt-auto pt-6 border-t border-error/20">
+    <button (click)="deleteCommunity()" class="w-full flex items-center justify-center gap-2 bg-error text-white py-3 rounded-xl hover:opacity-90 transition-opacity shadow-sm">
+      <span class="material-symbols-outlined">delete_forever</span>
+      <span class="font-label-md font-bold">Delete Community</span>
+    </button>
+  </div>
+</div>
+</div>
+<!-- FAB (Suppressed on this page as per rules, but included logic for future reference) -->
+<!-- The user is in "Discovery" mode, so we keep the interface clean and focus on navigation -->

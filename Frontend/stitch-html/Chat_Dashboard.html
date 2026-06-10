@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ChatSphere | Secure Communication</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Geist:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-fixed": "#dce1ff",
+                    "on-surface-variant": "#444651",
+                    "secondary-fixed": "#e1e0ff",
+                    "surface-container-low": "#f2f4f6",
+                    "tertiary": "#4b1c00",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary-fixed": "#341100",
+                    "surface-container-high": "#e6e8ea",
+                    "inverse-on-surface": "#eff1f3",
+                    "on-secondary-fixed-variant": "#2f2ebe",
+                    "on-error": "#ffffff",
+                    "surface-dim": "#d8dadc",
+                    "primary": "#00236f",
+                    "outline-variant": "#c5c5d3",
+                    "tertiary-container": "#6e2c00",
+                    "inverse-surface": "#2d3133",
+                    "success-green": "#10B981",
+                    "on-secondary-fixed": "#07006c",
+                    "on-surface": "#191c1e",
+                    "on-primary-container": "#90a8ff",
+                    "primary-fixed-dim": "#b6c4ff",
+                    "on-secondary": "#ffffff",
+                    "text-primary": "#0F172A",
+                    "surface-white": "#FFFFFF",
+                    "primary-container": "#1e3a8a",
+                    "inverse-primary": "#b6c4ff",
+                    "surface-container": "#eceef0",
+                    "on-primary-fixed": "#00164e",
+                    "on-error-container": "#93000a",
+                    "tertiary-fixed-dim": "#ffb691",
+                    "surface-tint": "#4059aa",
+                    "outline": "#757682",
+                    "background": "#f7f9fb",
+                    "on-primary-fixed-variant": "#264191",
+                    "text-secondary": "#64748B",
+                    "error-container": "#ffdad6",
+                    "on-tertiary": "#ffffff",
+                    "error": "#ba1a1a",
+                    "on-secondary-container": "#fffbff",
+                    "surface": "#f7f9fb",
+                    "surface-variant": "#e0e3e5",
+                    "security-blue": "#1E293B",
+                    "secondary-fixed-dim": "#c0c1ff",
+                    "on-background": "#191c1e",
+                    "on-primary": "#ffffff",
+                    "surface-container-highest": "#e0e3e5",
+                    "surface-bright": "#f7f9fb",
+                    "tertiary-fixed": "#ffdbcb",
+                    "on-tertiary-container": "#f39461",
+                    "on-tertiary-fixed-variant": "#773205",
+                    "secondary-container": "#6063ee",
+                    "border-subtle": "#E2E8F0",
+                    "secondary": "#4648d4"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "max-width": "1280px",
+                    "gutter": "16px",
+                    "margin-mobile": "16px",
+                    "unit": "4px",
+                    "margin-desktop": "32px"
+            },
+            "fontFamily": {
+                    "body-md": ["Inter"],
+                    "label-md": ["Geist"],
+                    "label-sm": ["Geist"],
+                    "body-lg": ["Inter"],
+                    "headline-lg-mobile": ["Geist"],
+                    "display-lg": ["Geist"],
+                    "headline-lg": ["Geist"],
+                    "title-md": ["Geist"]
+            },
+            "fontSize": {
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.03em", "fontWeight": "500"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+        .message-shadow { box-shadow: 0 4px 12px rgba(30, 41, 59, 0.04); }
+        .active-rail-indicator::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background-color: #00236f;
+        }
+    </style>
+</head>
+<body class="bg-background font-body-md text-on-surface overflow-hidden">
+<div class="flex h-screen w-full">
+<!-- SIDE NAVIGATION RAIL (Shared Component) -->
+<aside class="flex flex-col h-full py-6 bg-surface-white dark:bg-inverse-surface h-screen w-[320px] left-0 top-0 border-r border-border-subtle shrink-0">
+<div class="px-6 mb-8">
+<h1 class="font-headline-lg text-headline-lg font-bold text-primary dark:text-primary-fixed-dim">ChatSphere</h1>
+<p class="font-label-md text-label-md text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">lock</span>
+                    Encrypted
+                </p>
+</div>
+<nav class="flex-grow space-y-1">
+<!-- Tabs from JSON: Chats, Communities, Calls, Settings -->
+<a class="flex items-center gap-4 text-primary dark:text-inverse-primary font-bold border-l-4 border-primary dark:border-inverse-primary bg-primary-fixed dark:bg-primary-container px-6 py-4 transition-all duration-150 relative" href="#">
+<span class="material-symbols-outlined" data-icon="chat" style="font-variation-settings: 'FILL' 1;">chat</span>
+<span class="font-label-md text-label-md">Chats</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant dark:text-outline-variant px-6 py-4 hover:bg-surface-container dark:hover:bg-on-surface-variant transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="groups">groups</span>
+<span class="font-label-md text-label-md">Communities</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant dark:text-outline-variant px-6 py-4 hover:bg-surface-container dark:hover:bg-on-surface-variant transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="call">call</span>
+<span class="font-label-md text-label-md">Calls</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant dark:text-outline-variant px-6 py-4 hover:bg-surface-container dark:hover:bg-on-surface-variant transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</nav>
+<div class="mt-auto px-6 border-t border-border-subtle pt-6">
+<a class="flex items-center gap-4 text-on-surface-variant dark:text-outline-variant py-2 hover:bg-surface-container transition-colors rounded-lg" href="#">
+<img alt="User Profile Avatar" class="w-10 h-10 rounded-full border-2 border-primary-fixed" data-alt="A professional headshot of a friendly user with a modern, clean-shaven look, set against a soft blurred office background with cool blue and white tones, reflecting a corporate yet approachable persona." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCNWm2TZOjgNZmLc2ib-68u7LKFkGA6ew7TRWk-ES-yG2Du5SR_AJdEBDAfHex0sURGZzYiJ-xY7CObVePXcinjJKexM0u9GlICg5EpTdXOBl71w0B3Y-pILkRJuY0v_GArEkOA8v5aPENENd1UCEixITii1YV7FkagAWjJWgSanGrj3pTRU9YybtWCRWNroh64NIqtqBzQ_-JCw2Rc9Wl54SssNQLL1Y0_ZiubPHRzZt1Wtk3GfgOvtIZGGUrlDr44VXrfe9cB2Nt6"/>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md font-bold text-text-primary">Profile</span>
+<span class="text-xs text-on-surface-variant">Active Now</span>
+</div>
+</a>
+</div>
+</aside>
+<!-- CHAT LIST PANEL (Sub-Sidebar) -->
+<section class="w-80 bg-surface-container-low border-r border-border-subtle flex flex-col hidden lg:flex">
+<div class="p-6">
+<div class="relative mb-6">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-on-surface-variant text-sm">search</span>
+<input class="w-full bg-surface-white border-none rounded-xl py-2 pl-10 pr-4 text-label-md focus:ring-2 focus:ring-primary-fixed outline-none shadow-sm transition-all" placeholder="Search conversations..." type="text"/>
+</div>
+<h3 class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-4">Active Chats</h3>
+<div class="space-y-2 overflow-y-auto custom-scrollbar flex-grow">
+<!-- Chat Item Active -->
+<div class="p-3 bg-surface-white rounded-xl flex items-center gap-3 cursor-pointer border border-primary-fixed shadow-sm">
+<div class="relative">
+<img alt="Alex Avatar" class="w-12 h-12 rounded-full object-cover" data-alt="Close up portrait of Alex, a person with short brown hair and trendy glasses, smiling warmly. The lighting is bright and airy with high-key whites and subtle indigo shadows, perfectly matching the modern minimalism of the UI." src="https://lh3.googleusercontent.com/aida-public/AB6AXuArEFi3XKyRsUpDEQ0YlmYUbZeFtR5P3IuQCF01o3QvqnhmL4Xg2Cu10aFceUOKX77jLgBO3MWzCugWgqUaWy7CtLog7b9HFhyQWPNrV8CE5r9ylxasG1So9SMsXhmbdo-tremUzMdwufWLIIa8p83kPKVmtSgJXItxSazECkr1L1axERdu69ZrpUu_gRLUgBONqfuBB-U0he13qItKhIlUu3pMx_yol3BQlpXC5371CSchmNVPhHo3yegDDSNa7JCzr0Mgk6aOdc13"/>
+<div class="absolute bottom-0 right-0 w-3 h-3 bg-success-green border-2 border-surface-white rounded-full"></div>
+</div>
+<div class="flex-grow min-w-0">
+<div class="flex justify-between items-center mb-0.5">
+<span class="font-label-md text-label-md font-bold truncate">Alex (@alex_pro)</span>
+<span class="text-[10px] text-primary font-bold">Just Now</span>
+</div>
+<p class="text-label-sm text-on-surface-variant truncate">Let's verify the key tomorrow.</p>
+</div>
+</div>
+<!-- Chat Item -->
+<div class="p-3 hover:bg-surface-container rounded-xl flex items-center gap-3 cursor-pointer transition-colors">
+<div class="relative">
+<img alt="Sarah Avatar" class="w-12 h-12 rounded-full object-cover" data-alt="Professional studio portrait of Sarah, featuring soft natural lighting and a minimalist white background. She has a confident, trustworthy expression, wearing a high-quality dark indigo blouse that aligns with the brand colors." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_Xm-pFnqkPVQpwWrG68goxcvo2wcErTE3eETSKKsPpyukWSRV4y38j-H4c2LtdPdpRdz-R18wUrpVVTM1MQklyAYr9cGQ6gDYi3XiI9vMPa-z17ec3hvRPcwAWEiRrE4BFEm2oRi4mVhfLYPK4OrieOSFdXEJFFDPKKsgFydB3HnXrS7hk3E_sDVQWAI7bguRSQlzyHfgzQQwIdzBt65EGCTXRx_TbpiQyWCxZl30AdNrxhmAg7KboW3skwhVsOvXv1LrM7y0k0Ql"/>
+</div>
+<div class="flex-grow min-w-0">
+<div class="flex justify-between items-center mb-0.5">
+<span class="font-label-md text-label-md font-bold truncate">Sarah Mitchell</span>
+<span class="bg-primary text-white text-[10px] px-1.5 py-0.5 rounded-full font-bold">2</span>
+</div>
+<p class="text-label-sm text-on-surface-variant truncate">The deployment is ready for review.</p>
+</div>
+</div>
+<!-- Chat Item -->
+<div class="p-3 hover:bg-surface-container rounded-xl flex items-center gap-3 cursor-pointer transition-colors opacity-70">
+<div class="relative">
+<div class="w-12 h-12 rounded-full bg-secondary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-fixed">shield</span>
+</div>
+</div>
+<div class="flex-grow min-w-0">
+<div class="flex justify-between items-center mb-0.5">
+<span class="font-label-md text-label-md font-bold truncate">Security Updates</span>
+</div>
+<p class="text-label-sm text-on-surface-variant truncate">Encryption protocol v4.2 active.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- MAIN CONTENT CANVAS -->
+<main class="flex-grow flex flex-col bg-surface-white h-full relative">
+<!-- TOP APP BAR (Shared Component) -->
+<header class="flex justify-between items-center w-full px-margin-desktop h-16 bg-surface-white dark:bg-inverse-surface border-b border-border-subtle shrink-0">
+<div class="flex items-center gap-4">
+<button class="lg:hidden p-2 text-on-surface-variant hover:bg-surface-container rounded-full">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<div class="flex items-center gap-3">
+<div class="relative">
+<img alt="Contact Avatar" class="w-10 h-10 rounded-full" data-alt="A high-quality avatar of a contact, framed in a clean, minimalist UI design. The subject is well-lit and professional, conveying trust and reliability within a secure digital communication platform." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDFNVSod1bsubfcEZwpRN7JsevTHJKrTYIwRci6mwkVCI8ms8rnaQ--7r6hp8A5wdVENj4yzT3OXl2vT-fMjS9EMQ1puxz2E1OT1dHIdG7i9RfvAgC7WorDB00zzmcApPzID88QLFS0U9MWtm7H27qPsdbDhvTye_FOVWICrzpbIoj26gLRqt-caDnjbz5dwJqCr1bqQp9t9qvuo4L6TTwlLwcVS1pcmoBCzkGDgIQAvwqaPFxS4rST_i2lsFGfdOliQNPAuNktS79w"/>
+</div>
+<div>
+<div class="flex items-center gap-1.5">
+<h2 class="font-title-md text-title-md font-semibold text-text-primary dark:text-inverse-on-surface">Alex (@alex_pro)</h2>
+<span class="material-symbols-outlined text-primary text-base" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<div class="flex items-center gap-1 text-[11px] text-success-green font-medium">
+<span class="material-symbols-outlined text-[12px]">lock</span>
+                                End-to-End Encrypted
+                            </div>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<div class="hidden sm:flex items-center gap-2">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-all duration-200 cursor-pointer">
+<span class="material-symbols-outlined" data-icon="videocam">videocam</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-all duration-200 cursor-pointer">
+<span class="material-symbols-outlined" data-icon="call">call</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-all duration-200 cursor-pointer">
+<span class="material-symbols-outlined" data-icon="lock">lock</span>
+</button>
+</div>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-all duration-200 cursor-pointer">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</header>
+<!-- CHAT AREA -->
+<div class="flex-grow overflow-y-auto p-6 space-y-6 custom-scrollbar bg-background" id="chat-messages">
+<!-- Timestamp Separator -->
+<div class="flex justify-center">
+<span class="bg-surface-container text-on-surface-variant font-label-sm text-[11px] px-3 py-1 rounded-full uppercase tracking-widest">Today</span>
+</div>
+<!-- Incoming Message -->
+<div class="flex items-end gap-3 max-w-[80%]">
+<img alt="Alex" class="w-8 h-8 rounded-full mb-1" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDbjTh6K8D12uBxgDQQPASLFc6HjvgkFBf3EbNjhitvCtgeCBrSFkf2G1_BeucK7CiqA6IjwzHjLCLUQMP0aTaWJMRdYajqpdAfYdfqidklV_R2WNHJIiVEIfMtPcZvIUbVxiUePDcq9hH-pClUEB3SciyNVPaFBMlPUYvk28cfCao1jhKtH0_0vOBdvZLFlJ9Q0yBX74X0nOC3QnX8Dhm7j-oPtwWmoDc6yPNRwcHtHKP0DgKcJzzPO3zCEn6iXI06rp26Ba3igGuT"/>
+<div class="flex flex-col gap-1">
+<div class="bg-surface-white border border-border-subtle p-4 rounded-t-2xl rounded-br-2xl text-body-md text-text-primary message-shadow">
+                            Hey! Just checking in on that encryption key migration we discussed yesterday. Did you have a chance to look at the protocol?
+                        </div>
+<span class="text-[10px] text-on-surface-variant ml-1">10:42 AM</span>
+</div>
+</div>
+<!-- Outgoing Message -->
+<div class="flex flex-col items-end gap-1 ml-auto max-w-[80%]">
+<div class="bg-primary text-white p-4 rounded-t-2xl rounded-bl-2xl text-body-md message-shadow">
+                        Just finished reviewing it. The modern minimalism in the implementation is great—really keeps cognitive load low while maintaining high security.
+                    </div>
+<div class="flex items-center gap-1 mr-1">
+<span class="text-[10px] text-on-surface-variant">10:44 AM</span>
+<span class="material-symbols-outlined text-[14px] text-primary" style="font-variation-settings: 'FILL' 1;">done_all</span>
+</div>
+</div>
+<!-- Encryption Badge -->
+<div class="flex justify-center my-8">
+<div class="bg-success-green/10 border border-success-green/20 px-4 py-2 rounded-xl flex items-center gap-2">
+<span class="material-symbols-outlined text-success-green text-sm" style="font-variation-settings: 'FILL' 1;">lock</span>
+<span class="text-success-green font-label-md text-[12px] font-bold">Messages are secured with Post-Quantum Encryption</span>
+</div>
+</div>
+<!-- Incoming Message -->
+<div class="flex items-end gap-3 max-w-[80%]">
+<img alt="Alex" class="w-8 h-8 rounded-full mb-1" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWzKWxlEZrrBWnJOnwlzuFvRbAiP0VGvCXn1AMuQe9TwPAJanbAeHRGVVDj0DkKsN-vXyN8397Pg6kmrhP2m1JZYBmx122m2ft8waIjqJkOa6l3AjUAuKhl81rehMuaa6tddMdeodzSUMCu3f7A_VpshKyvVud2GnA7j-HPJtBuNVZwa1rc8VBwO_gCEl0AtXLp4x-gd_6HQPW_9C3ZZQ_H9KUF88Dcs9SxXWps0cyUElSsMjTpnaRNkoXlV92MArEHbQ45Qegt0Wy"/>
+<div class="flex flex-col gap-1">
+<div class="bg-surface-white border border-border-subtle p-4 rounded-t-2xl rounded-br-2xl text-body-md text-text-primary message-shadow">
+                            Excellent. Let's verify the key tomorrow then. 10:00 AM work for you?
+                        </div>
+<span class="text-[10px] text-on-surface-variant ml-1">10:45 AM</span>
+</div>
+</div>
+<!-- Typing Indicator -->
+<div class="flex items-end gap-2 text-on-surface-variant text-xs italic ml-11">
+                    Alex is typing...
+                </div>
+</div>
+<!-- CHAT INPUT AREA -->
+<div class="p-6 bg-surface-white border-t border-border-subtle">
+<div class="max-w-max-width mx-auto flex items-center gap-4 bg-surface-container-lowest border border-border-subtle rounded-2xl p-2 pr-3 shadow-sm focus-within:ring-2 focus-within:ring-primary-fixed transition-all duration-300">
+<div class="flex items-center gap-1">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">sentiment_satisfied</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">attach_file</span>
+</button>
+</div>
+<input class="flex-grow bg-transparent border-none focus:ring-0 text-body-md py-2 px-1 placeholder:text-outline" placeholder="Type an encrypted message..." type="text"/>
+<div class="flex items-center gap-2">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">mic</span>
+</button>
+<button class="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center hover:bg-primary-container transition-all shadow-md active:scale-95">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">send</span>
+</button>
+</div>
+</div>
+<div class="text-center mt-2">
+<span class="text-[10px] text-outline uppercase tracking-tighter">Your data is yours. ChatSphere does not store plain text logs.</span>
+</div>
+</div>
+</main>
+</div>
+<!-- Micro-interaction Scripts -->
+<script>
+        // Simple scroll to bottom logic for chat area
+        const chatContainer = document.getElementById('chat-messages');
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+
+        // Visual feedback for send button
+        document.querySelector('button .material-symbols-outlined[data-icon="send"]')?.parentElement?.addEventListener('click', () => {
+            const input = document.querySelector('input[placeholder="Type an encrypted message..."]');
+            if(input.value.trim() !== "") {
+                input.value = "";
+                // Interaction logic could go here to append a message locally
+            }
+        });
+
+        // Toggle hover effect states manually for demo if needed
+        const chatItems = document.querySelectorAll('.hover\\:bg-surface-container');
+        chatItems.forEach(item => {
+            item.addEventListener('mousedown', () => item.classList.add('opacity-80'));
+            item.addEventListener('mouseup', () => item.classList.remove('opacity-80'));
+        });
+    </script>
+</body></html>
