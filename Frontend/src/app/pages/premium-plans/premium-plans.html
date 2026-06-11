@@ -121,7 +121,10 @@
         <span *ngIf="isLoading()" class="material-symbols-outlined animate-spin">progress_activity</span>
         {{ isLoading() ? 'Processing...' : 'Secure Checkout' }}
       </button>
-
+      
+      <button (click)="initiateInsecureCheckout()" [disabled]="isLoading()" class="mt-2 text-sm text-text-secondary hover:text-primary transition-colors cursor-pointer flex items-center gap-1">
+        <span class="material-symbols-outlined text-[16px]">bug_report</span> Test Checkout (Bypass)
+      </button>
     </div>
 
   </div>
