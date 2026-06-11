@@ -122,9 +122,6 @@
         {{ isLoading() ? 'Processing...' : 'Secure Checkout' }}
       </button>
 
-      <button (click)="initiateInsecureCheckout()" [disabled]="isLoading()" class="text-on-surface-variant text-sm underline hover:text-primary transition-colors disabled:opacity-50">
-        Simulate Checkout (Testing Bypass)
-      </button>
     </div>
 
   </div>
