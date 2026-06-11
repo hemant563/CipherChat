@@ -3,6 +3,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Observable, BehaviorSubject, tap } from 'rxjs';
+import { SettingsService } from './settings.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,8 @@ export class UserService {
 
   // Global user state
   public currentUser$ = new BehaviorSubject<any>(this.getInitialState());
+
+  private settingsService = inject(SettingsService);
 
   private getInitialState() {
     if (isPlatformBrowser(this.platformId)) {
@@ -35,6 +38,14 @@ export class UserService {
         localStorage.setItem('cipherchat_user_profile', JSON.stringify(user));
       }
       this.currentUser$.next(user);
+      
+      if (user.settings?.notifications) {
+        this.settingsService.updateSettings({
+          messageTone: user.settings.notifications.messageTone,
+          hapticFeedback: user.settings.notifications.hapticFeedback,
+          desktopAlerts: user.settings.notifications.desktopAlerts
+        });
+      }
     }
   }
 
