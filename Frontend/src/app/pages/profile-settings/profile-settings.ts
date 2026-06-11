@@ -317,15 +317,32 @@ export class ProfileSettings implements OnInit {
   onAvatarSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
+      this.isLoading.set(true);
       this.mediaService.uploadMedia(file).subscribe({
         next: (res) => {
           if (res.data?.media?.url) {
             this.editForm.avatar.set(res.data.media.url);
+            // Auto save profile when avatar is uploaded
+            this.userService.updateProfile({
+              avatar: res.data.media.url
+            }).subscribe({
+              next: (profileRes) => {
+                const user = profileRes.data.user;
+                this.profile.avatar.set(user.avatar || '');
+                this.toastService.success('Profile picture updated!');
+                this.isLoading.set(false);
+              },
+              error: () => {
+                this.toastService.error('Failed to save profile picture.');
+                this.isLoading.set(false);
+              }
+            });
           }
         },
         error: (err) => {
           console.error('Avatar upload failed', err);
           this.toastService.error('Failed to upload avatar.');
+          this.isLoading.set(false);
         }
       });
     }

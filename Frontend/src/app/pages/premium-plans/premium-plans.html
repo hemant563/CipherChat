@@ -62,6 +62,10 @@
             <span class="text-text-primary">Never delete messages</span>
           </li>
         </ul>
+        <button class="w-full py-3 rounded-xl font-bold transition-all flex items-center justify-center gap-2"
+                [ngClass]="activePlan() === 'monthly' ? 'bg-primary text-white shadow-md' : 'bg-surface-container text-text-primary hover:bg-surface-container-high'">
+          Select Monthly
+        </button>
       </div>
 
       <!-- Yearly Plan -->
@@ -102,6 +106,10 @@
             <span class="text-text-primary">Never delete messages</span>
           </li>
         </ul>
+        <button class="w-full py-3 rounded-xl font-bold transition-all flex items-center justify-center gap-2"
+                [ngClass]="activePlan() === 'yearly' ? 'bg-amber-500 text-white shadow-md' : 'bg-surface-container text-text-primary hover:bg-surface-container-high'">
+          Select Yearly
+        </button>
       </div>
 
     </div>
