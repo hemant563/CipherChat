@@ -98,7 +98,7 @@ export class ProfileSettings implements OnInit {
   aiLimitReached = signal(false);
 
   isAiLocked() {
-    return this.aiLimitReached() || !this.profile.isPremium();
+    return !this.profile.isPremium();
   }
 
   // Change Chat Lock PIN
@@ -199,7 +199,9 @@ export class ProfileSettings implements OnInit {
           
           if (localStorage.getItem('aiLimitReached') === 'true') {
             this.aiLimitReached.set(true);
-            this.settings.aiSmartReplies.set(false);
+            if (!user.isPremium) {
+              this.settings.aiSmartReplies.set(false);
+            }
           }
         }
       });
