@@ -91,7 +91,7 @@ export class ParticleBgComponent implements AfterViewInit, OnDestroy {
 
   private initParticles(width: number, height: number) {
     this.particles = [];
-    const count = Math.floor((width * height) / 3000); // Dense particles
+    const count = Math.min(150, Math.floor((width * height) / 15000)); // Optimized particles
     for (let i = 0; i < count; i++) {
       this.particles.push({
         x: Math.random() * width,
