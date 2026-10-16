@@ -6,6 +6,7 @@ import asyncHandler from '../utils/asyncHandler.js';
 import ApiError from '../utils/ApiError.js';
 import ApiResponse from '../utils/ApiResponse.js';
 import env from '../config/env.js';
+import { addUserToCipherChatCommunity } from '../services/community.service.js';
 
 // Setup cookie options for refresh token
 const cookieOptions = {
@@ -131,6 +132,7 @@ export const verifyOtp = asyncHandler(async (req, res) => {
     const { accessToken, refreshToken } = TokenService.generateAuthTokens(user._id);
     user.refreshToken = refreshToken;
     await user.save({ validateBeforeSave: false });
+    await addUserToCipherChatCommunity(user._id);
 
     return res
       .status(200)
@@ -179,6 +181,7 @@ export const register = asyncHandler(async (req, res) => {
   user.refreshToken = refreshToken;
   
   await user.save();
+  await addUserToCipherChatCommunity(user._id);
 
   res
     .status(201)
@@ -232,6 +235,7 @@ export const login = asyncHandler(async (req, res) => {
   }
 
   await user.save({ validateBeforeSave: false });
+  await addUserToCipherChatCommunity(user._id);
 
   const userObj = user.toJSON();
 

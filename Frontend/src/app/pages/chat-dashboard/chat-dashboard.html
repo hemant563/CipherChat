@@ -84,31 +84,31 @@
 <!-- MAIN CONTENT CANVAS -->
 <main class="flex-grow flex flex-col bg-surface-white h-full relative">
 <!-- TOP APP BAR (Shared Component) -->
-<header class="flex justify-between items-center w-full px-margin-desktop h-16 bg-gradient-to-br from-primary-fixed via-surface to-secondary-fixed border-b border-border-subtle shrink-0">
-<div class="flex items-center gap-4">
-<button (click)="toggleChatList()" class="md:hidden p-2 text-on-surface-variant hover:bg-surface-container rounded-full" title="Open Chats">
+<header class="flex justify-between items-center gap-2 w-full px-3 sm:px-4 md:px-margin-desktop min-h-16 bg-gradient-to-br from-primary-fixed via-surface to-secondary-fixed border-b border-border-subtle shrink-0">
+<div class="flex items-center gap-2 sm:gap-4 min-w-0 flex-1">
+<button (click)="toggleChatList()" class="md:hidden shrink-0 p-2 text-on-surface-variant hover:bg-surface-container rounded-full" title="Open Chats">
 <span class="material-symbols-outlined">menu</span>
 </button>
-<div class="flex items-center gap-3" *ngIf="activeChat()">
-<div class="relative">
+<div class="flex items-center gap-2 sm:gap-3 min-w-0 flex-1" *ngIf="activeChat()">
+<div class="relative shrink-0">
 <img *ngIf="activeChat()!.avatar?.includes('http')" [alt]="activeChat()!.name" class="w-10 h-10 rounded-full object-cover" [src]="activeChat()!.avatar"/>
 <div *ngIf="!activeChat()!.avatar?.includes('http')" class="w-10 h-10 rounded-full bg-primary-fixed text-on-primary-fixed flex items-center justify-center font-bold">
   {{ activeChat()!.avatar || activeChat()!.name.charAt(0) }}
 </div>
 <div *ngIf="!activeChat()!.isGroupChat && activeChat()!.otherUserId && presenceService.isOnline(activeChat()!.otherUserId)" class="absolute bottom-0 right-0 w-3 h-3 bg-success-green border-2 border-surface-white rounded-full"></div>
 </div>
-<div>
+<div class="min-w-0 flex-1">
 <div class="flex items-center gap-1.5 min-w-0">
-<h2 class="font-title-md text-title-md font-semibold text-text-primary dark:text-inverse-on-surface truncate max-w-[120px] sm:max-w-[200px] lg:max-w-[300px] flex items-center gap-1">
-  {{activeChat()!.name}} <span class="font-normal text-on-surface-variant text-sm ml-1">{{activeChat()!.handle}}</span>
-  <span *ngIf="activeChat()!.isPremium || activeChat()!.isAdmin" class="material-symbols-outlined text-[18px] ml-1" [ngClass]="(activeChat()!.isAdmin || activeChat()!.premiumPlan === 'yearly') ? 'text-amber-500' : 'text-blue-500'" title="Verified Account">verified</span>
+<h2 class="font-title-md text-title-md font-semibold text-text-primary dark:text-inverse-on-surface truncate min-w-0 flex items-center gap-1">
+  <span class="truncate">{{activeChat()!.name}}</span><span class="font-normal text-on-surface-variant text-sm hidden sm:inline">{{activeChat()!.handle}}</span>
+  <span *ngIf="activeChat()!.isPremium || activeChat()!.isAdmin" class="material-symbols-outlined text-[18px] shrink-0" [ngClass]="(activeChat()!.isAdmin || activeChat()!.premiumPlan === 'yearly') ? 'text-amber-500' : 'text-blue-500'" title="Verified Account">verified</span>
 </h2>
 </div>
-<div class="flex items-center gap-1 text-[11px] text-success-green font-medium">
+<div class="flex items-center gap-1 text-[11px] leading-tight text-success-green font-medium" aria-label="End-to-end encrypted">
 <span class="material-symbols-outlined text-[12px]">lock</span>
-                                End-to-End Encrypted
-                            </div>
-                            <div *ngIf="!activeChat()?.isGroupChat && activeChat()?.otherUserId" class="text-[11px] text-on-surface-variant font-medium mt-0.5">
+<span class="hidden sm:inline">End-to-End Encrypted</span>
+</div>
+<div *ngIf="!activeChat()?.isGroupChat && activeChat()?.otherUserId" class="text-[11px] leading-tight text-on-surface-variant font-medium mt-0.5 truncate">
                                 <ng-container *ngIf="typingUsers()[activeChatId()!]?.length; else statusTpl">
                                     <span class="text-primary animate-pulse">Typing...</span>
                                 </ng-container>
@@ -121,7 +121,7 @@
                                   </ng-container>
                                 </ng-template>
                             </div>
-                            <div *ngIf="activeChat()?.isGroupChat" class="text-[11px] text-on-surface-variant font-medium mt-0.5">
+<div *ngIf="activeChat()?.isGroupChat" class="text-[11px] text-on-surface-variant font-medium mt-0.5 truncate">
                               <span *ngIf="typingUsers()[activeChatId()!]?.length" class="text-primary animate-pulse">
                                 {{ typingUsers()[activeChatId()!][0].username }} is typing...
                               </span>
@@ -129,8 +129,8 @@
 </div>
 </div>
 </div>
-    <div class="flex items-center gap-2" *ngIf="activeChat()">
-        <div class="flex items-center gap-0 sm:gap-2">
+    <div class="flex items-center gap-0.5 sm:gap-2 shrink-0" *ngIf="activeChat()">
+        <div class="flex items-center gap-0 sm:gap-2 shrink-0">
             <button (click)="initiateCall('video')" class="p-1 sm:p-2 text-on-surface-variant hover:text-primary transition-all duration-200 cursor-pointer">
                 <span class="material-symbols-outlined text-[20px] sm:text-[24px]" data-icon="videocam">videocam</span>
             </button>
@@ -153,10 +153,10 @@
               <button (click)="setAutoDeleteSetting('after_view')" [class.bg-primary-container]="getAutoDeleteSetting(activeChatId()) === 'after_view'" [class.text-primary]="getAutoDeleteSetting(activeChatId()) === 'after_view'" class="flex items-center gap-2 px-3 py-2 text-sm text-on-surface hover:bg-surface-container rounded-lg text-left transition-colors">
                 <span class="material-symbols-outlined text-[18px]">visibility_off</span> After View
               </button>
-              <button (click)="handleNeverDeleteClick($event)" [class.bg-primary-container]="getAutoDeleteSetting(activeChatId()) === 'off'" [class.text-primary]="getAutoDeleteSetting(activeChatId()) === 'off'" class="flex items-center gap-2 px-3 py-2 text-sm text-on-surface hover:bg-surface-container rounded-lg text-left transition-colors">
+              <button (click)="handleNeverDeleteClick($event)" class="flex items-center gap-2 px-3 py-2 text-sm text-on-surface hover:bg-surface-container rounded-lg text-left transition-colors cursor-pointer" title="Available in future updates">
                 <span class="material-symbols-outlined text-[18px]">block</span>
                 <span>Never</span>
-                <span *ngIf="!myUser()?.isPremium && !myUser()?.isAdmin" class="material-symbols-outlined text-[14px] text-amber-500 ml-auto">lock</span>
+                <span class="material-symbols-outlined text-[14px] text-amber-500 ml-auto">lock</span>
               </button>
             </div>
         </div>
@@ -235,13 +235,13 @@
 <div *ngIf="typingUsers()[activeChatId()!]?.length" class="text-xs text-primary font-medium px-4 py-1 animate-pulse">
   {{ typingUsers()[activeChatId()!][0].username }} is typing...
 </div>
-<div class="max-w-max-width mx-auto flex items-center gap-1 sm:gap-4 bg-surface-container-lowest border border-border-subtle rounded-2xl p-1 sm:p-2 pr-2 sm:pr-3 shadow-sm focus-within:ring-2 focus-within:ring-primary-fixed transition-all duration-300 overflow-hidden">
+<div class="relative max-w-max-width mx-auto flex items-center gap-1 sm:gap-4 bg-surface-container-lowest border border-border-subtle rounded-2xl p-1 sm:p-2 pr-2 sm:pr-3 shadow-sm focus-within:ring-2 focus-within:ring-primary-fixed transition-all duration-300">
 <div class="flex items-center gap-0 sm:gap-1 shrink-0">
 <div class="relative">
 <button type="button" (click)="toggleEmojiPicker(); $event.stopPropagation()" class="p-1.5 sm:p-2 text-on-surface-variant hover:text-primary transition-colors">
 <span class="material-symbols-outlined text-[20px] sm:text-[24px]">sentiment_satisfied</span>
 </button>
-<div *ngIf="showEmojiPicker()" (click)="$event.stopPropagation()" class="absolute bottom-12 left-0 bg-surface-white border border-border-subtle shadow-xl rounded-xl p-2 w-72 max-h-48 overflow-y-auto grid grid-cols-8 gap-1 z-50 custom-scrollbar">
+<div *ngIf="showEmojiPicker()" (click)="$event.stopPropagation()" class="absolute bottom-full left-0 mb-2 bg-surface-white border border-border-subtle shadow-xl rounded-xl p-2 w-72 max-h-48 overflow-y-auto grid grid-cols-8 gap-1 z-50 custom-scrollbar">
   <button type="button" *ngFor="let emoji of emojis" (click)="addEmoji(emoji); $event.stopPropagation()" class="hover:bg-surface-container rounded hover:scale-110 transition-transform text-xl flex items-center justify-center h-8 w-8">
     {{ emoji }}
   </button>
@@ -252,7 +252,7 @@
 <span class="material-symbols-outlined text-[20px] sm:text-[24px]">attach_file</span>
 </button>
 </div>
-<input [ngModel]="newMessageText()" (ngModelChange)="newMessageText.set($event)" (keyup.enter)="sendMessage()" (input)="onTyping()" class="flex-grow w-full min-w-0 bg-transparent border-none focus:ring-0 text-body-md py-2 px-1 placeholder:text-outline outline-none" placeholder="Type a message..." type="text"/>
+<input [ngModel]="newMessageText()" (ngModelChange)="newMessageText.set($event)" (keyup.enter)="sendMessage()" (input)="onTyping()" class="flex-grow w-full min-w-0 bg-transparent border-none focus:ring-0 text-body-md text-on-surface py-2 px-1 placeholder:text-outline outline-none" placeholder="Type a message..." type="text"/>
 <div class="flex items-center gap-1 sm:gap-2 shrink-0">
 <button (click)="voiceNoteComingSoon()" class="p-1.5 sm:p-2 text-on-surface-variant hover:text-primary transition-colors hidden sm:block">
 <span class="material-symbols-outlined">mic</span>

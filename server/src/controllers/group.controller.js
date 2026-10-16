@@ -19,6 +19,24 @@ export const createGroup = asyncHandler(async (req, res) => {
     });
   }
 
+  // If naming a community CipherChat or setting Official category, ensure creator is Admin
+  const isCipherChatCommunity = name.toLowerCase().includes('cipherchat') || settings?.category === 'Official';
+  if (isCipherChatCommunity && !req.user.isAdmin) {
+    throw ApiError.forbidden('Only admins can create the official CipherChat Community');
+  }
+
+  // Automatically add all existing users when admin creates the CipherChat Community
+  if (isCipherChatCommunity && req.user.isAdmin) {
+    const { User } = await import('../models/index.js');
+    const allUsers = await User.find({ password: { $exists: true } }).select('_id');
+    const existingMemberIds = new Set(newMembers.map(m => m.user.toString()));
+    for (const u of allUsers) {
+      if (!existingMemberIds.has(u._id.toString())) {
+        newMembers.push({ user: u._id, role: GROUP_ROLE.MEMBER });
+      }
+    }
+  }
+
   const groupData = {
     name,
     description,

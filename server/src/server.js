@@ -28,6 +28,10 @@ const startServer = async () => {
     const { User } = await import('./models/index.js');
     await User.updateMany({ status: 'online' }, { $set: { status: 'offline', lastSeen: Date.now() } });
 
+    // Ensure official CipherChat Community exists and all users are added
+    const { ensureCipherChatCommunity } = await import('./services/community.service.js');
+    await ensureCipherChatCommunity();
+
     // Start listening
     server.listen(env.PORT, () => {
       logger.info(`Server running in ${env.NODE_ENV} mode on port ${env.PORT}`);

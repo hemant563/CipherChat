@@ -907,12 +907,8 @@ export class ChatDashboard implements OnInit, OnDestroy {
   // --- Auto Delete Logic ---
   handleNeverDeleteClick(event: Event) {
     event.stopPropagation();
-    if (!this.myUser()?.isPremium && !this.myUser()?.isAdmin) {
-      this.router.navigate(['/premium']);
-      this.showAutoDeleteMenu.set(false);
-      return;
-    }
-    this.setAutoDeleteSetting('off');
+    this.toastService.info('Available in future updates.');
+    this.showAutoDeleteMenu.set(false);
   }
 
   toggleAutoDeleteMenu() {
@@ -922,6 +918,12 @@ export class ChatDashboard implements OnInit, OnDestroy {
   setAutoDeleteSetting(setting: 'midnight' | 'after_view' | 'off') {
     const chatId = this.activeChatId();
     if (!chatId) return;
+
+    if (setting === 'off') {
+      this.toastService.info('Available in future updates.');
+      this.showAutoDeleteMenu.set(false);
+      return;
+    }
 
     this.autoDeleteSettings.update(settings => {
       const newSettings = { ...settings, [chatId]: setting };
@@ -933,13 +935,12 @@ export class ChatDashboard implements OnInit, OnDestroy {
   }
 
   getAutoDeleteSetting(chatId: string | null | undefined): 'midnight' | 'after_view' | 'off' {
-    const isPremiumOrAdmin = this.myUser()?.isPremium || this.myUser()?.isAdmin;
-    const defaultSetting = isPremiumOrAdmin ? 'off' : 'midnight';
+    const defaultSetting = 'midnight';
     if (!chatId) return defaultSetting;
     
     const savedSetting = this.autoDeleteSettings()[chatId];
-    if (savedSetting === 'off' && !isPremiumOrAdmin) {
-      return 'midnight'; // Force downgrade if they lose premium
+    if (savedSetting === 'off') {
+      return 'midnight'; // Locked for all users until future updates
     }
     return savedSetting || defaultSetting;
   }

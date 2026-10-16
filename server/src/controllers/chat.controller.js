@@ -2,8 +2,12 @@ import { Message, User, Group } from '../models/index.js';
 import asyncHandler from '../utils/asyncHandler.js';
 import ApiError from '../utils/ApiError.js';
 import ApiResponse from '../utils/ApiResponse.js';
+import { addUserToCipherChatCommunity } from '../services/community.service.js';
 
 export const getConversations = asyncHandler(async (req, res) => {
+  // Ensure user is automatically added to official CipherChat Community
+  await addUserToCipherChatCommunity(req.user._id);
+
   // Fetch all groups the user is a member of
   const groups = await Group.find({ 'members.user': req.user._id })
     .populate('members.user', 'username displayName avatar publicKey status isPremium isAdmin premiumPlan')
@@ -18,7 +22,7 @@ export const getConversations = asyncHandler(async (req, res) => {
 
     return {
       _id: g._id,
-      isGroupChat: g.members.length > 2 || g.name !== 'Direct Message', // Simple heuristic for now
+      isGroupChat: g.type === 'community' || g.type === 'channel' || g.members.length > 2 || g.name !== 'Direct Message',
       name: g.name,
       avatar: g.avatar,
       participants: g.members.map(m => m.user).filter(Boolean),
